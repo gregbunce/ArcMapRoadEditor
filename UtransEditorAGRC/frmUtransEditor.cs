@@ -2,22 +2,16 @@
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Editor;
 using ESRI.ArcGIS.EditorExt;
-using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using ESRI.ArcGIS.GeoDatabaseUI;
 using ESRI.ArcGIS.Display;
-using ESRI.ArcGIS.ADF;
+using ESRI.ArcGIS.GeoDatabaseUI;
 //using NLog;
 //using NLog.Config;
 
@@ -1830,8 +1824,8 @@ namespace UtransEditorAGRC
                 IQueryFilter arcQueryFilter_DFC_updateOID = new QueryFilter();
                 arcQueryFilter_DFC_updateOID.WhereClause = "OBJECTID = " + strDFC_RESULT_oid;
 
-                ICalculator arcCalculator = new Calculator();
-                ICursor arcCur_dfcLayer = clsGlobals.arcGeoFLayerDfcResult.FeatureClass.Update(arcQueryFilter_DFC_updateOID, true) as ICursor;
+                //ICalculator arcCalculator = new Calculator();
+                //ICursor arcCur_dfcLayer = clsGlobals.arcGeoFLayerDfcResult.FeatureClass.Update(arcQueryFilter_DFC_updateOID, true) as ICursor;
 
                 IFeatureCursor arcFeatCur_dfcLayer = clsGlobals.arcGeoFLayerDfcResult.Search(arcQueryFilter_DFC_updateOID, false);
                 IFeature arcFeature_DFC = arcFeatCur_dfcLayer.NextFeature();
@@ -1878,17 +1872,23 @@ namespace UtransEditorAGRC
                         //exit
                         return;
                     case "REVISIT":
-                        string strCalcExprRevisit = @"""" + strComboBoxTextValue + @"""";
+                        ////string strCalcExprRevisit = @"""" + strComboBoxTextValue + @"""";
 
-                        //proceed with calculating values in the dfc table 
-                        arcCalculator.Cursor = arcCur_dfcLayer;
-                        arcCalculator.Expression = strCalcExprRevisit;
-                        arcCalculator.Field = "CURRENT_NOTES";
-                        arcCalculator.Calculate();
-                        arcCalculator.ShowErrorPrompt = true;
+                        //////proceed with calculating values in the dfc table 
+                        ////arcCalculator.Cursor = arcCur_dfcLayer;
+                        ////arcCalculator.Expression = strCalcExprRevisit;
+                        ////arcCalculator.Field = "CURRENT_NOTES";
+                        ////arcCalculator.Calculate();
+                        ////arcCalculator.ShowErrorPrompt = true;
 
-                        //clear out the cursor
-                        arcCur_dfcLayer = null;
+                        //////clear out the cursor
+                        ////arcCur_dfcLayer = null;
+
+                        // save the value to dfc_result layer
+                        clsGlobals.arcEditor.StartOperation();
+                        arcFeature_DFC.set_Value(arcFeature_DFC.Fields.FindField("CURRENT_NOTES"), strComboBoxTextValue);
+                        arcFeature_DFC.Store();
+                        clsGlobals.arcEditor.StopOperation("DFC_RESULT Update");
 
                         //unselect everything in map
                         arcMapp.ClearSelection();
@@ -1900,17 +1900,23 @@ namespace UtransEditorAGRC
                         //exit                        
                         return;
                     case "NOTIFY AND IGNORE":
-                        string strCalcExprInformIgnoreCounty = @"""" + strComboBoxTextValue + @"""";
+                        ////string strCalcExprInformIgnoreCounty = @"""" + strComboBoxTextValue + @"""";
 
-                        //proceed with calculating values in the dfc table 
-                        arcCalculator.Cursor = arcCur_dfcLayer;
-                        arcCalculator.Expression = strCalcExprInformIgnoreCounty;
-                        arcCalculator.Field = "CURRENT_NOTES";
-                        arcCalculator.Calculate();
-                        arcCalculator.ShowErrorPrompt = true;
+                        //////proceed with calculating values in the dfc table 
+                        ////arcCalculator.Cursor = arcCur_dfcLayer;
+                        ////arcCalculator.Expression = strCalcExprInformIgnoreCounty;
+                        ////arcCalculator.Field = "CURRENT_NOTES";
+                        ////arcCalculator.Calculate();
+                        ////arcCalculator.ShowErrorPrompt = true;
 
-                        //clear out the cursor
-                        arcCur_dfcLayer = null;
+                        //////clear out the cursor
+                        ////arcCur_dfcLayer = null;
+
+                        // save the value to dfc_result layer
+                        clsGlobals.arcEditor.StartOperation();
+                        arcFeature_DFC.set_Value(arcFeature_DFC.Fields.FindField("CURRENT_NOTES"), strComboBoxTextValue);
+                        arcFeature_DFC.Store();
+                        clsGlobals.arcEditor.StopOperation("DFC_RESULT Update");
 
                         //call google spreadsheet doc
                         clsGlobals.strCountySegment = txtCountyPreDir.Text.Trim() + " " + txtCountyStName.Text.Trim() + " " + txtCountyStType.Text.Trim() + " " + txtCountySufDir.Text.Trim();
@@ -2414,16 +2420,22 @@ namespace UtransEditorAGRC
                     clsGlobals.arcEditor.StopOperation("Street Edit");
 
                     //get the combobox value in a string
-                    string strComboBoxTextValueDoubleQuotes = @"""" + strComboBoxTextValue + @"""";
+                    ////string strComboBoxTextValueDoubleQuotes = @"""" + strComboBoxTextValue + @"""";
 
-                    arcCalculator.Cursor = arcCur_dfcLayer;
-                    arcCalculator.Expression = strComboBoxTextValueDoubleQuotes;
-                    arcCalculator.Field = "CURRENT_NOTES";
-                    arcCalculator.Calculate();
-                    arcCalculator.ShowErrorPrompt = true;
+                    ////arcCalculator.Cursor = arcCur_dfcLayer;
+                    ////arcCalculator.Expression = strComboBoxTextValueDoubleQuotes;
+                    ////arcCalculator.Field = "CURRENT_NOTES";
+                    ////arcCalculator.Calculate();
+                    ////arcCalculator.ShowErrorPrompt = true;
 
-                    //clear out the cursor
-                    arcCur_dfcLayer = null;
+                    //////clear out the cursor
+                    ////arcCur_dfcLayer = null;
+
+                    // save the value to dfc_result layer
+                    clsGlobals.arcEditor.StartOperation();
+                    arcFeature_DFC.set_Value(arcFeature_DFC.Fields.FindField("CURRENT_NOTES"), strComboBoxTextValue);
+                    arcFeature_DFC.Store();
+                    clsGlobals.arcEditor.StopOperation("DFC_RESULT Update");
 
                     //unselect everything in map
                     arcMapp.ClearSelection();
@@ -2759,17 +2771,32 @@ namespace UtransEditorAGRC
                     arcQueryFilter_DFC_updateOID.WhereClause = "OBJECTID = " + strDFC_RESULT_oid;
 
                     //proceed with calculating values in the dfc table - 
-                    ICalculator arcCalculator = new Calculator();
-                    ICursor arcCur_dfcLayer = clsGlobals.arcGeoFLayerDfcResult.FeatureClass.Update(arcQueryFilter_DFC_updateOID, true) as ICursor;
+                    IFeatureCursor arcFeatCursor_DFC = clsGlobals.arcGeoFLayerDfcResult.Search(arcQueryFilter_DFC_updateOID, false);
+                    IFeature arcFeat_dFC = arcFeatCursor_DFC.NextFeature();
 
-                    arcCalculator.Cursor = arcCur_dfcLayer;
-                    arcCalculator.Expression = strNewStreetOID;
-                    arcCalculator.Field = "BASE_FID";
-                    arcCalculator.Calculate();
-                    arcCalculator.ShowErrorPrompt = true;
+                    if (arcFeat_dFC == null)
+                    {
+                        MessageBox.Show("Could not find a feature in the DFC_RESULT layer with OID: " + strDFC_RESULT_oid, "OID Not Found", MessageBoxButtons.OK);
+                        return;
+                    }
+
+                    clsGlobals.arcEditor.StartOperation();
+                    arcFeat_dFC.set_Value(arcFeat_dFC.Fields.FindField("BASE_FID"), strNewStreetOID);
+                    arcFeat_dFC.Store();
+                    clsGlobals.arcEditor.StopOperation("DFC N OID Update");
+
+                    ////ICalculator arcCalculator = new Calculator();
+                    ////ICursor arcCur_dfcLayer = clsGlobals.arcGeoFLayerDfcResult.FeatureClass.Update(arcQueryFilter_DFC_updateOID, true) as ICursor;
+
+                    ////arcCalculator.Cursor = arcCur_dfcLayer;
+                    ////arcCalculator.Expression = strNewStreetOID;
+                    ////arcCalculator.Field = "BASE_FID";
+                    ////arcCalculator.Calculate();
+                    ////arcCalculator.ShowErrorPrompt = true;
 
                     //clear out the cursor
-                    arcCur_dfcLayer = null;
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatCursor_DFC);
+                    arcFeatCursor_DFC = null;
                 }
                 else if (intUtransFeatCount > 1)
                 {
@@ -2922,42 +2949,58 @@ namespace UtransEditorAGRC
                 IQueryFilter arcQueryFilter_DFC_updateSplitOID = new QueryFilter();
                 arcQueryFilter_DFC_updateSplitOID.WhereClause = "OBJECTID = " + strDfcResultSelectedFeatureOID;
 
+
+                IFeatureCursor arcFCur_DFC = clsGlobals.arcGeoFLayerDfcResult.Search(arcQueryFilter_DFC_updateSplitOID, false);
+                IFeature arcFeat_DFC = arcFCur_DFC.NextFeature();
+
+                if (arcFeat_DFC == null)
+                {
+                    MessageBox.Show("Could not find a feature in the DFC_RESULT layer with OID: " + strDfcResultSelectedFeatureOID, "OID Not Found", MessageBoxButtons.OK);
+                    return;
+                }
+
                 //create string for use of double quotes in expression
                 string strCalcExprNewBaseFID = @"""" + strUtransSelectedFeatureOID + @"""";
                 string strCalcExprPrevBaseFID = @"""" + strDfcResultSelectedFeatureExistingBaseFID + @"""";
 
                 //proceed with calculating values in the dfc table - 
-                ICalculator arcCalculator = new Calculator();
-                ICursor arcCur_dfcLayer = clsGlobals.arcGeoFLayerDfcResult.FeatureClass.Update(arcQueryFilter_DFC_updateSplitOID, true) as ICursor;
+                //ICalculator arcCalculator = new Calculator();
+                //ICursor arcCur_dfcLayer = clsGlobals.arcGeoFLayerDfcResult.FeatureClass.Update(arcQueryFilter_DFC_updateSplitOID, true) as ICursor;
 
                 //update the BASE_FID field
-                arcCalculator.Cursor = arcCur_dfcLayer;
-                arcCalculator.Expression = strCalcExprNewBaseFID;
-                arcCalculator.Field = "BASE_FID";
-                arcCalculator.Calculate();
-                arcCalculator.ShowErrorPrompt = true;
+                ////arcCalculator.Cursor = arcCur_dfcLayer;
+                ////arcCalculator.Expression = strCalcExprNewBaseFID;
+                ////arcCalculator.Field = "BASE_FID";
+                ////arcCalculator.Calculate();
+                ////arcCalculator.ShowErrorPrompt = true;
+
+                clsGlobals.arcEditor.StartOperation();
+                arcFeat_DFC.set_Value(arcFeat_DFC.Fields.FindField("BASE_FID"), strUtransSelectedFeatureOID);
+                arcFeat_DFC.set_Value(arcFeat_DFC.Fields.FindField("PREV__NOTES"), strDfcResultSelectedFeatureExistingBaseFID);
+                arcFeat_DFC.Store();
+                clsGlobals.arcEditor.StopOperation("DFC OID Update");
 
                 //update the PREV__NOTES field
-                //proceed with calculating values in the dfc table - 
-                arcCalculator = new Calculator();
-                arcCur_dfcLayer = clsGlobals.arcGeoFLayerDfcResult.FeatureClass.Update(arcQueryFilter_DFC_updateSplitOID, true) as ICursor;
-                
-                arcCalculator.Cursor = arcCur_dfcLayer;
-                arcCalculator.Expression = strCalcExprPrevBaseFID;
-                arcCalculator.Field = "PREV__NOTES";
-                arcCalculator.Calculate();
-                arcCalculator.ShowErrorPrompt = true;
+                //////proceed with calculating values in the dfc table - 
+                ////arcCalculator = new Calculator();
+                ////arcCur_dfcLayer = clsGlobals.arcGeoFLayerDfcResult.FeatureClass.Update(arcQueryFilter_DFC_updateSplitOID, true) as ICursor;
 
+                ////arcCalculator.Cursor = arcCur_dfcLayer;
+                ////arcCalculator.Expression = strCalcExprPrevBaseFID;
+                ////arcCalculator.Field = "PREV__NOTES";
+                ////arcCalculator.Calculate();
+                ////arcCalculator.ShowErrorPrompt = true;
 
                 //show messagebox of what was updated on dfc_result layer
-                MessageBox.Show("The following feature in the DFC_RESULT layer was updated: The record with OBJECTID : " + strDfcResultSelectedFeatureOID + " now contains the value " + strCalcExprNewBaseFID + " for the field BASE_FID.  It replaced the previous value of " + strDfcResultSelectedFeatureExistingBaseFID + ".");
+                //MessageBox.Show("The following feature in the DFC_RESULT layer was updated: The record with OBJECTID : " + strDfcResultSelectedFeatureOID + " now contains the value " + strCalcExprNewBaseFID + " for the field BASE_FID.  It replaced the previous value of " + strDfcResultSelectedFeatureExistingBaseFID + ".");
 
                 //null out variables...
                 arcFeatureSelectionDFC = null;
                 arcSelSetDFC = null;
                 arcFeatureSelectionUtrans = null;
                 arcSelSetUtrans = null;
-                arcCur_dfcLayer = null;
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFCur_DFC);
+                arcFCur_DFC = null;
                 arcQueryFilter_DFC_updateSplitOID = null;
 
                 // refresh the map
