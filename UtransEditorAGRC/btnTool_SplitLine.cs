@@ -163,7 +163,7 @@ namespace UtransEditorAGRC
 
                 if (!(arcSelectedFeature.Shape is IPolyline))
                 {
-                    MessageBox.Show("Selected feature must be a polyline.  Please select one polyline feature.","Select Polyline", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Selected feature must be a polyline.  Please select one polyline feature.", "Select Polyline", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     // deactivate the tool so it's no longer selected
                     clsGlobals.arcApplication.CurrentTool = null;
                     return;
@@ -225,11 +225,11 @@ namespace UtransEditorAGRC
                 // set some variables for capturing where the user's click location
                 ISnapEnvironment arcSnapEnvironment = clsGlobals.arcEditor as ISnapEnvironment;
                 //Boolean snapped = arcSnapEnvironment.SnapPoint()
-                
-                
-                IPoint arcSplitPoint = new ESRI.ArcGIS .Geometry.Point();
+
+
+                IPoint arcSplitPoint = new ESRI.ArcGIS.Geometry.Point();
                 arcSplitPoint = m_Position; // m_Position is set in the MouseMove event
-    
+
                 // the section of code below that is commented out was used before i converted over to gettting the snapping environment from the mouse movement event
                 // don't need it anymore, could be useful if i don't get the snapping point from the mouse movement event
                 //////IScreenDisplay arcScreenDisplay = arcActiveView.ScreenDisplay;
@@ -237,7 +237,7 @@ namespace UtransEditorAGRC
 
                 //////// snap to existing snap environment
                 //////arcSnapEnvironment.SnapPoint(m_Position);
-                
+
                 ////////arcSnapEnvironment.SnapPoint(arcSplitPoint);
 
                 //////// get the x and y from the user's mouse click - these are variables that are passed in via the OnMouseDown click event
@@ -413,9 +413,8 @@ namespace UtransEditorAGRC
                     return;
                 }
 
-
                 bool blnMixedParity = false;
-                
+
                 // check left address ranges //
                 // both of these values should retrun as false (if only odd numbers are on left) - meaning the to and from range for that side of the road is odd
                 bool blnLeftFromIsEven = isEven(lngFrom_Left_HouseNum);
@@ -433,13 +432,16 @@ namespace UtransEditorAGRC
                 // both ranges should be same
                 bool blnRightFromIsEven = isEven(lngFrom_Right_HouseNum);
                 bool blnRightToIsEven = isEven(lngTo_Right_HouseNum);
+                bool blnRightSideZeros = false;
+                bool blnLeftSideZeros = false;
+                bool blnBothSidesAllZeros = false;
 
                 // check if side of the road is both even or odd
                 if (blnRightFromIsEven != blnRightToIsEven)
-	            {
+                {
                     MessageBox.Show("The right side of the selected line has both even and odd numbers.  Ensure the right ranges are both either odd or even.", "Mixed Parity", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
-	            }
+                }
 
                 // verify the 2 sides of the polyline have opposite parity (unless one side has 2 zeros)
                 bool blnLeftIsEven = isEven(lngFrom_Left_HouseNum);
@@ -488,6 +490,26 @@ namespace UtransEditorAGRC
                         }
                     }
                 }
+                else if (blnOneSideHasZeros == true)
+                {
+                    // check what side has the zeros, and make sure the other side has values 
+                    //check left side for two zeros
+                    if (lngFrom_Left_HouseNum == 0 & lngTo_Left_HouseNum == 0)
+                    {
+                        blnLeftSideZeros = true;
+                    }
+                    //check right side for two zeros
+                    if (lngFrom_Right_HouseNum == 0 & lngTo_Right_HouseNum == 0)
+                    {
+                        blnRightSideZeros = true;
+                    }
+
+                    if (blnRightSideZeros & blnLeftSideZeros)
+                    {
+                        MessageBox.Show("Both sides of the selected line have zero range vales.  There must be valid numbers on at least one side of the road segment.", "Zero Address Ranges", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
 
 
                 // create the point that will be used to split the selected polyline //
@@ -508,10 +530,10 @@ namespace UtransEditorAGRC
                 // M and Z values, and works for geometric networks and topological ArcInfo coverages
                 IFeatureEdit arcFeatureEdit = arcParentFeature as IFeatureEdit;
                 ESRI.ArcGIS.esriSystem.ISet arcNewSet;
-                
+
                 // start an edit operation
                 clsGlobals.arcEditor.StartOperation();
-                
+
                 // split the segment
                 arcNewSet = arcFeatureEdit.Split(arcSplitPoint);
 
@@ -560,8 +582,26 @@ namespace UtransEditorAGRC
 
                 // fix the 4 house numbers that are not correct (main part of code). the other 4 numbers are
                 // already correct (the FROM_LEFT and FROM_RIGHT of the first feature, and the TO_LEFT and TO_RIGHT of the second feature).
-                long lngLeftNum = getInterpolatedHouseNumber(lngFrom_Left_HouseNum, lngTo_Left_HouseNum, dblDistAlongCurve);
-                long lngRightNum = getInterpolatedHouseNumber(lngFrom_Right_HouseNum, lngTo_Right_HouseNum, dblDistAlongCurve);
+                long lngLeftNum;
+                long lngRightNum;
+                if (blnLeftSideZeros)
+                {
+                    lngLeftNum = 0;
+                }
+                else
+                {
+                    lngLeftNum = getInterpolatedHouseNumber(lngFrom_Left_HouseNum, lngTo_Left_HouseNum, dblDistAlongCurve);
+                }
+                if (blnRightSideZeros)
+                {
+                    lngRightNum = 0;
+                }
+                else
+                {
+                    lngRightNum = getInterpolatedHouseNumber(lngFrom_Right_HouseNum, lngTo_Right_HouseNum, dblDistAlongCurve);
+                }
+
+
 
                 // the following 10 lines set the TO_LEFT and TO_RIGHT numbers of the first feature //
                 if (isNumeric_ACSName | isNumeric_StName) // there was an intersecting road with a numberic street name
@@ -574,13 +614,42 @@ namespace UtransEditorAGRC
 
                         if (blnIsEven_NumericStName) // intersecting street is even
                         {
-                            arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), intStreetName - 1);
-                            arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), intStreetName - 2);                            
+                            if (blnLeftSideZeros)
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), intStreetName - 1);
+                            }
+                            if (blnRightSideZeros)
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), intStreetName - 2);
+                            }
+
                         }
                         else // intersecting street is odd
                         {
-                            arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), intStreetName - 2);
-                            arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), intStreetName - 1);   
+                            if (blnLeftSideZeros)
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), intStreetName - 2);
+                            }
+                            if (blnRightSideZeros)
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), intStreetName - 1);
+                            }
                         }
                     }
                     else // use numeric values from acs alias field
@@ -590,13 +659,41 @@ namespace UtransEditorAGRC
 
                         if (blnIsEvenAcsName) // intersecting street is even
                         {
-                            arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), intACSName - 1);
-                            arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), intACSName - 2);
+                            if (blnLeftSideZeros)
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), intACSName - 1);
+                            }
+                            if (blnRightSideZeros)
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), intACSName - 2);
+                            }
                         }
                         else // intersecting street is odd
                         {
-                            arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), intACSName - 2);
-                            arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), intACSName - 1);
+                            if (blnLeftSideZeros)
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), intACSName - 2);
+                            }
+                            if (blnRightSideZeros)
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), intACSName - 1);
+                            }
                         }
                     }
                 }
@@ -617,7 +714,7 @@ namespace UtransEditorAGRC
                     else
                     {
                         arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), lngRightNum);
-                    }  
+                    }
                 }
 
                 //store feature1
@@ -639,13 +736,41 @@ namespace UtransEditorAGRC
 
                         if (blnIsEven_NumericStName) // intersecting street is even
                         {
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), intStreetName + 1);
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), intStreetName);
+                            if (blnLeftSideZeros)
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), intStreetName + 1);
+                            }
+                            if (blnRightSideZeros)
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), intStreetName);
+                            }
                         }
                         else // intersecting street is odd
                         {
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), intStreetName);
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), intStreetName + 1);
+                            if (blnLeftSideZeros)
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), intStreetName);
+                            }
+                            if (blnRightSideZeros)
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), intStreetName + 1);
+                            }
                         }
                     }
                     else  // use numeric values from acs alias field
@@ -655,13 +780,41 @@ namespace UtransEditorAGRC
 
                         if (blnIsEvenAcsName) // intersecting street is even
                         {
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), intACSName + 1);
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), intACSName);
+                            if (blnLeftSideZeros)
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), intACSName + 1);
+                            }
+                            if (blnRightSideZeros)
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), intACSName);
+                            }
                         }
                         else // intersecting street is odd
                         {
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), intACSName);
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), intACSName + 1);
+                            if (blnLeftSideZeros)
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), intACSName);
+                            }
+                            if (blnRightSideZeros)
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), 0);
+                            }
+                            else
+                            {
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), intACSName + 1);
+                            }
                         }
                     }
                 }
@@ -671,7 +824,14 @@ namespace UtransEditorAGRC
                     {
                         //long intLTADD = Convert.ToInt64(arcNewFeature1.get_Value(arcNewFeature1.Fields.FindField("L_T_ADD")));
                         //arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), arcNewFeature1.get_Value(arcNewFeature1.Fields.FindField("L_T_ADD") + 2));
-                        arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), lngFeat1_L_T_ADD + 2);
+                        if (blnLeftSideZeros)
+                        {
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), 0);
+                        }
+                        else
+                        {
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), lngFeat1_L_T_ADD + 2);
+                        }
                     }
                     else if (lngFrom_Left_HouseNum == lngTo_Left_HouseNum) // if parent had no range of house numbers
                     {
@@ -679,13 +839,27 @@ namespace UtransEditorAGRC
                     }
                     else // if house numbers run opposite to the polyline's digitized direction
                     {
-                        arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), lngFeat1_L_T_ADD - 2);
+                        if (blnLeftSideZeros)
+                        {
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), 0);
+                        }
+                        else
+                        {
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), lngFeat1_L_T_ADD - 2);
+                        }
                     }
 
                     // set the right_from for the feature 2
                     if (lngFrom_Right_HouseNum < lngTo_Right_HouseNum)
                     {
-                        arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), lngFeat1_R_T_ADD + 2);
+                        if (blnRightSideZeros)
+                        {
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), 0);
+                        }
+                        else
+                        {
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), lngFeat1_R_T_ADD + 2);
+                        }
                     }
                     else if (lngFrom_Right_HouseNum == lngTo_Right_HouseNum)
                     {
@@ -693,7 +867,15 @@ namespace UtransEditorAGRC
                     }
                     else // if house numbers run opposite to the polyline's digitized direction
                     {
-                        arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), lngFeat1_R_T_ADD - 2);
+                        if (blnRightSideZeros)
+                        {
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), 0);
+                        }
+                        else
+                        {
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), lngFeat1_R_T_ADD - 2);
+                        }
+
                     }
                 }
 
@@ -716,7 +898,7 @@ namespace UtransEditorAGRC
                 "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
                 "Error Location:" + Environment.NewLine + ex.StackTrace,
                 "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                
+
                 return;
             }
         }
@@ -724,7 +906,7 @@ namespace UtransEditorAGRC
 
 
         // this method tries to get a valid house number
-        public long TryToGetValidHouseNum(object strHouseNum) 
+        public long TryToGetValidHouseNum(object strHouseNum)
         {
             try
             {
@@ -739,9 +921,10 @@ namespace UtransEditorAGRC
                     long longHouseNum = Convert.ToInt64(intHouseNum);
 
                     // check if value is zero
-                    if (longHouseNum != 0)
+                    //if (longHouseNum != 0) - i changed this to now allow zeros, based on David's request to allow zeros on one side only (2/27/2017)
+                    if (longHouseNum >= 0)
                     {
-                       return longHouseNum; 
+                        return longHouseNum;
                     }
                     else
                     {
@@ -752,7 +935,7 @@ namespace UtransEditorAGRC
                 {
                     return -1;
                 }
-            } 
+            }
             catch (Exception ex)
             {
                 MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
@@ -767,7 +950,7 @@ namespace UtransEditorAGRC
 
 
         // check if number is even
-        public bool isEven(long longHseNumber) 
+        public bool isEven(long longHseNumber)
         {
             try
             {
@@ -787,10 +970,10 @@ namespace UtransEditorAGRC
                 "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
                 "Error Location:" + Environment.NewLine + ex.StackTrace,
                 "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                
+
                 // retrun false
                 return false;
-            }   
+            }
         }
 
 
