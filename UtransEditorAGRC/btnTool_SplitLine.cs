@@ -870,7 +870,5 @@ namespace UtransEditorAGRC
                 features.Add(feature);
             return features;
         }
-
-
     }
 }
