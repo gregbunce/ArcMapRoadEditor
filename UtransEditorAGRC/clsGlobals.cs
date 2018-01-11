@@ -162,7 +162,5 @@ namespace UtransEditorAGRC
             get;
             set;
         }
-
-
     }
 }
