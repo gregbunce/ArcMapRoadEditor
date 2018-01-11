@@ -19,8 +19,6 @@ namespace UtransEditorAGRC
             set;
         }
 
-
-
         public static IEditor3 arcEditor
         {
             get;
