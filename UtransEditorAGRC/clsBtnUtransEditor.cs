@@ -77,7 +77,7 @@ namespace UtransEditorAGRC
             //
             base.m_category = "AGRC"; //localizable text
             base.m_caption = "UTRANS Editor";  //localizable text
-            base.m_message = "This tool assists in the UTRANS update process.  Requires the following layers as named in the map: ''UTRANS.TRANSADMIN.StatewideStreets'', ''COUNTY_STREETS'', ''DFC_RESULT''.  Also, must be editing on UTRANS layer.";  //localizable text 
+            base.m_message = "This tool assists in the UTRANS update process.  Requires the following layers as named in the map: ''UTRANS.TRANSADMIN.Roads_Edit'', ''COUNTY_STREETS'', ''DFC_RESULT''.  Also, must be editing on UTRANS layer.";  //localizable text 
             base.m_toolTip = "AGRC UTRANS Editor Tool";  //localizable text 
             base.m_name = "UtransEditorTool";   //unique id, non-localizable (e.g. "MyCategory_ArcMapCommand")
             base.m_bitmap = Properties.Resources.clsBtnUtransEditor;
@@ -140,7 +140,7 @@ namespace UtransEditorAGRC
                     //loop through all the layers in the map and see if streets is there and editable
                     for (int i = 0; i < arcMapp.LayerCount; i++)
                     {
-                        if (arcMapp.get_Layer(i).Name.ToUpper() == "UTRANS.TRANSADMIN.STATEWIDESTREETS")
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "UTRANS.TRANSADMIN.ROADS_EDIT")
                         {
                             if (arcEditLayers.IsEditable(arcMapp.get_Layer(i) as IFeatureLayer))
                             {

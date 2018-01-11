@@ -131,7 +131,7 @@ namespace UtransEditorAGRC
                     }
                     if (arcFL_UtransStreet == null)
                     {
-                        MessageBox.Show("Please select the correct layer for UTRANS.StatewideStreets", "Layer Name Issue", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Please select the correct layer for UTRANS.Roads_Edit", "Layer Name Issue", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 

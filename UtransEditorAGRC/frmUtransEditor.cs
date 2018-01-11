@@ -159,7 +159,7 @@ namespace UtransEditorAGRC
                             IFeatureLayer arcFLayer = arcMapp.get_Layer(i) as IFeatureLayer;
                             IFeatureClass arcFClass = arcFLayer.FeatureClass;
                             IObjectClass arcObjClass = arcFClass as IObjectClass;
-                            if (arcObjClass.AliasName.ToString().ToUpper() == "UTRANS.TRANSADMIN.STATEWIDESTREETS")
+                            if (arcObjClass.AliasName.ToString().ToUpper() == "UTRANS.TRANSADMIN.ROADS_EDIT")
                             {
                                 clsGlobals.arcGeoFLayerUtransStreets = arcMapp.get_Layer(i) as IGeoFeatureLayer;
                                 //MessageBox.Show("referenced utrans streets");
@@ -212,7 +212,7 @@ namespace UtransEditorAGRC
                 }
                 else if (clsGlobals.arcGeoFLayerUtransStreets == null)
                 {
-                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'UTRANS.TRANSADMIN.STATEWIDESTREETS' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'UTRANS.TRANSADMIN.ROADS_EDIT' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Close();
                     return;
                 }
@@ -2940,7 +2940,7 @@ namespace UtransEditorAGRC
                 }
                 else
                 {
-                    MessageBox.Show("Please select only ONE feature from the UTRANS.TRANSADMIN.StatewideStreets layer.  Note that the feature must overlap the selected DFC_RESULT segment.");
+                    MessageBox.Show("Please select only ONE feature from the UTRANS.TRANSADMIN.Roads_Edit layer.  Note that the feature must overlap the selected DFC_RESULT segment.");
                     return;
                 }
 
