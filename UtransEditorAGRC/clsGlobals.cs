@@ -115,25 +115,25 @@ namespace UtransEditorAGRC
 
         }
 
-        public static string strCountyL_F_Add
+        public static string strCountyFROMADDR_L
         {
             get;
             set;
         }
 
-        public static string strCountyL_T_Add
+        public static string strCountyTOADDR_L
         {
             get;
             set;
         }
 
-        public static string strCountyR_F_Add
+        public static string strCountyFROMADDR_R
         {
             get;
             set;
         }
 
-        public static string strCountyR_T_Add
+        public static string strCountyTOADDR_R
         {
             get;
             set;

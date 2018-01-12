@@ -192,10 +192,10 @@ namespace UtransEditorAGRC
                             {
                                 //populate the utrans segment with the needed values
                                 arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("UtransSegment"), "| " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("L_F_ADD")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("L_T_ADD")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("R_F_ADD")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("R_T_ADD")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("FROMADDR_L")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("TOADDR_L")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("FROMADDR_R")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("TOADDR_R")).ToString().Trim() + " | " +
                                     arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("PREDIR")).ToString().Trim() + " | " +
                                     arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("STREETNAME")).ToString().Trim() + " | " +
                                     arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("STREETTYPE")).ToString().Trim() + " | " +
@@ -237,10 +237,10 @@ namespace UtransEditorAGRC
                         {
                             //populate the utrans segment with the needed values
                             arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("CountySegment"), "| " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("L_F_ADD")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("L_T_ADD")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("R_F_ADD")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("R_T_ADD")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("FROMADDR_L")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("TOADDR_L")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("FROMADDR_R")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("TOADDR_R")).ToString().Trim() + " | " +
                                 arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("PREDIR")).ToString().Trim() + " | " +
                                 arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("STREETNAME")).ToString().Trim() + " | " +
                                 arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("STREETTYPE")).ToString().Trim() + " | " +

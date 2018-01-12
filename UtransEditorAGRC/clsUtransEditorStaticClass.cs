@@ -231,10 +231,10 @@ namespace UtransEditorAGRC
                 row.Elements.Add(new ListEntry.Custom() { LocalName = "agrcnotes", Value = clsGlobals.strUserInputForSpreadsheet.ToString().Trim() });
                 row.Elements.Add(new ListEntry.Custom() { LocalName = "agrcsegment", Value = clsGlobals.strAgrcSegment.ToString().Trim() });
                 row.Elements.Add(new ListEntry.Custom() { LocalName = "cntysegment", Value = clsGlobals.strCountySegmentTrimed });
-                row.Elements.Add(new ListEntry.Custom() { LocalName = "leftfrom", Value = clsGlobals.strCountyL_F_Add });
-                row.Elements.Add(new ListEntry.Custom() { LocalName = "leftto", Value = clsGlobals.strCountyL_T_Add });
-                row.Elements.Add(new ListEntry.Custom() { LocalName = "rightfrom", Value = clsGlobals.strCountyR_F_Add });
-                row.Elements.Add(new ListEntry.Custom() { LocalName = "rightto", Value = clsGlobals.strCountyR_T_Add });
+                row.Elements.Add(new ListEntry.Custom() { LocalName = "leftfrom", Value = clsGlobals.strCountyFROMADDR_L });
+                row.Elements.Add(new ListEntry.Custom() { LocalName = "leftto", Value = clsGlobals.strCountyTOADDR_L });
+                row.Elements.Add(new ListEntry.Custom() { LocalName = "rightfrom", Value = clsGlobals.strCountyFROMADDR_R });
+                row.Elements.Add(new ListEntry.Custom() { LocalName = "rightto", Value = clsGlobals.strCountyTOADDR_R });
                 row.Elements.Add(new ListEntry.Custom() { LocalName = "city", Value = clsGlobals.strGoogleSpreadsheetCityField });
                 // Send the new row to the API for insertion.
                 service.Insert(listFeed, row);

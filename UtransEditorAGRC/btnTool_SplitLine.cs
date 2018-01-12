@@ -354,10 +354,10 @@ namespace UtransEditorAGRC
             try
             {
                 // set address field range fields
-                string strLeftFromName = "L_F_ADD";
-                string strLeftToName = "L_T_ADD";
-                string strRightFromName = "R_F_ADD";
-                string strRightToName = "R_T_ADD";
+                string strLeftFromName = "FROMADDR_L";
+                string strLeftToName = "TOADDR_L";
+                string strRightFromName = "FROMADDR_R";
+                string strRightToName = "TOADDR_R";
                 long longLeftFromNum;
                 long longLeftToNum;
                 long longRightFromNum;
@@ -402,10 +402,10 @@ namespace UtransEditorAGRC
 
                 // try to get a valid house number from each of the 4 house number fields.
                 // this is especially important if the fields are Text, which is common for geocoding data.
-                long lngFrom_Left_HouseNum = TryToGetValidHouseNum(arcSelectedFeature.get_Value(arcSelectedFeature.Fields.FindField("L_F_ADD")).ToString().Trim());
-                long lngFrom_Right_HouseNum = TryToGetValidHouseNum(arcSelectedFeature.get_Value(arcSelectedFeature.Fields.FindField("R_F_ADD")).ToString().Trim());
-                long lngTo_Left_HouseNum = TryToGetValidHouseNum(arcSelectedFeature.get_Value(arcSelectedFeature.Fields.FindField("L_T_ADD")).ToString().Trim());
-                long lngTo_Right_HouseNum = TryToGetValidHouseNum(arcSelectedFeature.get_Value(arcSelectedFeature.Fields.FindField("R_T_ADD")).ToString().Trim());
+                long lngFrom_Left_HouseNum = TryToGetValidHouseNum(arcSelectedFeature.get_Value(arcSelectedFeature.Fields.FindField("FROMADDR_L")).ToString().Trim());
+                long lngFrom_Right_HouseNum = TryToGetValidHouseNum(arcSelectedFeature.get_Value(arcSelectedFeature.Fields.FindField("FROMADDR_R")).ToString().Trim());
+                long lngTo_Left_HouseNum = TryToGetValidHouseNum(arcSelectedFeature.get_Value(arcSelectedFeature.Fields.FindField("TOADDR_L")).ToString().Trim());
+                long lngTo_Right_HouseNum = TryToGetValidHouseNum(arcSelectedFeature.get_Value(arcSelectedFeature.Fields.FindField("TOADDR_R")).ToString().Trim());
 
                 if (lngFrom_Left_HouseNum == -1 | lngFrom_Right_HouseNum == -1 | lngTo_Left_HouseNum == -1 | lngTo_Right_HouseNum == -1)
                 {
@@ -616,19 +616,19 @@ namespace UtransEditorAGRC
                         {
                             if (blnLeftSideZeros)
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), 0);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), 0);
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), intStreetName - 1);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), intStreetName - 1);
                             }
                             if (blnRightSideZeros)
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), 0);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), 0);
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), intStreetName - 2);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), intStreetName - 2);
                             }
 
                         }
@@ -636,19 +636,19 @@ namespace UtransEditorAGRC
                         {
                             if (blnLeftSideZeros)
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), 0);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), 0);
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), intStreetName - 2);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), intStreetName - 2);
                             }
                             if (blnRightSideZeros)
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), 0);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), 0);
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), intStreetName - 1);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), intStreetName - 1);
                             }
                         }
                     }
@@ -661,38 +661,38 @@ namespace UtransEditorAGRC
                         {
                             if (blnLeftSideZeros)
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), 0);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), 0);
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), intACSName - 1);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), intACSName - 1);
                             }
                             if (blnRightSideZeros)
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), 0);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), 0);
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), intACSName - 2);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), intACSName - 2);
                             }
                         }
                         else // intersecting street is odd
                         {
                             if (blnLeftSideZeros)
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), 0);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), 0);
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), intACSName - 2);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), intACSName - 2);
                             }
                             if (blnRightSideZeros)
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), 0);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), 0);
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), intACSName - 1);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), intACSName - 1);
                             }
                         }
                     }
@@ -701,19 +701,19 @@ namespace UtransEditorAGRC
                 {
                     if (lngFrom_Left_HouseNum == lngTo_Left_HouseNum) // if parent had no range of house numbers
                     {
-                        arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), lngFrom_Left_HouseNum);
+                        arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), lngFrom_Left_HouseNum);
                     }
                     else
                     {
-                        arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("L_T_ADD"), lngLeftNum);
+                        arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), lngLeftNum);
                     }
                     if (lngFrom_Right_HouseNum == lngTo_Right_HouseNum)
                     {
-                        arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), lngFrom_Right_HouseNum);
+                        arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), lngFrom_Right_HouseNum);
                     }
                     else
                     {
-                        arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("R_T_ADD"), lngRightNum);
+                        arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), lngRightNum);
                     }
                 }
 
@@ -721,8 +721,8 @@ namespace UtransEditorAGRC
                 arcNewFeature1.Store();
 
                 //get field values for address ranges
-                long lngFeat1_L_T_ADD = Convert.ToInt64(arcNewFeature1.get_Value(arcNewFeature1.Fields.FindField("L_T_ADD")));
-                long lngFeat1_R_T_ADD = Convert.ToInt64(arcNewFeature1.get_Value(arcNewFeature1.Fields.FindField("R_T_ADD")));
+                long lngFeat1_TOADDR_L = Convert.ToInt64(arcNewFeature1.get_Value(arcNewFeature1.Fields.FindField("TOADDR_L")));
+                long lngFeat1_TOADDR_R = Convert.ToInt64(arcNewFeature1.get_Value(arcNewFeature1.Fields.FindField("TOADDR_R")));
 
                 // the following lines set the FROM_LEFT and FROM_RIGHT numbers of the second feature
                 // set the left_from
@@ -738,38 +738,38 @@ namespace UtransEditorAGRC
                         {
                             if (blnLeftSideZeros)
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), 0);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), 0);
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), intStreetName + 1);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), intStreetName + 1);
                             }
                             if (blnRightSideZeros)
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), 0);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), 0);
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), intStreetName);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), intStreetName);
                             }
                         }
                         else // intersecting street is odd
                         {
                             if (blnLeftSideZeros)
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), 0);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), 0);
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), intStreetName);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), intStreetName);
                             }
                             if (blnRightSideZeros)
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), 0);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), 0);
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), intStreetName + 1);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), intStreetName + 1);
                             }
                         }
                     }
@@ -782,38 +782,38 @@ namespace UtransEditorAGRC
                         {
                             if (blnLeftSideZeros)
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), 0);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), 0);
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), intACSName + 1);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), intACSName + 1);
                             }
                             if (blnRightSideZeros)
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), 0);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), 0);
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), intACSName);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), intACSName);
                             }
                         }
                         else // intersecting street is odd
                         {
                             if (blnLeftSideZeros)
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), 0);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), 0);
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), intACSName);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), intACSName);
                             }
                             if (blnRightSideZeros)
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), 0);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), 0);
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), intACSName + 1);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), intACSName + 1);
                             }
                         }
                     }
@@ -822,30 +822,30 @@ namespace UtransEditorAGRC
                 {
                     if (lngFrom_Left_HouseNum < lngTo_Left_HouseNum)
                     {
-                        //long intLTADD = Convert.ToInt64(arcNewFeature1.get_Value(arcNewFeature1.Fields.FindField("L_T_ADD")));
-                        //arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), arcNewFeature1.get_Value(arcNewFeature1.Fields.FindField("L_T_ADD") + 2));
+                        //long intLTADD = Convert.ToInt64(arcNewFeature1.get_Value(arcNewFeature1.Fields.FindField("TOADDR_L")));
+                        //arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), arcNewFeature1.get_Value(arcNewFeature1.Fields.FindField("TOADDR_L") + 2));
                         if (blnLeftSideZeros)
                         {
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), 0);
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), 0);
                         }
                         else
                         {
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), lngFeat1_L_T_ADD + 2);
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), lngFeat1_TOADDR_L + 2);
                         }
                     }
                     else if (lngFrom_Left_HouseNum == lngTo_Left_HouseNum) // if parent had no range of house numbers
                     {
-                        arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), lngFrom_Left_HouseNum);
+                        arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), lngFrom_Left_HouseNum);
                     }
                     else // if house numbers run opposite to the polyline's digitized direction
                     {
                         if (blnLeftSideZeros)
                         {
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), 0);
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), 0);
                         }
                         else
                         {
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("L_F_ADD"), lngFeat1_L_T_ADD - 2);
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), lngFeat1_TOADDR_L - 2);
                         }
                     }
 
@@ -854,26 +854,26 @@ namespace UtransEditorAGRC
                     {
                         if (blnRightSideZeros)
                         {
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), 0);
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), 0);
                         }
                         else
                         {
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), lngFeat1_R_T_ADD + 2);
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), lngFeat1_TOADDR_R + 2);
                         }
                     }
                     else if (lngFrom_Right_HouseNum == lngTo_Right_HouseNum)
                     {
-                        arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), lngFrom_Right_HouseNum);
+                        arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), lngFrom_Right_HouseNum);
                     }
                     else // if house numbers run opposite to the polyline's digitized direction
                     {
                         if (blnRightSideZeros)
                         {
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), 0);
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), 0);
                         }
                         else
                         {
-                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("R_F_ADD"), lngFeat1_R_T_ADD - 2);
+                            arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), lngFeat1_TOADDR_R - 2);
                         }
 
                     }

@@ -28,10 +28,10 @@ namespace UtransEditorAGRC
         // create a list of controls that contains address pieces for managing edits
         private List<Control> ctrlList = new List<Control>();
 
-        string txtUtransInitialL_F_Add;
+        string txtUtransInitialFROMADDR_L;
         string txtUtransInitialL_TAdd;
-        string txtUtransInitialR_F_Add;
-        string txtUtransInitialR_T_Add;
+        string txtUtransInitialFROMADDR_R;
+        string txtUtransInitialTOADDR_R;
         string txtUtransInitialPreDir;
         string txtUtransInitialStName;
         string txtUtransInitialStType;
@@ -257,19 +257,19 @@ namespace UtransEditorAGRC
                 ctrlList.Add(this.txtCountyAlias1Type);
                 ctrlList.Add(this.txtCountyAlias2);
                 ctrlList.Add(this.txtCountyAlias2Type);
-                ctrlList.Add(this.txtCountyL_F_Add);
-                ctrlList.Add(this.txtCountyL_T_Add);
+                ctrlList.Add(this.txtCountyFROMADDR_L);
+                ctrlList.Add(this.txtCountyTOADDR_L);
                 ctrlList.Add(this.txtCountyPreDir);
-                ctrlList.Add(this.txtCountyR_F_Add);
-                ctrlList.Add(this.txtCountyR_T_Add);
+                ctrlList.Add(this.txtCountyFROMADDR_R);
+                ctrlList.Add(this.txtCountyTOADDR_R);
                 ctrlList.Add(this.txtCountyStName);
                 ctrlList.Add(this.txtCountyStType);
                 ctrlList.Add(this.txtCountySufDir);
-                ctrlList.Add(this.txtUtranL_F_Add);
-                ctrlList.Add(this.txtUtranL_T_Add);
+                ctrlList.Add(this.txtUtranFROMADDR_L);
+                ctrlList.Add(this.txtUtranTOADDR_L);
                 ctrlList.Add(this.txtUtranPreDir);
-                ctrlList.Add(this.txtUtranR_F_Add);
-                ctrlList.Add(this.txtUtranR_T_Add);
+                ctrlList.Add(this.txtUtranFROMADDR_R);
+                ctrlList.Add(this.txtUtranTOADDR_R);
                 ctrlList.Add(this.txtUtransAcsName);
                 ctrlList.Add(this.txtUtransAcsSuf);
                 ctrlList.Add(this.txtUtransAlias1);
@@ -344,11 +344,11 @@ namespace UtransEditorAGRC
                 groupBox5.Font = fontLabelRegular;
 
                 //enable the textboxes - in case last record was "N" and were disabled
-                ////////txtUtranL_F_Add.ReadOnly = false;
-                ////////txtUtranL_T_Add.ReadOnly = false;
+                ////////txtUtranFROMADDR_L.ReadOnly = false;
+                ////////txtUtranTOADDR_L.ReadOnly = false;
                 ////////txtUtranPreDir.ReadOnly = false;
-                ////////txtUtranR_F_Add.ReadOnly = false;
-                ////////txtUtranR_T_Add.ReadOnly = false;
+                ////////txtUtranFROMADDR_R.ReadOnly = false;
+                ////////txtUtranTOADDR_R.ReadOnly = false;
                 ////////txtUtransAcsName.ReadOnly = false;
                 ////////txtUtransAcsSuf.ReadOnly = false;
                 ////////txtUtransAlias1.ReadOnly = false;
@@ -397,10 +397,10 @@ namespace UtransEditorAGRC
 
 
                 //clear utrans existing variables - for reuse
-                txtUtransInitialL_F_Add = null;
+                txtUtransInitialFROMADDR_L = null;
                 txtUtransInitialL_TAdd = null;;
-                txtUtransInitialR_F_Add = null;
-                txtUtransInitialR_T_Add = null;
+                txtUtransInitialFROMADDR_R = null;
+                txtUtransInitialTOADDR_R = null;
                 txtUtransInitialPreDir = null;
                 txtUtransInitialStName = null;
                 txtUtransInitialStType = null;
@@ -562,10 +562,10 @@ namespace UtransEditorAGRC
                 arcActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, null, null);
 
                 //populate variables to hold the initial textbox text for utrans streets - in case the user wants to revert to it
-                txtUtransInitialL_F_Add = txtUtranL_F_Add.Text;
-                txtUtransInitialL_TAdd = txtUtranL_T_Add.Text;
-                txtUtransInitialR_F_Add = txtUtranR_F_Add.Text;
-                txtUtransInitialR_T_Add = txtUtranR_T_Add.Text;
+                txtUtransInitialFROMADDR_L = txtUtranFROMADDR_L.Text;
+                txtUtransInitialL_TAdd = txtUtranTOADDR_L.Text;
+                txtUtransInitialFROMADDR_R = txtUtranFROMADDR_R.Text;
+                txtUtransInitialTOADDR_R = txtUtranTOADDR_R.Text;
                 txtUtransInitialPreDir = txtUtranPreDir.Text;
                 txtUtransInitialStName = txtUtranStName.Text;
                 txtUtransInitialStType = txtUtranStType.Text;
@@ -597,11 +597,11 @@ namespace UtransEditorAGRC
                 if (strChangeType == "N" & strUtransOID == "-1")
                 {
                     //make the textboxes a light red color, indicating there's no attributes for this feature
-                    txtUtranL_F_Add.BackColor = Color.LightGray;
-                    txtUtranL_T_Add.BackColor = Color.LightGray;
+                    txtUtranFROMADDR_L.BackColor = Color.LightGray;
+                    txtUtranTOADDR_L.BackColor = Color.LightGray;
                     txtUtranPreDir.BackColor = Color.LightGray;
-                    txtUtranR_F_Add.BackColor = Color.LightGray;
-                    txtUtranR_T_Add.BackColor = Color.LightGray;
+                    txtUtranFROMADDR_R.BackColor = Color.LightGray;
+                    txtUtranTOADDR_R.BackColor = Color.LightGray;
                     txtUtransAcsName.BackColor = Color.LightGray;
                     txtUtransAcsSuf.BackColor = Color.LightGray;
                     txtUtransAlias1.BackColor = Color.LightGray;
@@ -613,11 +613,11 @@ namespace UtransEditorAGRC
                     txtUtranSufDir.BackColor = Color.LightGray;
 
                     //i could change this to loop the control list and update all the controls with a tag like utrans
-                    ////////txtUtranL_F_Add.ReadOnly = true;
-                    ////////txtUtranL_T_Add.ReadOnly = true;
+                    ////////txtUtranFROMADDR_L.ReadOnly = true;
+                    ////////txtUtranTOADDR_L.ReadOnly = true;
                     ////////txtUtranPreDir.ReadOnly = true;
-                    ////////txtUtranR_F_Add.ReadOnly = true;
-                    ////////txtUtranR_T_Add.ReadOnly = true;
+                    ////////txtUtranFROMADDR_R.ReadOnly = true;
+                    ////////txtUtranTOADDR_R.ReadOnly = true;
                     ////////txtUtransAcsName.ReadOnly = true;
                     ////////txtUtransAcsSuf.ReadOnly = true;
                     ////////txtUtransAlias1.ReadOnly = true;
@@ -797,35 +797,35 @@ namespace UtransEditorAGRC
                     //lblPreDir.Font = fontLabelDataMismatch;
                     //boolHadDifferencePreDir = true;
                 }
-                if (txtCountyL_F_Add.Text.ToString() != txtUtranL_F_Add.Text.ToString())
+                if (txtCountyFROMADDR_L.Text.ToString() != txtUtranFROMADDR_L.Text.ToString())
                 {
-                    txtUtranL_F_Add.BackColor = Color.LightYellow;
-                    txtCountyL_F_Add.BackColor = Color.LightYellow;
+                    txtUtranFROMADDR_L.BackColor = Color.LightYellow;
+                    txtCountyFROMADDR_L.BackColor = Color.LightYellow;
                     //lblLeftFrom.Font = fontLabelDataMismatch;
                     //capture the curent text - incase we want to revert to it
-                    //txtUtransExistingL_F_Add = txtUtranL_F_Add.Text;
-                    //boolHadDifferenceL_F_Add = true;
+                    //txtUtransExistingFROMADDR_L = txtUtranFROMADDR_L.Text;
+                    //boolHadDifferenceFROMADDR_L = true;
                 }
-                if (txtCountyL_T_Add.Text.ToString() != txtUtranL_T_Add.Text.ToString())
+                if (txtCountyTOADDR_L.Text.ToString() != txtUtranTOADDR_L.Text.ToString())
                 {
-                    txtUtranL_T_Add.BackColor = Color.LightYellow;
-                    txtCountyL_T_Add.BackColor = Color.LightYellow;
+                    txtUtranTOADDR_L.BackColor = Color.LightYellow;
+                    txtCountyTOADDR_L.BackColor = Color.LightYellow;
                     //lblLeftTo.Font = fontLabelDataMismatch;
-                    //boolHadDifferenceL_T_Add = true;
+                    //boolHadDifferenceTOADDR_L = true;
                 }
-                if (txtCountyR_F_Add.Text.ToString() != txtUtranR_F_Add.Text.ToString())
+                if (txtCountyFROMADDR_R.Text.ToString() != txtUtranFROMADDR_R.Text.ToString())
                 {
-                    txtUtranR_F_Add.BackColor = Color.LightYellow;
-                    txtCountyR_F_Add.BackColor = Color.LightYellow;
+                    txtUtranFROMADDR_R.BackColor = Color.LightYellow;
+                    txtCountyFROMADDR_R.BackColor = Color.LightYellow;
                     //lblRightFrom.Font = fontLabelDataMismatch;
-                    //boolHadDifferenceR_F_Add = true;
+                    //boolHadDifferenceFROMADDR_R = true;
                 }
-                if (txtCountyR_T_Add.Text.ToString() != txtUtranR_T_Add.Text.ToString())
+                if (txtCountyTOADDR_R.Text.ToString() != txtUtranTOADDR_R.Text.ToString())
                 {
-                    txtUtranR_T_Add.BackColor = Color.LightYellow;
-                    txtCountyR_T_Add.BackColor = Color.LightYellow;
+                    txtUtranTOADDR_R.BackColor = Color.LightYellow;
+                    txtCountyTOADDR_R.BackColor = Color.LightYellow;
                     //lblRightTo.Font = fontLabelDataMismatch;
-                    //boolHadDifferenceR_T_Add = true;
+                    //boolHadDifferenceTOADDR_R = true;
                 }
                 if (txtCountyAcsName.Text.ToUpper().ToString() != txtUtransAcsName.Text.ToUpper().ToString())
                 {
@@ -953,62 +953,62 @@ namespace UtransEditorAGRC
                 //get a reference to the label that was doublecliked
                 Label clickedLabel = sender as Label;
 
-                // L_F_ADD
-                if (clickedLabel.Text == "L_F_ADD")
+                // FROMADDR_L
+                if (clickedLabel.Text == "FROMADDR_L")
                 {
-                    if (txtUtranL_F_Add.Text != txtCountyL_F_Add.Text)
+                    if (txtUtranFROMADDR_L.Text != txtCountyFROMADDR_L.Text)
                     {
-                        txtUtranL_F_Add.Text = txtCountyL_F_Add.Text;
+                        txtUtranFROMADDR_L.Text = txtCountyFROMADDR_L.Text;
                         return;
                     }
-                    if (txtUtranL_F_Add.Text == txtCountyL_F_Add.Text)
+                    if (txtUtranFROMADDR_L.Text == txtCountyFROMADDR_L.Text)
                     {
-                        txtUtranL_F_Add.Text = txtUtransInitialL_F_Add;
+                        txtUtranFROMADDR_L.Text = txtUtransInitialFROMADDR_L;
                         return;
                     }
                 }
 
-                // L_T_ADD
-                if (clickedLabel.Text == "L_T_ADD")
+                // TOADDR_L
+                if (clickedLabel.Text == "TOADDR_L")
                 {
-                    if (txtUtranL_T_Add.Text != txtCountyL_T_Add.Text)
+                    if (txtUtranTOADDR_L.Text != txtCountyTOADDR_L.Text)
                     {
-                        txtUtranL_T_Add.Text = txtCountyL_T_Add.Text;
+                        txtUtranTOADDR_L.Text = txtCountyTOADDR_L.Text;
                         return;
                     }
-                    if (txtUtranL_T_Add.Text == txtCountyL_T_Add.Text)
+                    if (txtUtranTOADDR_L.Text == txtCountyTOADDR_L.Text)
                     {
-                        txtUtranL_T_Add.Text = txtUtransInitialL_TAdd;
+                        txtUtranTOADDR_L.Text = txtUtransInitialL_TAdd;
                         return;
                     }
                 }
 
-                // R_F_ADD
-                if (clickedLabel.Text == "R_F_ADD")
+                // FROMADDR_R
+                if (clickedLabel.Text == "FROMADDR_R")
                 {
-                    if (txtUtranR_F_Add.Text != txtCountyR_F_Add.Text)
+                    if (txtUtranFROMADDR_R.Text != txtCountyFROMADDR_R.Text)
                     {
-                        txtUtranR_F_Add.Text = txtCountyR_F_Add.Text;
+                        txtUtranFROMADDR_R.Text = txtCountyFROMADDR_R.Text;
                         return;
                     }
-                    if (txtUtranR_F_Add.Text == txtCountyR_F_Add.Text)
+                    if (txtUtranFROMADDR_R.Text == txtCountyFROMADDR_R.Text)
                     {
-                        txtUtranR_F_Add.Text = txtUtransInitialR_F_Add;
+                        txtUtranFROMADDR_R.Text = txtUtransInitialFROMADDR_R;
                         return;
                     }
                 }
 
-                // R_T_ADD
-                if (clickedLabel.Text == "R_T_ADD")
+                // TOADDR_R
+                if (clickedLabel.Text == "TOADDR_R")
                 {
-                    if (txtUtranR_T_Add.Text != txtCountyR_T_Add.Text)
+                    if (txtUtranTOADDR_R.Text != txtCountyTOADDR_R.Text)
                     {
-                        txtUtranR_T_Add.Text = txtCountyR_T_Add.Text;
+                        txtUtranTOADDR_R.Text = txtCountyTOADDR_R.Text;
                         return;
                     }
-                    if (txtUtranR_T_Add.Text == txtCountyR_T_Add.Text)
+                    if (txtUtranTOADDR_R.Text == txtCountyTOADDR_R.Text)
                     {
-                        txtUtranR_T_Add.Text = txtUtransInitialR_T_Add;
+                        txtUtranTOADDR_R.Text = txtUtransInitialTOADDR_R;
                         return;
                     }
                 }
@@ -1177,23 +1177,23 @@ namespace UtransEditorAGRC
 
         // the following methods handle textbox text changes // 
 
-        // L_F_ADD
-        private void txtUtranL_F_Add_TextChanged(object sender, EventArgs e)
+        // FROMADDR_L
+        private void txtUtranFROMADDR_L_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtranL_F_Add.Text.ToUpper().ToString() != txtCountyL_F_Add.Text.ToUpper().ToString())
+                if (txtUtranFROMADDR_L.Text.ToUpper().ToString() != txtCountyFROMADDR_L.Text.ToUpper().ToString())
                 {
-                    txtUtranL_F_Add.BackColor = Color.LightYellow;
-                    txtCountyL_F_Add.BackColor = Color.LightYellow;
+                    txtUtranFROMADDR_L.BackColor = Color.LightYellow;
+                    txtCountyFROMADDR_L.BackColor = Color.LightYellow;
                 }
-                else if (txtUtranL_F_Add.Text.ToUpper().ToString() == txtCountyL_F_Add.Text.ToUpper().ToString())
+                else if (txtUtranFROMADDR_L.Text.ToUpper().ToString() == txtCountyFROMADDR_L.Text.ToUpper().ToString())
                 {
-                    txtUtranL_F_Add.BackColor = Color.White;
-                    txtCountyL_F_Add.BackColor = Color.White;
+                    txtUtranFROMADDR_L.BackColor = Color.White;
+                    txtCountyFROMADDR_L.BackColor = Color.White;
                 }
 
-                if (txtUtranL_F_Add.Text != txtUtransInitialL_F_Add)
+                if (txtUtranFROMADDR_L.Text != txtUtransInitialFROMADDR_L)
                 {
                     lblLeftFrom.Font = fontLabelHasEdits;
                     //lblLeftFrom.ForeColor = Color.LightSalmon;
@@ -1220,23 +1220,23 @@ namespace UtransEditorAGRC
             }
         }
 
-        // L_T_ADD
-        private void txtUtranL_T_Add_TextChanged(object sender, EventArgs e)
+        // TOADDR_L
+        private void txtUtranTOADDR_L_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtranL_T_Add.Text.ToUpper().ToString() != txtCountyL_T_Add.Text.ToUpper().ToString())
+                if (txtUtranTOADDR_L.Text.ToUpper().ToString() != txtCountyTOADDR_L.Text.ToUpper().ToString())
                 {
-                    txtUtranL_T_Add.BackColor = Color.LightYellow;
-                    txtCountyL_T_Add.BackColor = Color.LightYellow;
+                    txtUtranTOADDR_L.BackColor = Color.LightYellow;
+                    txtCountyTOADDR_L.BackColor = Color.LightYellow;
                 }
-                else if (txtUtranL_T_Add.Text.ToUpper().ToString() == txtCountyL_T_Add.Text.ToUpper().ToString())
+                else if (txtUtranTOADDR_L.Text.ToUpper().ToString() == txtCountyTOADDR_L.Text.ToUpper().ToString())
                 {
-                    txtUtranL_T_Add.BackColor = Color.White;
-                    txtCountyL_T_Add.BackColor = Color.White;
+                    txtUtranTOADDR_L.BackColor = Color.White;
+                    txtCountyTOADDR_L.BackColor = Color.White;
                 }
 
-                if (txtUtranL_T_Add.Text != txtUtransInitialL_TAdd)
+                if (txtUtranTOADDR_L.Text != txtUtransInitialL_TAdd)
                 {
                     lblLeftTo.Font = fontLabelHasEdits;
                     //lblLeftTo.ForeColor = Color.LightSalmon;
@@ -1263,23 +1263,23 @@ namespace UtransEditorAGRC
             }
         }
 
-        // R_F_ADD
-        private void txtUtranR_F_Add_TextChanged(object sender, EventArgs e)
+        // FROMADDR_R
+        private void txtUtranFROMADDR_R_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtranR_F_Add.Text.ToUpper().ToString() != txtCountyR_F_Add.Text.ToUpper().ToString())
+                if (txtUtranFROMADDR_R.Text.ToUpper().ToString() != txtCountyFROMADDR_R.Text.ToUpper().ToString())
                 {
-                    txtUtranR_F_Add.BackColor = Color.LightYellow;
-                    txtCountyR_F_Add.BackColor = Color.LightYellow;
+                    txtUtranFROMADDR_R.BackColor = Color.LightYellow;
+                    txtCountyFROMADDR_R.BackColor = Color.LightYellow;
                 }
-                else if (txtUtranR_F_Add.Text.ToUpper().ToString() == txtCountyR_F_Add.Text.ToUpper().ToString())
+                else if (txtUtranFROMADDR_R.Text.ToUpper().ToString() == txtCountyFROMADDR_R.Text.ToUpper().ToString())
                 {
-                    txtUtranR_F_Add.BackColor = Color.White;
-                    txtCountyR_F_Add.BackColor = Color.White;
+                    txtUtranFROMADDR_R.BackColor = Color.White;
+                    txtCountyFROMADDR_R.BackColor = Color.White;
                 }
 
-                if (txtUtranR_F_Add.Text != txtUtransInitialR_F_Add)
+                if (txtUtranFROMADDR_R.Text != txtUtransInitialFROMADDR_R)
                 {
                     lblRightFrom.Font = fontLabelHasEdits;
                     //lblRightFrom.ForeColor = Color.LightSalmon;
@@ -1306,23 +1306,23 @@ namespace UtransEditorAGRC
             }
         }
 
-        // R_T_ADD
-        private void txtUtranR_T_Add_TextChanged(object sender, EventArgs e)
+        // TOADDR_R
+        private void txtUtranTOADDR_R_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtranR_T_Add.Text.ToUpper().ToString() != txtCountyR_T_Add.Text.ToUpper().ToString())
+                if (txtUtranTOADDR_R.Text.ToUpper().ToString() != txtCountyTOADDR_R.Text.ToUpper().ToString())
                 {
-                    txtUtranR_T_Add.BackColor = Color.LightYellow;
-                    txtCountyR_T_Add.BackColor = Color.LightYellow;
+                    txtUtranTOADDR_R.BackColor = Color.LightYellow;
+                    txtCountyTOADDR_R.BackColor = Color.LightYellow;
                 }
-                else if (txtUtranR_T_Add.Text.ToUpper().ToString() == txtCountyR_T_Add.Text.ToUpper().ToString())
+                else if (txtUtranTOADDR_R.Text.ToUpper().ToString() == txtCountyTOADDR_R.Text.ToUpper().ToString())
                 {
-                    txtUtranR_T_Add.BackColor = Color.White;
-                    txtCountyR_T_Add.BackColor = Color.White;
+                    txtUtranTOADDR_R.BackColor = Color.White;
+                    txtCountyTOADDR_R.BackColor = Color.White;
                 }
 
-                if (txtUtranR_T_Add.Text != txtUtransInitialR_T_Add)
+                if (txtUtranTOADDR_R.Text != txtUtransInitialTOADDR_R)
                 {
                     lblRightTo.Font = fontLabelHasEdits;
                     //lblRightTo.ForeColor = Color.LightSalmon;
@@ -1921,37 +1921,37 @@ namespace UtransEditorAGRC
                         //call google spreadsheet doc
                         clsGlobals.strCountySegment = txtCountyPreDir.Text.Trim() + " " + txtCountyStName.Text.Trim() + " " + txtCountyStType.Text.Trim() + " " + txtCountySufDir.Text.Trim();
                         clsGlobals.strCountySegmentTrimed = clsGlobals.strCountySegment.Trim();
-                        if (txtCountyL_F_Add.Text != "")
+                        if (txtCountyFROMADDR_L.Text != "")
                         {
-                            clsGlobals.strCountyL_F_Add = txtCountyL_F_Add.Text.ToString().Trim();
+                            clsGlobals.strCountyFROMADDR_L = txtCountyFROMADDR_L.Text.ToString().Trim();
                         }
                         else
                         {
-                            clsGlobals.strCountyL_F_Add = "0";
+                            clsGlobals.strCountyFROMADDR_L = "0";
                         }
-                        if (txtCountyL_T_Add.Text != "")
+                        if (txtCountyTOADDR_L.Text != "")
                         {
-                            clsGlobals.strCountyL_T_Add = txtCountyL_T_Add.Text.ToString().Trim();
-                        }
-                        else
-                        {
-                            clsGlobals.strCountyL_T_Add = "0";
-                        }
-                        if (txtCountyR_F_Add.Text != "")
-                        {
-                            clsGlobals.strCountyR_F_Add = txtCountyR_F_Add.Text.ToString().Trim();
+                            clsGlobals.strCountyTOADDR_L = txtCountyTOADDR_L.Text.ToString().Trim();
                         }
                         else
                         {
-                            clsGlobals.strCountyR_F_Add = "0";
+                            clsGlobals.strCountyTOADDR_L = "0";
                         }
-                        if (txtCountyR_T_Add.Text != "")
+                        if (txtCountyFROMADDR_R.Text != "")
                         {
-                            clsGlobals.strCountyR_T_Add = txtCountyR_T_Add.Text.ToString().Trim();
+                            clsGlobals.strCountyFROMADDR_R = txtCountyFROMADDR_R.Text.ToString().Trim();
                         }
                         else
                         {
-                            clsGlobals.strCountyR_T_Add = "0";
+                            clsGlobals.strCountyFROMADDR_R = "0";
+                        }
+                        if (txtCountyTOADDR_R.Text != "")
+                        {
+                            clsGlobals.strCountyTOADDR_R = txtCountyTOADDR_R.Text.ToString().Trim();
+                        }
+                        else
+                        {
+                            clsGlobals.strCountyTOADDR_R = "0";
                         }
 
                         //check if null values in utrans streets, if so assign zero
@@ -1960,37 +1960,37 @@ namespace UtransEditorAGRC
                         strGoogleLogRightTo = "";
                         strGoogleLogRightFrom = "";
                         
-                        if (txtUtranL_T_Add.Text == "")
+                        if (txtUtranTOADDR_L.Text == "")
 	                    {
 		                    strGoogleLogLeftTo = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogLeftTo = txtUtranL_T_Add.Text;
+                            strGoogleLogLeftTo = txtUtranTOADDR_L.Text;
 	                    }
-                        if (txtUtranL_F_Add.Text == "")
+                        if (txtUtranFROMADDR_L.Text == "")
 	                    {
 		                     strGoogleLogLeftFrom = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogLeftFrom = txtUtranL_F_Add.Text;
+                            strGoogleLogLeftFrom = txtUtranFROMADDR_L.Text;
 	                    }
-                        if (txtUtranR_F_Add.Text == "")
+                        if (txtUtranFROMADDR_R.Text == "")
 	                    {
 		                    strGoogleLogRightFrom = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogRightFrom = txtUtranR_F_Add.Text;
+                            strGoogleLogRightFrom = txtUtranFROMADDR_R.Text;
 	                    }
-                        if (txtUtranR_T_Add.Text == "")
+                        if (txtUtranTOADDR_R.Text == "")
 	                    {
 		                    strGoogleLogRightTo = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogRightTo = txtUtranR_T_Add.Text;
+                            strGoogleLogRightTo = txtUtranTOADDR_R.Text;
 	                    }
 
                         // get city from muni layer for google doc city field
@@ -2027,37 +2027,37 @@ namespace UtransEditorAGRC
                         //call google spreadsheet doc
                         clsGlobals.strCountySegment = txtCountyPreDir.Text.Trim() + " " + txtCountyStName.Text.Trim() + " " + txtCountyStType.Text.Trim() + " " + txtCountySufDir.Text.Trim();
                         clsGlobals.strCountySegmentTrimed = clsGlobals.strCountySegment.Trim();
-                        if (txtCountyL_F_Add.Text != "")
+                        if (txtCountyFROMADDR_L.Text != "")
                         {
-                            clsGlobals.strCountyL_F_Add = txtCountyL_F_Add.Text.ToString().Trim();
+                            clsGlobals.strCountyFROMADDR_L = txtCountyFROMADDR_L.Text.ToString().Trim();
                         }
                         else
                         {
-                            clsGlobals.strCountyL_F_Add = "0";
+                            clsGlobals.strCountyFROMADDR_L = "0";
                         }
-                        if (txtCountyL_T_Add.Text != "")
+                        if (txtCountyTOADDR_L.Text != "")
                         {
-                            clsGlobals.strCountyL_T_Add = txtCountyL_T_Add.Text.ToString().Trim();
-                        }
-                        else
-                        {
-                            clsGlobals.strCountyL_T_Add = "0";
-                        }
-                        if (txtCountyR_F_Add.Text != "")
-                        {
-                            clsGlobals.strCountyR_F_Add = txtCountyR_F_Add.Text.ToString().Trim();
+                            clsGlobals.strCountyTOADDR_L = txtCountyTOADDR_L.Text.ToString().Trim();
                         }
                         else
                         {
-                            clsGlobals.strCountyR_F_Add = "0";
+                            clsGlobals.strCountyTOADDR_L = "0";
                         }
-                        if (txtCountyR_T_Add.Text != "")
+                        if (txtCountyFROMADDR_R.Text != "")
                         {
-                            clsGlobals.strCountyR_T_Add = txtCountyR_T_Add.Text.ToString().Trim();
+                            clsGlobals.strCountyFROMADDR_R = txtCountyFROMADDR_R.Text.ToString().Trim();
                         }
                         else
                         {
-                            clsGlobals.strCountyR_T_Add = "0";
+                            clsGlobals.strCountyFROMADDR_R = "0";
+                        }
+                        if (txtCountyTOADDR_R.Text != "")
+                        {
+                            clsGlobals.strCountyTOADDR_R = txtCountyTOADDR_R.Text.ToString().Trim();
+                        }
+                        else
+                        {
+                            clsGlobals.strCountyTOADDR_R = "0";
                         }
 
                         //check if null values in utrans streets, if so assign zero
@@ -2066,37 +2066,37 @@ namespace UtransEditorAGRC
                         strGoogleLogRightTo = "";
                         strGoogleLogRightFrom = "";
                         
-                        if (txtUtranL_T_Add.Text == "")
+                        if (txtUtranTOADDR_L.Text == "")
 	                    {
 		                    strGoogleLogLeftTo = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogLeftTo = txtUtranL_T_Add.Text;
+                            strGoogleLogLeftTo = txtUtranTOADDR_L.Text;
 	                    }
-                        if (txtUtranL_F_Add.Text == "")
+                        if (txtUtranFROMADDR_L.Text == "")
 	                    {
 		                     strGoogleLogLeftFrom = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogLeftFrom = txtUtranL_F_Add.Text;
+                            strGoogleLogLeftFrom = txtUtranFROMADDR_L.Text;
 	                    }
-                        if (txtUtranR_F_Add.Text == "")
+                        if (txtUtranFROMADDR_R.Text == "")
 	                    {
 		                    strGoogleLogRightFrom = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogRightFrom = txtUtranR_F_Add.Text;
+                            strGoogleLogRightFrom = txtUtranFROMADDR_R.Text;
 	                    }
-                        if (txtUtranR_T_Add.Text == "")
+                        if (txtUtranTOADDR_R.Text == "")
 	                    {
 		                    strGoogleLogRightTo = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogRightTo = txtUtranR_T_Add.Text;
+                            strGoogleLogRightTo = txtUtranTOADDR_R.Text;
 	                    }
 
                         // get city from muni layer for google doc city field
@@ -2142,22 +2142,22 @@ namespace UtransEditorAGRC
                         if (!ctrlCurrent.Tag.ToString().Contains("Co"))
                         {
                             //check for emptly values in the numeric fields and populate with zeros in utrans
-                            if (ctrlCurrent.Tag.ToString() == "L_F_ADD" & ctrlCurrent.Text.ToString() == "")
+                            if (ctrlCurrent.Tag.ToString() == "FROMADDR_L" & ctrlCurrent.Text.ToString() == "")
                             {
                                 arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
                             }
-                            else if (ctrlCurrent.Tag.ToString() == "L_T_ADD" & ctrlCurrent.Text.ToString() == "")
+                            else if (ctrlCurrent.Tag.ToString() == "TOADDR_L" & ctrlCurrent.Text.ToString() == "")
                             {
                                 arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
                             }
-                            else if (ctrlCurrent.Tag.ToString() == "R_F_ADD" & ctrlCurrent.Text.ToString() == "")
+                            else if (ctrlCurrent.Tag.ToString() == "FROMADDR_R" & ctrlCurrent.Text.ToString() == "")
                             {
                                 arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
                             }
-                            else if (ctrlCurrent.Tag.ToString() == "R_T_ADD" & ctrlCurrent.Text.ToString() == "")
+                            else if (ctrlCurrent.Tag.ToString() == "TOADDR_R" & ctrlCurrent.Text.ToString() == "")
                             {
                                 arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
@@ -2632,7 +2632,7 @@ namespace UtransEditorAGRC
 
                 //create query filter to get the new segment (from county fc)
                 IQueryFilter arcQueryFilter_loadSegment = new QueryFilter();
-                arcQueryFilter_loadSegment.SubFields = "Shape,ZIPLEFT,ZIPRIGHT,L_F_ADD,L_T_ADD,R_F_ADD,R_T_ADD,PREDIR,STREETNAME,STREETTYPE,SUFDIR,ALIAS1,ALIAS1TYPE,ALIAS2,ALIAS2TYPE,ACSALIAS,ACSNAME,ACSSUF,USPS_PLACE,ONEWAY,SPEED,VERTLEVEL,CLASS,MODIFYDATE,COLLDATE,ACCURACY,SOURCE,NOTES,STATUS,ACCESS,USAGENOTES,BIKE_L,BIKE_R,BIKE_NOTES,BIKE_STATUS,GRID1MIL,GRID100K";
+                arcQueryFilter_loadSegment.SubFields = "Shape,ZIPLEFT,ZIPRIGHT,FROMADDR_L,TOADDR_L,FROMADDR_R,TOADDR_R,PREDIR,STREETNAME,STREETTYPE,SUFDIR,ALIAS1,ALIAS1TYPE,ALIAS2,ALIAS2TYPE,ACSALIAS,ACSNAME,ACSSUF,USPS_PLACE,ONEWAY,SPEED,VERTLEVEL,CLASS,MODIFYDATE,COLLDATE,ACCURACY,SOURCE,NOTES,STATUS,ACCESS,USAGENOTES,BIKE_L,BIKE_R,BIKE_NOTES,BIKE_STATUS,GRID1MIL,GRID100K";
                 arcQueryFilter_loadSegment.WhereClause = "OBJECTID = " + strCountyOID;
 
                 //get the county roads segment for quering new utrans street segment below
@@ -2686,56 +2686,56 @@ namespace UtransEditorAGRC
 
 
                 //create variables for the address range where clause, in case empty values
-                string strL_F_add = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("L_F_ADD")).ToString().Trim();
-                string strL_T_add = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("L_T_ADD")).ToString().Trim();
-                string strR_F_add = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("R_F_ADD")).ToString().Trim();
-                string strR_T_add = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("R_T_ADD")).ToString().Trim();
+                string strFROMADDR_L = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("FROMADDR_L")).ToString().Trim();
+                string strTOADDR_L = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("TOADDR_L")).ToString().Trim();
+                string strFROMADDR_R = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("FROMADDR_R")).ToString().Trim();
+                string strTOADDR_R = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("TOADDR_R")).ToString().Trim();
 
 
                 //check for road segment has empty values for street range, if so pass in zero in where clause
-                if (strL_F_add == "")
+                if (strFROMADDR_L == "")
                 {
-                    strL_F_add = "is null";
+                    strFROMADDR_L = "is null";
                 }
                 else
                 {
-                    strL_F_add = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("L_F_ADD")).ToString();
+                    strFROMADDR_L = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("FROMADDR_L")).ToString();
                 }
 
-                if (strL_T_add == "")
+                if (strTOADDR_L == "")
                 {
-                    strL_T_add = "is null";
+                    strTOADDR_L = "is null";
                 }
                 else
                 {
-                    strL_T_add = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("L_T_ADD")).ToString();
+                    strTOADDR_L = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("TOADDR_L")).ToString();
                 }
 
-                if (strR_F_add == "")
+                if (strFROMADDR_R == "")
                 {
-                    strR_F_add = "is null";
+                    strFROMADDR_R = "is null";
                 }
                 else
                 {
-                    strR_F_add = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("R_F_ADD")).ToString();
+                    strFROMADDR_R = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("FROMADDR_R")).ToString();
                 }
 
-                if (strR_T_add == "")
+                if (strTOADDR_R == "")
                 {
-                    strR_T_add = "is null";
+                    strTOADDR_R = "is null";
                 }
                 else
                 {
-                    strR_T_add = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("R_T_ADD")).ToString();
+                    strTOADDR_R = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("TOADDR_R")).ToString();
                 }
 
                 //select the new feature in the utrans database - based on values in the county street layer
                 IQueryFilter arcQueryFilterNewUtransSegment = new QueryFilter();
                 arcQueryFilterNewUtransSegment.WhereClause =
-                    "L_F_ADD " + strL_F_add +
-                    " AND L_T_ADD " + strL_T_add +
-                    " AND R_F_ADD " + strR_F_add +
-                    " AND R_T_ADD " + strR_T_add +
+                    "FROMADDR_L " + strFROMADDR_L +
+                    " AND TOADDR_L " + strTOADDR_L +
+                    " AND FROMADDR_R " + strFROMADDR_R +
+                    " AND TOADDR_R " + strTOADDR_R +
                     " AND PREDIR = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("PREDIR")) + "'" +
                     " AND STREETNAME = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("STREETNAME")) + "'" +
                     " AND STREETTYPE = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("STREETTYPE")) + "'" +
@@ -3277,8 +3277,5 @@ namespace UtransEditorAGRC
         {
 
         }
-
-
-
     }
 }
