@@ -40,7 +40,11 @@ namespace UtransEditorAGRC
         string txtUtransInitialA1_POSTTYPE;
         string txtUtransInitialA2_NAME;
         string txtUtransInitialA2_POSTTYPE;
-        string txtUtransInitialAcsAlias;
+        string txtUtransInitialA1_PREDIR;
+        string txtUtransInitialA1_POSTDIR;
+        string txtUtransInitialA2_PREDIR;
+        string txtUtransInitialA2_POSTDIR;
+        //string txtUtransInitialAcsAlias;
         string txtUtransInitialAscSuf;
         int intUtransInitialCartoCodeIndex;
         string strGoogleLogLeftTo;
@@ -253,10 +257,14 @@ namespace UtransEditorAGRC
                 //add textboxes to the control list
                 ctrlList.Add(this.txtCountyAN_NAME);
                 ctrlList.Add(this.txtCountyAN_POSTDIR);
+                ctrlList.Add(this.txtCountyA1_PREDIR);
                 ctrlList.Add(this.txtCountyA1_NAME);
                 ctrlList.Add(this.txtCountyA1_POSTTYPE);
+                ctrlList.Add(this.txtCountyA1_POSTDIR);
+                ctrlList.Add(this.txtCountyA2_PREDIR);
                 ctrlList.Add(this.txtCountyA2_NAME);
                 ctrlList.Add(this.txtCountyA2_POSTTYPE);
+                ctrlList.Add(this.txtCountyA2_POSTDIR);
                 ctrlList.Add(this.txtCountyFROMADDR_L);
                 ctrlList.Add(this.txtCountyTOADDR_L);
                 ctrlList.Add(this.txtCountyPreDir);
@@ -272,10 +280,14 @@ namespace UtransEditorAGRC
                 ctrlList.Add(this.txtUtranTOADDR_R);
                 ctrlList.Add(this.txtUtransAN_NAME);
                 ctrlList.Add(this.txtUtransAN_POSTDIR);
+                ctrlList.Add(this.txtUtransA1_PREDIR);
                 ctrlList.Add(this.txtUtransA1_NAME);
                 ctrlList.Add(this.txtUtransA1_POSTTYPE);
+                ctrlList.Add(this.txtUtransA1_POSTDIR);
+                ctrlList.Add(this.txtUtransA2_PREDIR);
                 ctrlList.Add(this.txtUtransA2_NAME);
                 ctrlList.Add(this.txtUtransA2_POSTTYPE);
+                ctrlList.Add(this.txtUtransA2_POSTDIR);
                 ctrlList.Add(this.txtUtranStName);
                 ctrlList.Add(this.txtUtranStType);
                 ctrlList.Add(this.txtUtranPOSTDIR);
@@ -369,10 +381,14 @@ namespace UtransEditorAGRC
                 lblPOSTDIR.Enabled = true;
                 lblAN_NAME.Enabled = true;
                 lblAN_POSTDIR.Enabled = true;
-                lblAlias.Enabled = true;
+                lblA1_NAME.Enabled = true;
+                lblA1_PREDIR.Enabled = true;
                 lblA1_POSTTYPE.Enabled = true;
+                lblA1_POSTDIR.Enabled = true;
+                lblA2_PREDIR.Enabled = true;
                 lblA2_NAME.Enabled = true;
                 lblA2_POSTTYPE.Enabled = true;
+                lblA2_POSTDIR.Enabled = true;
 
                 //disable the save to utrans button - until a change has been detected
                 //btnSaveToUtrans.Enabled = false;
@@ -409,7 +425,11 @@ namespace UtransEditorAGRC
                 txtUtransInitialA1_POSTTYPE = null;
                 txtUtransInitialA2_NAME = null;
                 txtUtransInitialA2_POSTTYPE = null;
-                txtUtransInitialAcsAlias = null;
+                txtUtransInitialA1_PREDIR = null;
+                txtUtransInitialA1_POSTDIR = null;
+                txtUtransInitialA2_PREDIR = null;
+                txtUtransInitialA2_POSTDIR = null;
+                //txtUtransInitialAcsAlias = null;
                 txtUtransInitialAscSuf = null;
 
                 arcFeatureSelection = clsGlobals.arcGeoFLayerDfcResult as IFeatureSelection;
@@ -574,16 +594,24 @@ namespace UtransEditorAGRC
                 txtUtransInitialA1_POSTTYPE = txtUtransA1_POSTTYPE.Text;
                 txtUtransInitialA2_NAME = txtUtransA2_NAME.Text;
                 txtUtransInitialA2_POSTTYPE = txtUtransA2_POSTTYPE.Text;
-                txtUtransInitialAcsAlias = txtUtransAN_NAME.Text;
+                txtUtransInitialA1_PREDIR = txtUtransA1_PREDIR.Text;
+                txtUtransInitialA1_POSTDIR = txtUtransA1_POSTDIR.Text;
+                txtUtransInitialA2_PREDIR = txtUtransA2_PREDIR.Text;
+                txtUtransInitialA2_POSTDIR = txtUtransA2_POSTDIR.Text;
+                //txtUtransInitialAcsAlias = txtUtransAN_NAME.Text;
                 txtUtransInitialAscSuf = txtUtransAN_POSTDIR.Text;
 
                 //revert labels back to regular (non-italic)
                 lblAN_NAME.Font = fontLabelRegular;
                 lblAN_POSTDIR.Font = fontLabelRegular;
-                lblAlias.Font = fontLabelRegular;
+                lblA1_PREDIR.Font = fontLabelRegular;
+                lblA1_NAME.Font = fontLabelRegular;
                 lblA1_POSTTYPE.Font = fontLabelRegular;
+                lblA1_POSTDIR.Font = fontLabelRegular;
+                lblA2_PREDIR.Font = fontLabelRegular;
                 lblA2_NAME.Font = fontLabelRegular;
                 lblA2_POSTTYPE.Font = fontLabelRegular;
+                lblA2_POSTDIR.Font = fontLabelRegular;
                 lblLeftFrom.Font = fontLabelRegular;
                 lblLeftTo.Font = fontLabelRegular;
                 lblPreDir.Font = fontLabelRegular;
@@ -604,10 +632,14 @@ namespace UtransEditorAGRC
                     txtUtranTOADDR_R.BackColor = Color.LightGray;
                     txtUtransAN_NAME.BackColor = Color.LightGray;
                     txtUtransAN_POSTDIR.BackColor = Color.LightGray;
+                    txtUtransA1_PREDIR.BackColor = Color.LightGray;
                     txtUtransA1_NAME.BackColor = Color.LightGray;
                     txtUtransA1_POSTTYPE.BackColor = Color.LightGray;
+                    txtUtransA1_POSTDIR.BackColor = Color.LightGray;
+                    txtUtransA2_PREDIR.BackColor = Color.LightGray;
                     txtUtransA2_NAME.BackColor = Color.LightGray;
                     txtUtransA2_POSTTYPE.BackColor = Color.LightGray;
+                    txtUtransA1_POSTDIR.BackColor = Color.LightGray;
                     txtUtranStName.BackColor = Color.LightGray;
                     txtUtranStType.BackColor = Color.LightGray;
                     txtUtranPOSTDIR.BackColor = Color.LightGray;
@@ -638,11 +670,15 @@ namespace UtransEditorAGRC
                     lblPOSTDIR.Enabled = false;
                     lblAN_NAME.Enabled = false;
                     lblAN_POSTDIR.Enabled = false;
-                    lblAlias.Enabled = false;
+                    lblA1_PREDIR.Enabled = false;
+                    lblA1_NAME.Enabled = false;
                     lblA1_POSTTYPE.Enabled = false;
+                    lblA1_POSTDIR.Enabled = false;
+                    lblA2_PREDIR.Enabled = false;
                     lblA2_NAME.Enabled = false;
                     lblA2_POSTTYPE.Enabled = false;
-                    
+                    lblA2_POSTDIR.Enabled = false;
+
                     //show get new feature button and make save button not enabled
                     btnCopyNewSegment.Visible = true;
                     chkShowVertices.Visible = true;
@@ -841,6 +877,13 @@ namespace UtransEditorAGRC
                     //lblAN_POSTDIR.Font = fontLabelDataMismatch;
                     //boolHadDifferenceAscSuf = true;
                 }
+                if (txtCountyA1_PREDIR.Text.ToUpper().ToString() != txtUtransA1_PREDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA1_PREDIR.BackColor = Color.LightYellow;
+                    txtCountyA1_PREDIR.BackColor = Color.LightYellow;
+                    //lblAlias.Font = fontLabelDataMismatch;
+                    //boolHadDifferenceA1_NAME = true;
+                }
                 if (txtCountyA1_NAME.Text.ToUpper().ToString() != txtUtransA1_NAME.Text.ToUpper().ToString())
                 {
                     txtUtransA1_NAME.BackColor = Color.LightYellow;
@@ -854,6 +897,20 @@ namespace UtransEditorAGRC
                     txtCountyA1_POSTTYPE.BackColor = Color.LightYellow;
                     //lblA1_POSTTYPE.Font = fontLabelDataMismatch;
                     //boolHadDifferenceA1_POSTTYPE = true;
+                }
+                if (txtCountyA1_POSTDIR.Text.ToUpper().ToString() != txtUtransA1_POSTDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA1_POSTDIR.BackColor = Color.LightYellow;
+                    txtCountyA1_POSTDIR.BackColor = Color.LightYellow;
+                    //lblAlias.Font = fontLabelDataMismatch;
+                    //boolHadDifferenceA1_NAME = true;
+                }
+                if (txtCountyA2_PREDIR.Text.ToUpper().ToString() != txtUtransA2_PREDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_PREDIR.BackColor = Color.LightYellow;
+                    txtCountyA2_PREDIR.BackColor = Color.LightYellow;
+                    //lblA2_NAME.Font = fontLabelDataMismatch;
+                    //boolHadDifferenceA2_NAME = true;
                 }
                 if (txtCountyA2_NAME.Text.ToUpper().ToString() != txtUtransA2_NAME.Text.ToUpper().ToString())
                 {
@@ -869,7 +926,13 @@ namespace UtransEditorAGRC
                     //lblA2_POSTTYPE.Font = fontLabelDataMismatch;
                     //boolHadDifferenceA2_POSTTYPE = true;
                 }
-
+                if (txtCountyA2_POSTDIR.Text.ToUpper().ToString() != txtUtransA2_POSTDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_POSTDIR.BackColor = Color.LightYellow;
+                    txtCountyA2_POSTDIR.BackColor = Color.LightYellow;
+                    //lblA2_POSTTYPE.Font = fontLabelDataMismatch;
+                    //boolHadDifferenceA2_POSTTYPE = true;
+                }
             }
             catch (Exception ex)
             {
@@ -880,7 +943,6 @@ namespace UtransEditorAGRC
                 "Error Location:" + Environment.NewLine + ex.StackTrace,
                 "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-        
         }
 
 
@@ -1073,6 +1135,21 @@ namespace UtransEditorAGRC
                     }
                 }
 
+                // A1_PREDIR
+                if (clickedLabel.Text == "A1_PREDIR")
+                {
+                    if (txtUtransA1_PREDIR.Text != txtCountyA1_PREDIR.Text)
+                    {
+                        txtUtransA1_PREDIR.Text = txtCountyA1_PREDIR.Text;
+                        return;
+                    }
+                    if (txtUtransA1_PREDIR.Text == txtCountyA1_PREDIR.Text)
+                    {
+                        txtUtransA1_PREDIR.Text = txtUtransInitialA1_PREDIR;
+                        return;
+                    }
+                }
+
                 // A1_NAME
                 if (clickedLabel.Text == "A1_NAME")
                 {
@@ -1099,6 +1176,36 @@ namespace UtransEditorAGRC
                     if (txtUtransA1_POSTTYPE.Text == txtCountyA1_POSTTYPE.Text)
                     {
                         txtUtransA1_POSTTYPE.Text = txtUtransInitialA1_POSTTYPE;
+                        return;
+                    }
+                }
+
+                // A1_POSTDIR
+                if (clickedLabel.Text == "A1_POSTDIR")
+                {
+                    if (txtUtransA1_POSTDIR.Text != txtCountyA1_POSTDIR.Text)
+                    {
+                        txtUtransA1_POSTDIR.Text = txtCountyA1_POSTDIR.Text;
+                        return;
+                    }
+                    if (txtUtransA1_POSTDIR.Text == txtCountyA1_POSTDIR.Text)
+                    {
+                        txtUtransA1_POSTDIR.Text = txtUtransInitialA1_POSTDIR;
+                        return;
+                    }
+                }
+
+                // A2_PREDIR
+                if (clickedLabel.Text == "A2_PREDIR")
+                {
+                    if (txtUtransA2_PREDIR.Text != txtCountyA2_PREDIR.Text)
+                    {
+                        txtUtransA2_PREDIR.Text = txtCountyA2_PREDIR.Text;
+                        return;
+                    }
+                    if (txtUtransA2_PREDIR.Text == txtCountyA2_PREDIR.Text)
+                    {
+                        txtUtransA2_PREDIR.Text = txtUtransInitialA2_PREDIR;
                         return;
                     }
                 }
@@ -1133,6 +1240,21 @@ namespace UtransEditorAGRC
                     }
                 }
 
+                // A2_POSTDIR
+                if (clickedLabel.Text == "A2_POSTDIR")
+                {
+                    if (txtUtransA2_POSTDIR.Text != txtCountyA2_POSTDIR.Text)
+                    {
+                        txtUtransA2_POSTDIR.Text = txtCountyA2_POSTDIR.Text;
+                        return;
+                    }
+                    if (txtUtransA2_POSTDIR.Text == txtCountyA2_POSTDIR.Text)
+                    {
+                        txtUtransA2_POSTDIR.Text = txtUtransInitialA2_POSTDIR;
+                        return;
+                    }
+                }
+
                 // AN_NAME
                 if (clickedLabel.Text == "AN_NAME")
                 {
@@ -1141,11 +1263,11 @@ namespace UtransEditorAGRC
                         txtUtransAN_NAME.Text = txtCountyAN_NAME.Text;
                         return;
                     }
-                    if (txtUtransAN_NAME.Text == txtCountyAN_NAME.Text)
-                    {
-                        txtUtransAN_NAME.Text = txtUtransInitialAcsAlias;
-                        return;
-                    }
+                    //if (txtUtransAN_NAME.Text == txtCountyAN_NAME.Text)
+                    //{
+                    //    txtUtransAN_NAME.Text = txtUtransInitialAcsAlias;
+                    //    return;
+                    //}
                 }
 
                 // AN_POSTDIR
@@ -1521,6 +1643,49 @@ namespace UtransEditorAGRC
             }
         }
 
+        // A1_PREDIR
+        private void txtUtransA1_PREDIR_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtUtransA1_PREDIR.Text.ToUpper().ToString() != txtCountyA1_PREDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA1_PREDIR.BackColor = Color.LightYellow;
+                    txtCountyA1_PREDIR.BackColor = Color.LightYellow;
+                }
+                else if (txtUtransA1_PREDIR.Text.ToUpper().ToString() == txtCountyA1_PREDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA1_PREDIR.BackColor = Color.White;
+                    txtCountyA1_PREDIR.BackColor = Color.White;
+                }
+
+                if (txtUtransA1_PREDIR.Text != txtUtransInitialA1_PREDIR)
+                {
+                    lblA1_NAME.Font = fontLabelHasEdits;
+                    //lblAlias.ForeColor = Color.LightSalmon;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                else
+                {
+                    lblA1_NAME.Font = fontLabelRegular;
+                    //lblAlias.ForeColor = Color.Black;
+                    //btnSaveToUtrans.Enabled = false;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                //fontLabelHasEdits.Dispose();
+                //fontLabelRegular.Dispose();
+            }
+            catch (Exception ex)
+            {
+                //clsGlobals.logger.Error(Environment.NewLine + "Error Message: " + ex.Message + Environment.NewLine + "Error Source: " + ex.Source + Environment.NewLine + "Error Location:" + ex.StackTrace + Environment.NewLine + "Target Site: " + ex.TargetSite);
+
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
         // A1_NAME
         private void txtUtransA1_NAME_TextChanged(object sender, EventArgs e)
         {
@@ -1539,13 +1704,13 @@ namespace UtransEditorAGRC
 
                 if (txtUtransA1_NAME.Text != txtUtransInitialA1_NAME)
                 {
-                    lblAlias.Font = fontLabelHasEdits;
+                    lblA1_NAME.Font = fontLabelHasEdits;
                     //lblAlias.ForeColor = Color.LightSalmon;
                     btnSaveToUtrans.Enabled = true;
                 }
                 else
                 {
-                    lblAlias.Font = fontLabelRegular;
+                    lblA1_NAME.Font = fontLabelRegular;
                     //lblAlias.ForeColor = Color.Black;
                     //btnSaveToUtrans.Enabled = false;
                     btnSaveToUtrans.Enabled = true;
@@ -1591,6 +1756,93 @@ namespace UtransEditorAGRC
                 {
                     lblA1_POSTTYPE.Font = fontLabelRegular;
                     //lblA1_POSTTYPE.ForeColor = Color.Black;
+                    //btnSaveToUtrans.Enabled = false;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                //fontLabelHasEdits.Dispose();
+                //fontLabelRegular.Dispose();
+            }
+            catch (Exception ex)
+            {
+                //clsGlobals.logger.Error(Environment.NewLine + "Error Message: " + ex.Message + Environment.NewLine + "Error Source: " + ex.Source + Environment.NewLine + "Error Location:" + ex.StackTrace + Environment.NewLine + "Target Site: " + ex.TargetSite);
+
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        // A1_POSTDIR
+        private void txtUtransA1_POSTDIR_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtUtransA1_POSTDIR.Text.ToUpper().ToString() != txtCountyA1_POSTDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA1_POSTDIR.BackColor = Color.LightYellow;
+                    txtCountyA1_POSTDIR.BackColor = Color.LightYellow;
+                }
+                else if (txtUtransA1_POSTDIR.Text.ToUpper().ToString() == txtCountyA1_POSTDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA1_POSTDIR.BackColor = Color.White;
+                    txtCountyA1_POSTDIR.BackColor = Color.White;
+                }
+
+                if (txtUtransA1_POSTDIR.Text != txtUtransInitialA1_POSTDIR)
+                {
+                    lblA1_POSTDIR.Font = fontLabelHasEdits;
+                    //lblA1_POSTTYPE.ForeColor = Color.LightSalmon;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                else
+                {
+                    lblA1_POSTDIR.Font = fontLabelRegular;
+                    //lblA1_POSTTYPE.ForeColor = Color.Black;
+                    //btnSaveToUtrans.Enabled = false;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                //fontLabelHasEdits.Dispose();
+                //fontLabelRegular.Dispose();
+            }
+            catch (Exception ex)
+            {
+                //clsGlobals.logger.Error(Environment.NewLine + "Error Message: " + ex.Message + Environment.NewLine + "Error Source: " + ex.Source + Environment.NewLine + "Error Location:" + ex.StackTrace + Environment.NewLine + "Target Site: " + ex.TargetSite);
+
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+
+        // A2_PREDIR
+        private void txtUtransA2_PREDIR_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtUtransA2_PREDIR.Text.ToUpper().ToString() != txtCountyA2_PREDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA1_PREDIR.BackColor = Color.LightYellow;
+                    txtCountyA1_PREDIR.BackColor = Color.LightYellow;
+                }
+                else if (txtUtransA2_PREDIR.Text.ToUpper().ToString() == txtCountyA2_PREDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_PREDIR.BackColor = Color.White;
+                    txtCountyA2_PREDIR.BackColor = Color.White;
+                }
+
+                if (txtUtransA2_PREDIR.Text != txtUtransInitialA2_PREDIR)
+                {
+                    lblA1_NAME.Font = fontLabelHasEdits;
+                    //lblAlias.ForeColor = Color.LightSalmon;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                else
+                {
+                    lblA1_NAME.Font = fontLabelRegular;
+                    //lblAlias.ForeColor = Color.Black;
                     //btnSaveToUtrans.Enabled = false;
                     btnSaveToUtrans.Enabled = true;
                 }
@@ -1694,6 +1946,49 @@ namespace UtransEditorAGRC
             }
         }
 
+        // A2_POSTDIR
+        private void txtUtransA2_POSTDIR_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtUtransA2_POSTDIR.Text.ToUpper().ToString() != txtCountyA2_POSTDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_POSTDIR.BackColor = Color.LightYellow;
+                    txtCountyA2_POSTDIR.BackColor = Color.LightYellow;
+                }
+                else if (txtUtransA2_POSTDIR.Text.ToUpper().ToString() == txtCountyA2_POSTDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_POSTDIR.BackColor = Color.White;
+                    txtCountyA2_POSTDIR.BackColor = Color.White;
+                }
+
+                if (txtUtransA2_POSTDIR.Text != txtUtransInitialA2_POSTDIR)
+                {
+                    lblA2_POSTDIR.Font = fontLabelHasEdits;
+                    //lblA1_POSTTYPE.ForeColor = Color.LightSalmon;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                else
+                {
+                    lblA2_POSTDIR.Font = fontLabelRegular;
+                    //lblA1_POSTTYPE.ForeColor = Color.Black;
+                    //btnSaveToUtrans.Enabled = false;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                //fontLabelHasEdits.Dispose();
+                //fontLabelRegular.Dispose();
+            }
+            catch (Exception ex)
+            {
+                //clsGlobals.logger.Error(Environment.NewLine + "Error Message: " + ex.Message + Environment.NewLine + "Error Source: " + ex.Source + Environment.NewLine + "Error Location:" + ex.StackTrace + Environment.NewLine + "Target Site: " + ex.TargetSite);
+
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
         //AN_NAME
         private void txtUtransAcsAllias_TextChanged(object sender, EventArgs e)
         {
@@ -1710,12 +2005,12 @@ namespace UtransEditorAGRC
                     txtCountyAN_NAME.BackColor = Color.White;
                 }
 
-                if (txtUtransAN_NAME.Text != txtUtransInitialAcsAlias)
-                {
-                    lblAN_NAME.Font = fontLabelHasEdits;
-                    //lblAcsAlias.ForeColor = Color.LightSalmon;
-                    btnSaveToUtrans.Enabled = true;
-                }
+                //if (txtUtransAN_NAME.Text != txtUtransInitialAcsAlias)
+                //{
+                //    lblAN_NAME.Font = fontLabelHasEdits;
+                //    //lblAcsAlias.ForeColor = Color.LightSalmon;
+                //    btnSaveToUtrans.Enabled = true;
+                //}
                 else
                 {
                     lblAN_NAME.Font = fontLabelRegular;
@@ -2392,8 +2687,8 @@ namespace UtransEditorAGRC
                     }
 
                     // ACSALIAS //
-                    string strAscAlias = txtUtransAN_NAME.Text.Trim() + " " + txtUtransAN_POSTDIR.Text.Trim();
-                    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ACSALIAS"), strAscAlias.Trim());
+                    //string strAscAlias = txtUtransAN_NAME.Text.Trim() + " " + txtUtransAN_POSTDIR.Text.Trim();
+                    //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ACSALIAS"), strAscAlias.Trim());
 
                     // CARTOCODE
                     if (cboCartoCode.SelectedIndex == 15) //this is the 99 value
@@ -2632,7 +2927,7 @@ namespace UtransEditorAGRC
 
                 //create query filter to get the new segment (from county fc)
                 IQueryFilter arcQueryFilter_loadSegment = new QueryFilter();
-                arcQueryFilter_loadSegment.SubFields = "Shape,ZIPLEFT,ZIPRIGHT,FROMADDR_L,TOADDR_L,FROMADDR_R,TOADDR_R,PREDIR,NAME,POSTTYPE,POSTDIR,A1_NAME,A1_POSTTYPE,A2_NAME,A2_POSTTYPE,ACSALIAS,AN_NAME,AN_POSTDIR,USPS_PLACE,ONEWAY,SPEED,VERTLEVEL,CLASS,MODIFYDATE,COLLDATE,ACCURACY,SOURCE,NOTES,STATUS,ACCESS,USAGENOTES,BIKE_L,BIKE_R,BIKE_NOTES,BIKE_STATUS,GRID1MIL,GRID100K";
+                arcQueryFilter_loadSegment.SubFields = "Shape,ZIPLEFT,ZIPRIGHT,FROMADDR_L,TOADDR_L,FROMADDR_R,TOADDR_R,PREDIR,NAME,POSTTYPE,POSTDIR,A1_PREDIR,A1_NAME,A1_POSTTYPE,A1_POSTDIR,A2_PREDIR,A2_NAME,A2_POSTTYPE,A2_POSTDIR,AN_NAME,AN_POSTDIR,USPS_PLACE,ONEWAY,SPEED,VERTLEVEL,CLASS,MODIFYDATE,COLLDATE,ACCURACY,SOURCE,NOTES,STATUS,ACCESS,USAGENOTES,BIKE_L,BIKE_R,BIKE_NOTES,BIKE_STATUS,GRID1MIL,GRID100K";
                 arcQueryFilter_loadSegment.WhereClause = "OBJECTID = " + strCountyOID;
 
                 //get the county roads segment for quering new utrans street segment below
