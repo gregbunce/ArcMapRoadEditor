@@ -74,10 +74,10 @@ namespace UtransEditorAGRC
         #endregion
         #endregion
         IFeature arcSelectedFeature;
-        int intStreetName;
-        int intACSName;
+        int intNAME;
+        int intAN_NAME;
         bool isNumeric_StName;
-        bool isNumeric_ACSName;
+        bool isNumeric_AN_NAME;
         IPoint m_Position = null;
         private IApplication m_application;
         public btnTool_SplitLine()
@@ -253,7 +253,7 @@ namespace UtransEditorAGRC
                 // get the objectid of the selected feature - so we can exclude it from the intesecting search below
                 string strSelectedOID = arcSelectedFeature.get_Value(arcSelectedFeature.Fields.FindField("OBJECTID")).ToString();
                 isNumeric_StName = false;
-                isNumeric_ACSName = false;
+                isNumeric_AN_NAME = false;
 
                 // if see there are any features intersecting (there is always 1 - it's the selected feature to split, so we need to check if it's more than 1)
                 if (listFeatures.Count > 1)
@@ -267,19 +267,19 @@ namespace UtransEditorAGRC
                         if (strSelectedOID != listFeatures[i].OID.ToString())
                         {
                             // check if street name is acs/coordinate (numberic)
-                            isNumeric_StName = int.TryParse(listFeatures[i].get_Value(listFeatures[i].Fields.FindField("STREETNAME")).ToString(), out intStreetName);
+                            isNumeric_StName = int.TryParse(listFeatures[i].get_Value(listFeatures[i].Fields.FindField("NAME")).ToString(), out intNAME);
 
-                            isNumeric_ACSName = int.TryParse(listFeatures[i].get_Value(listFeatures[i].Fields.FindField("ACSNAME")).ToString(), out intACSName);
+                            isNumeric_AN_NAME = int.TryParse(listFeatures[i].get_Value(listFeatures[i].Fields.FindField("AN_NAME")).ToString(), out intAN_NAME);
 
                             // if the value is numeric then capture the number and proceed
                             if (isNumeric_StName == true)
                             {
-                                //MessageBox.Show(intStreetName.ToString());
+                                //MessageBox.Show(intNAME.ToString());
                                 break; // breaks from "for loop"
                             }
-                            if (isNumeric_ACSName == true)
+                            if (isNumeric_AN_NAME == true)
                             {
-                                //MessageBox.Show(intACSName.ToString());
+                                //MessageBox.Show(intAN_NAME.ToString());
                                 break; // breaks from "for loop"
                             }
                         }
@@ -604,13 +604,13 @@ namespace UtransEditorAGRC
 
 
                 // the following 10 lines set the TO_LEFT and TO_RIGHT numbers of the first feature //
-                if (isNumeric_ACSName | isNumeric_StName) // there was an intersecting road with a numberic street name
+                if (isNumeric_AN_NAME | isNumeric_StName) // there was an intersecting road with a numberic street name
                 {
                     // use the numeric street name to populate the address ranges
                     if (isNumeric_StName) // use numeric values from street name
                     {
                         // check if intersecting numeric street name is even or odd
-                        bool blnIsEven_NumericStName = isEven(Convert.ToInt64(intStreetName)); // convert b/c method is expecting long
+                        bool blnIsEven_NumericStName = isEven(Convert.ToInt64(intNAME)); // convert b/c method is expecting long
 
                         if (blnIsEven_NumericStName) // intersecting street is even
                         {
@@ -620,7 +620,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), intStreetName - 1);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), intNAME - 1);
                             }
                             if (blnRightSideZeros)
                             {
@@ -628,7 +628,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), intStreetName - 2);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), intNAME - 2);
                             }
 
                         }
@@ -640,7 +640,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), intStreetName - 2);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), intNAME - 2);
                             }
                             if (blnRightSideZeros)
                             {
@@ -648,16 +648,16 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), intStreetName - 1);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), intNAME - 1);
                             }
                         }
                     }
                     else // use numeric values from acs alias field
                     {
                         // check if value is even or odd
-                        bool blnIsEvenAcsName = isEven(Convert.ToInt64(intACSName));
+                        bool blnIsEvenAN_NAME = isEven(Convert.ToInt64(intAN_NAME));
 
-                        if (blnIsEvenAcsName) // intersecting street is even
+                        if (blnIsEvenAN_NAME) // intersecting street is even
                         {
                             if (blnLeftSideZeros)
                             {
@@ -665,7 +665,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), intACSName - 1);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), intAN_NAME - 1);
                             }
                             if (blnRightSideZeros)
                             {
@@ -673,7 +673,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), intACSName - 2);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), intAN_NAME - 2);
                             }
                         }
                         else // intersecting street is odd
@@ -684,7 +684,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), intACSName - 2);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_L"), intAN_NAME - 2);
                             }
                             if (blnRightSideZeros)
                             {
@@ -692,7 +692,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), intACSName - 1);
+                                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("TOADDR_R"), intAN_NAME - 1);
                             }
                         }
                     }
@@ -726,13 +726,13 @@ namespace UtransEditorAGRC
 
                 // the following lines set the FROM_LEFT and FROM_RIGHT numbers of the second feature
                 // set the left_from
-                if (isNumeric_ACSName | isNumeric_StName) // there was an intersecting road with a numberic street name
+                if (isNumeric_AN_NAME | isNumeric_StName) // there was an intersecting road with a numberic street name
                 {
                     // use the numeric street name to populate the address ranges
                     if (isNumeric_StName) // use numeric values from street name
                     {
                         // check if intersecting numeric street name is even or odd
-                        bool blnIsEven_NumericStName = isEven(Convert.ToInt64(intStreetName)); // convert b/c method is expecting long
+                        bool blnIsEven_NumericStName = isEven(Convert.ToInt64(intNAME)); // convert b/c method is expecting long
 
                         if (blnIsEven_NumericStName) // intersecting street is even
                         {
@@ -742,7 +742,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), intStreetName + 1);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), intNAME + 1);
                             }
                             if (blnRightSideZeros)
                             {
@@ -750,7 +750,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), intStreetName);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), intNAME);
                             }
                         }
                         else // intersecting street is odd
@@ -761,7 +761,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), intStreetName);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), intNAME);
                             }
                             if (blnRightSideZeros)
                             {
@@ -769,16 +769,16 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), intStreetName + 1);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), intNAME + 1);
                             }
                         }
                     }
                     else  // use numeric values from acs alias field
                     {
                         // check if value is even or odd
-                        bool blnIsEvenAcsName = isEven(Convert.ToInt64(intACSName));
+                        bool blnIsEvenAN_NAME = isEven(Convert.ToInt64(intAN_NAME));
 
-                        if (blnIsEvenAcsName) // intersecting street is even
+                        if (blnIsEvenAN_NAME) // intersecting street is even
                         {
                             if (blnLeftSideZeros)
                             {
@@ -786,7 +786,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), intACSName + 1);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), intAN_NAME + 1);
                             }
                             if (blnRightSideZeros)
                             {
@@ -794,7 +794,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), intACSName);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), intAN_NAME);
                             }
                         }
                         else // intersecting street is odd
@@ -805,7 +805,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), intACSName);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_L"), intAN_NAME);
                             }
                             if (blnRightSideZeros)
                             {
@@ -813,7 +813,7 @@ namespace UtransEditorAGRC
                             }
                             else
                             {
-                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), intACSName + 1);
+                                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("FROMADDR_R"), intAN_NAME + 1);
                             }
                         }
                     }

@@ -197,15 +197,15 @@ namespace UtransEditorAGRC
                                     arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("FROMADDR_R")).ToString().Trim() + " | " +
                                     arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("TOADDR_R")).ToString().Trim() + " | " +
                                     arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("PREDIR")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("STREETNAME")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("STREETTYPE")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("SUFDIR")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("ALIAS1")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("ALIAS1TYPE")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("ALIAS2")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("ALIAS2TYPE")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("ACSNAME")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("ACSSUF")).ToString().Trim() + " |");
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("NAME")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("POSTTYPE")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("POSTDIR")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("A1_NAME")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("A1_POSTTYPE")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("A2_NAME")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("A2_POSTTYPE")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("AN_NAME")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("AN_POSTDIR")).ToString().Trim() + " |");
 
                                 //null out query filter and feature cursor
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatCursor_Utrans);
@@ -242,15 +242,15 @@ namespace UtransEditorAGRC
                                 arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("FROMADDR_R")).ToString().Trim() + " | " +
                                 arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("TOADDR_R")).ToString().Trim() + " | " +
                                 arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("PREDIR")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("STREETNAME")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("STREETTYPE")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("SUFDIR")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("ALIAS1")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("ALIAS1TYPE")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("ALIAS2")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("ALIAS2TYPE")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("ACSNAME")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("ACSSUF")).ToString().Trim() + " |");
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("NAME")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("POSTTYPE")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("POSTDIR")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("A1_NAME")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("A1_POSTTYPE")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("A2_NAME")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("A2_POSTTYPE")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("AN_NAME")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("AN_POSTDIR")).ToString().Trim() + " |");
 
                             //null out query filter and feature cursor
                             System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeat_CountyStreets);
