@@ -194,6 +194,10 @@ namespace UtransEditorAGRC
                             {
                                 clsGlobals.arcFLayerMunicipalities = arcMapp.get_Layer(i) as IFeatureLayer;
                             }
+                            if (arcObjClass.AliasName.ToString() == "SGID10.BOUNDARIES.MetroTownships")
+                            {
+                                clsGlobals.arcFLayerMetroTwnShips = arcMapp.get_Layer(i) as IFeatureLayer;
+                            }
                         }
                         catch (Exception) { }//in case there is an error looping through layers (sometimes on group layers or dynamic xy layers), just keep going
                         
@@ -244,8 +248,13 @@ namespace UtransEditorAGRC
                     this.Close();
                     return;
                 }
-  
-                
+                else if (clsGlobals.arcFLayerMetroTwnShips == null)
+                {
+                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID10.BOUNDARIES.MetroTownships' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.Close();
+                    return;
+                }
+
                 //clear the selection in the map, so we can start fresh with the tool and user's inputs
                 arcMapp.ClearSelection();
                 
@@ -2476,33 +2485,7 @@ namespace UtransEditorAGRC
                     arcUtransEdits_polyline.QueryPoint(esriSegmentExtension.esriNoExtension, 0.5, true, arcUtransEdits_midPoint);
                     //MessageBox.Show("The midpoint of the selected line segment is: " + arcUtransEdits_midPoint.X.ToString() + ", " + arcUtransEdits_midPoint.Y.ToString());
 
-                    // spatial intersect for the following fields: ADDRSYS_L, QUADRANT_L, ZIPCODE_L, ZIPCODE_R, COUNTY_L (Maybe POSTCOMM_L)
-                    // ADDRSYS_L and QUADRANT_L
-                    ISpatialFilter arcSpatialFilter = new SpatialFilter();
-                    arcSpatialFilter.Geometry = arcUtransEdits_midPoint;
-                    arcSpatialFilter.GeometryField = "SHAPE";
-                    arcSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
-                    arcSpatialFilter.SubFields = "*";
-
-                    IFeatureCursor arcAddrSysCursor = clsGlobals.arcFLayerAddrSysQuads.Search(arcSpatialFilter, false);
-                    IFeature arcFeatureAddrSys = arcAddrSysCursor.NextFeature();
-                    if (arcFeatureAddrSys != null)
-                    {
-                        //update the value in the utrans based on the intersect
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_L"), arcFeatureAddrSys.get_Value(arcFeatureAddrSys.Fields.FindField("GRID_NAME")).ToString().Trim());
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_L"), arcFeatureAddrSys.get_Value(arcFeatureAddrSys.Fields.FindField("QUADRANT")).ToString().Trim());
-                    }
-                    else
-                    {
-                        MessageBox.Show("The midpoint of the street segment you are trying to update is not within an AddressSystemQuadrants.", "Whoa there Cowboy!");
-                        //give option to leave blank or abort edit operation and return
-                        //return;
-                    }
-                    //clear out variables
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcAddrSysCursor);
-                    arcAddrSysCursor = null;
-                    arcFeatureAddrSys = null;
-
+                    // spatial intersect for right and left fields //
                     // ZIPCODE_L and ZIPCODE_R (use iconstructpoint.constructoffset method to offset the midpoint of the line)
                     // test the iconstructpoint.constructtooffset mehtod
                     IConstructPoint arcConstructionPoint_posRight = new PointClass();
@@ -2519,13 +2502,13 @@ namespace UtransEditorAGRC
                     //MessageBox.Show("for negative/left offset: " + outPoint_negLeft.X + " , " + outPoint_negLeft.Y);
 
 
-                    // LEFT - ZIP & MUNICIPALITY(SDE) //
-                    // query zipcode layer for a zip on left side of segment
-                    ISpatialFilter arcSpatialFilter_leftZip = new SpatialFilter();
-                    arcSpatialFilter_leftZip.Geometry = outPoint_negLeft;
-                    arcSpatialFilter_leftZip.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+                    // __LEFT SPATIAL FIELDS__ //
+                    ISpatialFilter arcSpatialFilter_left = new SpatialFilter();
+                    arcSpatialFilter_left.Geometry = outPoint_negLeft;
+                    arcSpatialFilter_left.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
 
-                    IFeatureCursor arcZipCursor_left = clsGlobals.arcFLayerZipCodes.Search(arcSpatialFilter_leftZip, false);
+                    // query ZIPCODE layer left
+                    IFeatureCursor arcZipCursor_left = clsGlobals.arcFLayerZipCodes.Search(arcSpatialFilter_left, false);
                     IFeature arcFeatureZip_left = arcZipCursor_left.NextFeature();
                     if (arcFeatureZip_left != null)
                     {
@@ -2533,11 +2516,11 @@ namespace UtransEditorAGRC
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPCODE_L"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("ZIP5")));
                         //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPCODE_R"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("ZIP5")));
                         //maybe update the POSTCOMM_L field as well with the "name" field from the zipcodes layer
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("POSTCOMM_L"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("NAME")).ToString().Trim());
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("POSTCOMM_L"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("NAME")).ToString().Trim().ToUpper());
                     }
                     else
                     {
-                        MessageBox.Show("A zipcode could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Whoa there Cowboy!");
+                        MessageBox.Show("A zipcode could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                         //give option to leave blank or abort edit operation and return
                         //return;
                     }
@@ -2548,33 +2531,96 @@ namespace UtransEditorAGRC
                     arcZipCursor_left = null;
                     arcFeatureZip_left = null;
 
-                    // query the municipal layer
-                    IFeatureCursor arcMuniCursor_left = clsGlobals.arcFLayerMunicipalities.Search(arcSpatialFilter_leftZip, false);
+
+                    // query the MNUI layer left
+                    IFeatureCursor arcMuniCursor_left = clsGlobals.arcFLayerMunicipalities.Search(arcSpatialFilter_left, false);
                     IFeature arcFeatureMuni_left = arcMuniCursor_left.NextFeature();
 
                     if (arcFeatureMuni_left != null)
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("L_CITY"), arcFeatureMuni_left.get_Value(arcFeatureMuni_left.Fields.FindField("NAME")));
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_L"), arcFeatureMuni_left.get_Value(arcFeatureMuni_left.Fields.FindField("NAME")).ToString().ToUpper().Trim());
                     }
                     else
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("L_CITY"), "");
-                        //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Whoa there Cowboy!");
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_L"), "");
+                        //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
 
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMuniCursor_left);
                     arcMuniCursor_left = null;
                     arcFeatureMuni_left = null;
-                    arcSpatialFilter_leftZip = null;
+                    //arcSpatialFilter_left = null;
 
 
-                    // RIGHT ZIP & MUNICIPALITY(SDE) //
-                    // query zipcode layer for a zipcode on right side of segment // 
-                    ISpatialFilter arcSpatialFilter_rightZip = new SpatialFilter();
-                    arcSpatialFilter_rightZip.Geometry = outPoint_posRight;
-                    arcSpatialFilter_rightZip.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+                    // query the ADDRESS SYSTEM layer left
+                    IFeatureCursor arcAddrSysCursor_left = clsGlobals.arcFLayerAddrSysQuads.Search(arcSpatialFilter_left, false);
+                    IFeature arcFeatureAddrSys_left = arcAddrSysCursor_left.NextFeature();
 
-                    IFeatureCursor arcZipCursor_right = clsGlobals.arcFLayerZipCodes.Search(arcSpatialFilter_rightZip, false);
+                    if (arcFeatureAddrSys_left != null)
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_L"), arcFeatureAddrSys_left.get_Value(arcFeatureAddrSys_left.Fields.FindField("GRID_NAME")).ToString().ToUpper().Trim());
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_L"), arcFeatureAddrSys_left.get_Value(arcFeatureAddrSys_left.Fields.FindField("QUADRANT")).ToString().ToUpper().Trim());
+                    }
+                    else
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_L"), "");
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_L"), "");
+                        //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
+                    }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureAddrSys_left);
+                    arcAddrSysCursor_left = null;
+                    arcFeatureAddrSys_left = null;
+                    //arcSpatialFilter_left = null;
+
+
+                    // query the COUNTY layer left
+                    IFeatureCursor arcCountyCursor_left = clsGlobals.arcFLayerCounties.Search(arcSpatialFilter_left, false);
+                    IFeature arcFeatureCounty_left = arcCountyCursor_left.NextFeature();
+
+                    if (arcFeatureCounty_left != null)
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COUNTY_L"), arcFeatureCounty_left.get_Value(arcFeatureCounty_left.Fields.FindField("FIPS_STR")));
+                    }
+                    else
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COUNTY_L"), "");
+                        MessageBox.Show("A county could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
+                        //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
+                    }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureCounty_left);
+                    arcCountyCursor_left = null;
+                    arcFeatureCounty_left = null;
+                    //arcSpatialFilter_left = null;
+
+
+                    // query the UNINCCOM layer left
+                    IFeatureCursor arcMetroAreasCursor_left = clsGlobals.arcFLayerMetroTwnShips.Search(arcSpatialFilter_left, false);
+                    IFeature arcFeatureMetroAreas_left = arcMetroAreasCursor_left.NextFeature();
+
+                    if (arcFeatureMetroAreas_left != null)
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), arcFeatureMetroAreas_left.get_Value(arcFeatureMetroAreas_left.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
+                    }
+                    else
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), "");
+                    }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureMetroAreas_left);
+                    arcMetroAreasCursor_left = null;
+                    arcFeatureMetroAreas_left = null;
+                    //arcSpatialFilter_left = null;
+
+
+                    // __RIGHT SPATIAL FIELDS__ //
+                    ISpatialFilter arcSpatialFilter_right = new SpatialFilter();
+                    arcSpatialFilter_right.Geometry = outPoint_posRight;
+                    arcSpatialFilter_right.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+
+                    // query ZIPCODE layer right
+                    IFeatureCursor arcZipCursor_right = clsGlobals.arcFLayerZipCodes.Search(arcSpatialFilter_right, false);
                     IFeature arcFeatureZip_right = arcZipCursor_right.NextFeature();
                     if (arcFeatureZip_right != null)
                     {
@@ -2582,11 +2628,11 @@ namespace UtransEditorAGRC
                         //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPCODE_L"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("ZIP5")));
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPCODE_R"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("ZIP5")));
                         //maybe update the POSTCOMM_L field as well with the "name" field from the zipcodes layer
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("POSTCOMM_L"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("NAME")).ToString().Trim());
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("POSTCOMM_L"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("NAME")).ToString().Trim().ToUpper());
                     }
                     else
                     {
-                        MessageBox.Show("A zipcode could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Whoa there Cowboy!");
+                        MessageBox.Show("A zipcode could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                         //give option to leave blank or abort edit operation and return
                         //return;
                     }
@@ -2597,46 +2643,142 @@ namespace UtransEditorAGRC
                     arcFeatureZip_right = null;
                     arcFeatureZip_right = null;
 
-                    // query the municipal layer
-                    IFeatureCursor arcMuniCursor_right = clsGlobals.arcFLayerMunicipalities.Search(arcSpatialFilter_rightZip, false);
+
+                    // query the MUNI layer right
+                    IFeatureCursor arcMuniCursor_right = clsGlobals.arcFLayerMunicipalities.Search(arcSpatialFilter_right, false);
                     IFeature arcFeatureMuni_right = arcMuniCursor_right.NextFeature();
 
                     if (arcFeatureMuni_right != null)
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("R_CITY"), arcFeatureMuni_right.get_Value(arcFeatureMuni_right.Fields.FindField("NAME")));
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_R"), arcFeatureMuni_right.get_Value(arcFeatureMuni_right.Fields.FindField("NAME")).ToString().ToUpper().Trim());
                     }
                     else
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("R_CITY"), "");
-                        //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Whoa there Cowboy!");
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_R"), "");
+                        //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
 
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMuniCursor_right);
                     arcMuniCursor_right = null;
                     arcFeatureMuni_right = null;
-                    arcSpatialFilter_rightZip = null;
+                    //arcSpatialFilter_right = null;
 
-                    // null out the offset points
-                    outPoint_posRight = null;
-                    outPoint_negLeft = null;
 
-                    // COUNTY_L
-                    IFeatureCursor arcCountiesCursor = clsGlobals.arcFLayerCounties.Search(arcSpatialFilter, false);
-                    IFeature arcFeature_County = arcCountiesCursor.NextFeature();
-                    if (arcFeature_County != null)
+                    // query the ADDRESS SYSTEM layer right
+                    IFeatureCursor arcAddrSysCursor_right = clsGlobals.arcFLayerAddrSysQuads.Search(arcSpatialFilter_right, false);
+                    IFeature arcFeatureAddrSys_right = arcAddrSysCursor_right.NextFeature();
+
+                    if (arcFeatureAddrSys_right != null)
                     {
-                        //update the value in the utrans based on the intersect
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COUNTY_L"), arcFeature_County.get_Value(arcFeature_County.Fields.FindField("FIPS_STR")));
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_R"), arcFeatureAddrSys_right.get_Value(arcFeatureAddrSys_right.Fields.FindField("GRID_NAME")).ToString().ToUpper().Trim());
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_R"), arcFeatureAddrSys_right.get_Value(arcFeatureAddrSys_right.Fields.FindField("QUADRANT")).ToString().ToUpper().Trim());
                     }
                     else
                     {
-                        MessageBox.Show("The midpoint of the street segment you are trying to update is not within a County.", "Whoa there Cowboy!");
-                        //give option to leave blank or abort edit operation and return
-                        //return;
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_R"), "");
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_R"), "");
+                        //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
-                    //clear out variables
-                    arcCountiesCursor = null;
-                    arcFeature_County = null;
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureAddrSys_right);
+                    arcAddrSysCursor_right = null;
+                    arcFeatureAddrSys_right = null;
+                    //arcSpatialFilter_right = null;
+
+
+                    // query the COUNTY layer right
+                    IFeatureCursor arcCountyCursor_right = clsGlobals.arcFLayerCounties.Search(arcSpatialFilter_right, false);
+                    IFeature arcFeatureCounty_right = arcCountyCursor_right.NextFeature();
+
+                    if (arcFeatureCounty_right != null)
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COUNTY_R"), arcFeatureCounty_right.get_Value(arcFeatureCounty_right.Fields.FindField("FIPS_STR")));
+                    }
+                    else
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COUNTY_R"), "");
+                        MessageBox.Show("A county could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
+                        //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
+                    }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureCounty_right);
+                    arcCountyCursor_right = null;
+                    arcFeatureCounty_right = null;
+                    //arcSpatialFilter_right = null;
+
+
+                    // query the UNINCCOM layer right
+                    IFeatureCursor arcMetroAreasCursor_right = clsGlobals.arcFLayerMetroTwnShips.Search(arcSpatialFilter_right, false);
+                    IFeature arcFeatureMetroAreas_right = arcMetroAreasCursor_right.NextFeature();
+
+                    if (arcFeatureMetroAreas_right != null)
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), arcFeatureMetroAreas_right.get_Value(arcFeatureMetroAreas_right.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
+                    }
+                    else
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), "");
+                    }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureMetroAreas_right);
+                    arcMetroAreasCursor_right = null;
+                    arcFeatureMetroAreas_right = null;
+                    //arcSpatialFilter_right = null;
+
+
+                    // null out the offset points and spatial filters
+                    outPoint_posRight = null;
+                    outPoint_negLeft = null;
+                    arcSpatialFilter_right = null;
+                    arcSpatialFilter_left = null;
+
+
+                    ////// THIS CODE IS FOR NON RIGHT/LEFT FIELDS, WHICH WE NOLONGER HAVE IN THE NEW NG SCHEMA //
+                    ////// ADDRSYS_L and QUADRANT_L
+                    ////ISpatialFilter arcSpatialFilter = new SpatialFilter();
+                    ////arcSpatialFilter.Geometry = arcUtransEdits_midPoint;
+                    ////arcSpatialFilter.GeometryField = "SHAPE";
+                    ////arcSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+                    ////arcSpatialFilter.SubFields = "*";
+
+                    ////IFeatureCursor arcAddrSysCursor = clsGlobals.arcFLayerAddrSysQuads.Search(arcSpatialFilter, false);
+                    ////IFeature arcFeatureAddrSys = arcAddrSysCursor.NextFeature();
+                    ////if (arcFeatureAddrSys != null)
+                    ////{
+                    ////    //update the value in the utrans based on the intersect
+                    ////    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_L"), arcFeatureAddrSys.get_Value(arcFeatureAddrSys.Fields.FindField("GRID_NAME")).ToString().Trim());
+                    ////    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_L"), arcFeatureAddrSys.get_Value(arcFeatureAddrSys.Fields.FindField("QUADRANT")).ToString().Trim());
+                    ////}
+                    ////else
+                    ////{
+                    ////    MessageBox.Show("The midpoint of the street segment you are trying to update is not within an AddressSystemQuadrants.", "Easy there Turbo!");
+                    ////    //give option to leave blank or abort edit operation and return
+                    ////    //return;
+                    ////}
+                    //////clear out variables
+                    ////System.Runtime.InteropServices.Marshal.ReleaseComObject(arcAddrSysCursor);
+                    ////arcAddrSysCursor = null;
+                    ////arcFeatureAddrSys = null;
+
+                    ////// COUNTY_L
+                    ////IFeatureCursor arcCountiesCursor = clsGlobals.arcFLayerCounties.Search(arcSpatialFilter, false);
+                    ////IFeature arcFeature_County = arcCountiesCursor.NextFeature();
+                    ////if (arcFeature_County != null)
+                    ////{
+                    ////    //update the value in the utrans based on the intersect
+                    ////    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COUNTY_L"), arcFeature_County.get_Value(arcFeature_County.Fields.FindField("FIPS_STR")));
+                    ////}
+                    ////else
+                    ////{
+                    ////    MessageBox.Show("The midpoint of the street segment you are trying to update is not within a County.", "Easy there Turbo!");
+                    ////    //give option to leave blank or abort edit operation and return
+                    ////    //return;
+                    ////}
+                    //////clear out variables
+                    ////arcCountiesCursor = null;
+                    ////arcFeature_County = null;
+
+
 
                     // FULLNAME //
                     //check if street name is numeric
