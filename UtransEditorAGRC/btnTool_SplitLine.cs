@@ -91,7 +91,7 @@ namespace UtransEditorAGRC
             base.m_cursor = new System.Windows.Forms.Cursor(GetType(), GetType().Name + ".cur");
         }
 
-        #region Overridden Class Methods
+        #region Overridden class Methods
 
 
         /// Occurs when this tool is created
@@ -220,7 +220,7 @@ namespace UtransEditorAGRC
 
                 // set classic snapping to true
                 //IEditProperties4 arcEditProperties4 = clsGlobals.arcEditor as IEditProperties4;
-                //arcEditProperties4.ClassicSnapping = true;
+                //arcEditProperties4.classicSnapping = true;
 
                 // set some variables for capturing where the user's click location
                 ISnapEnvironment arcSnapEnvironment = clsGlobals.arcEditor as ISnapEnvironment;
@@ -1033,18 +1033,18 @@ namespace UtransEditorAGRC
 
 
         // get features that intersect the buffered mouse click and return them as a list of IFeature
-        public List<IFeature> checkForIntersectingSegments(IPoint mousePoint, double buffer, IFeatureClass featureClass)
+        public List<IFeature> checkForIntersectingSegments(IPoint mousePoint, double buffer, IFeatureClass FeatureClass)
         {
             var envelope = mousePoint.Envelope;
             envelope.Expand(buffer, buffer, false);
-            var geodataset = (IGeoDataset)featureClass;
-            string shapeFieldName = featureClass.ShapeFieldName;
+            var geodataset = (IGeoDataset)FeatureClass;
+            string shapeFieldName = FeatureClass.ShapeFieldName;
             ESRI.ArcGIS.Geodatabase.ISpatialFilter spatialFilter = new ESRI.ArcGIS.Geodatabase.SpatialFilter();
             spatialFilter.Geometry = envelope;
             spatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelCrosses;  // website for other options edndoc.esri.com/arcobjects/9.2/ComponentHelp/esrigeodatabase/esrispatialrelenum.htm
             spatialFilter.set_OutputSpatialReference(shapeFieldName, geodataset.SpatialReference);
 
-            ESRI.ArcGIS.Geodatabase.IFeatureCursor featureCursor = featureClass.Search(spatialFilter, false);
+            ESRI.ArcGIS.Geodatabase.IFeatureCursor featureCursor = FeatureClass.Search(spatialFilter, false);
 
             var features = new List<IFeature>();
             ESRI.ArcGIS.Geodatabase.IFeature feature;

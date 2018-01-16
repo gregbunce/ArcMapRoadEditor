@@ -216,7 +216,7 @@
             this.MinimizeBox = false;
             this.Name = "ExportToIgnoreFC";
             this.ShowIcon = false;
-            this.Text = "Export Ignored Records to Feature Class";
+            this.Text = "Export Ignored Records to Feature class";
             this.Load += new System.EventHandler(this.ExportToIgnoreFC_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

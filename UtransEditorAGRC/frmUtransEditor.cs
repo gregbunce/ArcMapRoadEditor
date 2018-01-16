@@ -44,8 +44,8 @@ namespace UtransEditorAGRC
         string txtUtransInitialA1_POSTDIR;
         string txtUtransInitialA2_PREDIR;
         string txtUtransInitialA2_POSTDIR;
-        //string txtUtransInitialAcsAlias;
-        string txtUtransInitialAscSuf;
+        string txtUtransInitialAN_NAME;
+        string txtUtransInitialAN_POSTDIR;
         int intUtransInitialCartoCodeIndex;
         string strGoogleLogLeftTo;
         string strGoogleLogLeftFrom;
@@ -429,8 +429,8 @@ namespace UtransEditorAGRC
                 txtUtransInitialA1_POSTDIR = null;
                 txtUtransInitialA2_PREDIR = null;
                 txtUtransInitialA2_POSTDIR = null;
-                //txtUtransInitialAcsAlias = null;
-                txtUtransInitialAscSuf = null;
+                txtUtransInitialAN_NAME = null;
+                txtUtransInitialAN_POSTDIR = null;
 
                 arcFeatureSelection = clsGlobals.arcGeoFLayerDfcResult as IFeatureSelection;
                 arcSelSet = arcFeatureSelection.SelectionSet;
@@ -532,7 +532,7 @@ namespace UtransEditorAGRC
 
                         //get the county's cartocode
                         //strCountyCartoCode = arcCountyFeature.get_Value(arcCountyFeature.Fields.FindFieldByAliasName("CARTOCODE")).ToString().Trim();
-                        clsGlobals.strCountyID = arcCountyFeature.get_Value(arcCountyFeature.Fields.FindFieldByAliasName("COFIPS")).ToString().Trim();
+                        clsGlobals.strCountyID = arcCountyFeature.get_Value(arcCountyFeature.Fields.FindField("COUNTY_L")).ToString().Trim();
                     }
 
 
@@ -598,8 +598,8 @@ namespace UtransEditorAGRC
                 txtUtransInitialA1_POSTDIR = txtUtransA1_POSTDIR.Text;
                 txtUtransInitialA2_PREDIR = txtUtransA2_PREDIR.Text;
                 txtUtransInitialA2_POSTDIR = txtUtransA2_POSTDIR.Text;
-                //txtUtransInitialAcsAlias = txtUtransAN_NAME.Text;
-                txtUtransInitialAscSuf = txtUtransAN_POSTDIR.Text;
+                txtUtransInitialAN_NAME = txtUtransAN_NAME.Text;
+                txtUtransInitialAN_POSTDIR = txtUtransAN_POSTDIR.Text;
 
                 //revert labels back to regular (non-italic)
                 lblAN_NAME.Font = fontLabelRegular;
@@ -639,7 +639,7 @@ namespace UtransEditorAGRC
                     txtUtransA2_PREDIR.BackColor = Color.LightGray;
                     txtUtransA2_NAME.BackColor = Color.LightGray;
                     txtUtransA2_POSTTYPE.BackColor = Color.LightGray;
-                    txtUtransA1_POSTDIR.BackColor = Color.LightGray;
+                    txtUtransA2_POSTDIR.BackColor = Color.LightGray;
                     txtUtranStName.BackColor = Color.LightGray;
                     txtUtranStType.BackColor = Color.LightGray;
                     txtUtranPOSTDIR.BackColor = Color.LightGray;
@@ -919,10 +919,10 @@ namespace UtransEditorAGRC
                     //lblA2_NAME.Font = fontLabelDataMismatch;
                     //boolHadDifferenceA2_NAME = true;
                 }
-                if (txtCountyA2_POSTTYPE.Text.ToUpper().ToString() != txtUtransA2_NAME.Text.ToUpper().ToString())
+                if (txtCountyA2_POSTTYPE.Text.ToUpper().ToString() != txtUtransA2_POSTTYPE.Text.ToUpper().ToString())
                 {
-                    txtUtransA2_NAME.BackColor = Color.LightYellow;
-                    txtCountyA2_NAME.BackColor = Color.LightYellow;
+                    txtUtransA2_POSTTYPE.BackColor = Color.LightYellow;
+                    txtCountyA2_POSTTYPE.BackColor = Color.LightYellow;
                     //lblA2_POSTTYPE.Font = fontLabelDataMismatch;
                     //boolHadDifferenceA2_POSTTYPE = true;
                 }
@@ -1263,11 +1263,11 @@ namespace UtransEditorAGRC
                         txtUtransAN_NAME.Text = txtCountyAN_NAME.Text;
                         return;
                     }
-                    //if (txtUtransAN_NAME.Text == txtCountyAN_NAME.Text)
-                    //{
-                    //    txtUtransAN_NAME.Text = txtUtransInitialAcsAlias;
-                    //    return;
-                    //}
+                    if (txtUtransAN_NAME.Text == txtCountyAN_NAME.Text)
+                    {
+                        txtUtransAN_NAME.Text = txtUtransInitialAN_NAME;
+                        return;
+                    }
                 }
 
                 // AN_POSTDIR
@@ -1280,7 +1280,7 @@ namespace UtransEditorAGRC
                     }
                     if (txtUtransAN_POSTDIR.Text == txtCountyAN_POSTDIR.Text)
                     {
-                        txtUtransAN_POSTDIR.Text = txtUtransInitialAscSuf;
+                        txtUtransAN_POSTDIR.Text = txtUtransInitialAN_POSTDIR;
                         return;
                     }
                 }
@@ -1661,13 +1661,13 @@ namespace UtransEditorAGRC
 
                 if (txtUtransA1_PREDIR.Text != txtUtransInitialA1_PREDIR)
                 {
-                    lblA1_NAME.Font = fontLabelHasEdits;
+                    lblA1_PREDIR.Font = fontLabelHasEdits;
                     //lblAlias.ForeColor = Color.LightSalmon;
                     btnSaveToUtrans.Enabled = true;
                 }
                 else
                 {
-                    lblA1_NAME.Font = fontLabelRegular;
+                    lblA1_PREDIR.Font = fontLabelRegular;
                     //lblAlias.ForeColor = Color.Black;
                     //btnSaveToUtrans.Enabled = false;
                     btnSaveToUtrans.Enabled = true;
@@ -1824,8 +1824,8 @@ namespace UtransEditorAGRC
             {
                 if (txtUtransA2_PREDIR.Text.ToUpper().ToString() != txtCountyA2_PREDIR.Text.ToUpper().ToString())
                 {
-                    txtUtransA1_PREDIR.BackColor = Color.LightYellow;
-                    txtCountyA1_PREDIR.BackColor = Color.LightYellow;
+                    txtUtransA2_PREDIR.BackColor = Color.LightYellow;
+                    txtCountyA2_PREDIR.BackColor = Color.LightYellow;
                 }
                 else if (txtUtransA2_PREDIR.Text.ToUpper().ToString() == txtCountyA2_PREDIR.Text.ToUpper().ToString())
                 {
@@ -1835,13 +1835,13 @@ namespace UtransEditorAGRC
 
                 if (txtUtransA2_PREDIR.Text != txtUtransInitialA2_PREDIR)
                 {
-                    lblA1_NAME.Font = fontLabelHasEdits;
+                    lblA2_PREDIR.Font = fontLabelHasEdits;
                     //lblAlias.ForeColor = Color.LightSalmon;
                     btnSaveToUtrans.Enabled = true;
                 }
                 else
                 {
-                    lblA1_NAME.Font = fontLabelRegular;
+                    lblA2_PREDIR.Font = fontLabelRegular;
                     //lblAlias.ForeColor = Color.Black;
                     //btnSaveToUtrans.Enabled = false;
                     btnSaveToUtrans.Enabled = true;
@@ -2005,12 +2005,12 @@ namespace UtransEditorAGRC
                     txtCountyAN_NAME.BackColor = Color.White;
                 }
 
-                //if (txtUtransAN_NAME.Text != txtUtransInitialAcsAlias)
-                //{
-                //    lblAN_NAME.Font = fontLabelHasEdits;
-                //    //lblAcsAlias.ForeColor = Color.LightSalmon;
-                //    btnSaveToUtrans.Enabled = true;
-                //}
+                if (txtUtransAN_NAME.Text != txtUtransInitialAN_NAME)
+                {
+                    lblAN_NAME.Font = fontLabelHasEdits;
+                    //lblAcsAlias.ForeColor = Color.LightSalmon;
+                    btnSaveToUtrans.Enabled = true;
+                }
                 else
                 {
                     lblAN_NAME.Font = fontLabelRegular;
@@ -2048,7 +2048,7 @@ namespace UtransEditorAGRC
                     txtCountyAN_POSTDIR.BackColor = Color.White;
                 }
 
-                if (txtUtransAN_POSTDIR.Text != txtUtransInitialAscSuf)
+                if (txtUtransAN_POSTDIR.Text != txtUtransInitialAN_POSTDIR)
                 {
                     lblAN_POSTDIR.Font = fontLabelHasEdits;
                     //lblAN_POSTDIR.ForeColor = Color.LightSalmon;
@@ -2476,8 +2476,8 @@ namespace UtransEditorAGRC
                     arcUtransEdits_polyline.QueryPoint(esriSegmentExtension.esriNoExtension, 0.5, true, arcUtransEdits_midPoint);
                     //MessageBox.Show("The midpoint of the selected line segment is: " + arcUtransEdits_midPoint.X.ToString() + ", " + arcUtransEdits_midPoint.Y.ToString());
 
-                    // spatial intersect for the following fields: ADDR_SYS, ADDR_QUAD, ZIPLEFT, ZIPRIGHT, COFIPS (Maybe USPS_PLACE)
-                    // ADDR_SYS and ADDR_QUAD
+                    // spatial intersect for the following fields: ADDRSYS_L, QUADRANT_L, ZIPCODE_L, ZIPCODE_R, COUNTY_L (Maybe POSTCOMM_L)
+                    // ADDRSYS_L and QUADRANT_L
                     ISpatialFilter arcSpatialFilter = new SpatialFilter();
                     arcSpatialFilter.Geometry = arcUtransEdits_midPoint;
                     arcSpatialFilter.GeometryField = "SHAPE";
@@ -2489,8 +2489,8 @@ namespace UtransEditorAGRC
                     if (arcFeatureAddrSys != null)
                     {
                         //update the value in the utrans based on the intersect
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDR_SYS"), arcFeatureAddrSys.get_Value(arcFeatureAddrSys.Fields.FindField("GRID_NAME")).ToString().Trim());
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDR_QUAD"), arcFeatureAddrSys.get_Value(arcFeatureAddrSys.Fields.FindField("QUADRANT")).ToString().Trim());
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_L"), arcFeatureAddrSys.get_Value(arcFeatureAddrSys.Fields.FindField("GRID_NAME")).ToString().Trim());
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_L"), arcFeatureAddrSys.get_Value(arcFeatureAddrSys.Fields.FindField("QUADRANT")).ToString().Trim());
                     }
                     else
                     {
@@ -2503,7 +2503,7 @@ namespace UtransEditorAGRC
                     arcAddrSysCursor = null;
                     arcFeatureAddrSys = null;
 
-                    // ZIPLEFT and ZIPRIGHT (use iconstructpoint.constructoffset method to offset the midpoint of the line)
+                    // ZIPCODE_L and ZIPCODE_R (use iconstructpoint.constructoffset method to offset the midpoint of the line)
                     // test the iconstructpoint.constructtooffset mehtod
                     IConstructPoint arcConstructionPoint_posRight = new PointClass();
                     IConstructPoint arcConstructionPoint_negLeft = new PointClass();
@@ -2530,10 +2530,10 @@ namespace UtransEditorAGRC
                     if (arcFeatureZip_left != null)
                     {
                         //update the value in the utrans based on the intersect
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPLEFT"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("ZIP5")));
-                        //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPRIGHT"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("ZIP5")));
-                        //maybe update the usps_place field as well with the "name" field from the zipcodes layer
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("USPS_PLACE"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("NAME")).ToString().Trim());
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPCODE_L"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("ZIP5")));
+                        //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPCODE_R"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("ZIP5")));
+                        //maybe update the POSTCOMM_L field as well with the "name" field from the zipcodes layer
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("POSTCOMM_L"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("NAME")).ToString().Trim());
                     }
                     else
                     {
@@ -2579,10 +2579,10 @@ namespace UtransEditorAGRC
                     if (arcFeatureZip_right != null)
                     {
                         //update the value in the utrans based on the intersect
-                        //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPLEFT"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("ZIP5")));
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPRIGHT"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("ZIP5")));
-                        //maybe update the usps_place field as well with the "name" field from the zipcodes layer
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("USPS_PLACE"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("NAME")).ToString().Trim());
+                        //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPCODE_L"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("ZIP5")));
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPCODE_R"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("ZIP5")));
+                        //maybe update the POSTCOMM_L field as well with the "name" field from the zipcodes layer
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("POSTCOMM_L"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("NAME")).ToString().Trim());
                     }
                     else
                     {
@@ -2620,13 +2620,13 @@ namespace UtransEditorAGRC
                     outPoint_posRight = null;
                     outPoint_negLeft = null;
 
-                    // COFIPS
+                    // COUNTY_L
                     IFeatureCursor arcCountiesCursor = clsGlobals.arcFLayerCounties.Search(arcSpatialFilter, false);
                     IFeature arcFeature_County = arcCountiesCursor.NextFeature();
                     if (arcFeature_County != null)
                     {
                         //update the value in the utrans based on the intersect
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COFIPS"), arcFeature_County.get_Value(arcFeature_County.Fields.FindField("FIPS_STR")));
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COUNTY_L"), arcFeature_County.get_Value(arcFeature_County.Fields.FindField("FIPS_STR")));
                     }
                     else
                     {
@@ -2927,7 +2927,8 @@ namespace UtransEditorAGRC
 
                 //create query filter to get the new segment (from county fc)
                 IQueryFilter arcQueryFilter_loadSegment = new QueryFilter();
-                arcQueryFilter_loadSegment.SubFields = "Shape,ZIPLEFT,ZIPRIGHT,FROMADDR_L,TOADDR_L,FROMADDR_R,TOADDR_R,PREDIR,NAME,POSTTYPE,POSTDIR,A1_PREDIR,A1_NAME,A1_POSTTYPE,A1_POSTDIR,A2_PREDIR,A2_NAME,A2_POSTTYPE,A2_POSTDIR,AN_NAME,AN_POSTDIR,USPS_PLACE,ONEWAY,SPEED,VERTLEVEL,CLASS,MODIFYDATE,COLLDATE,ACCURACY,SOURCE,NOTES,STATUS,ACCESS,USAGENOTES,BIKE_L,BIKE_R,BIKE_NOTES,BIKE_STATUS,GRID1MIL,GRID100K";
+                arcQueryFilter_loadSegment.SubFields = "Shape,STATUS,CARTOCODE,FULLNAME,FROMADDR_L,TOADDR_L,FROMADDR_R,TOADDR_R,PARITY_L,PARITY_R,PREDIR,NAME,POSTTYPE,POSTDIR,AN_NAME,AN_POSTDIR,A1_PREDIR,A1_NAME,A1_POSTTYPE,A1_POSTDIR,A2_PREDIR,A2_NAME,A2_POSTTYPE,A2_POSTDIR,QUADRANT_L,QUADRANT_R,STATE_L,STATE_R,COUNTY_L,COUNTY_R,ADDRSYS_L,ADDRSYS_R,POSTCOMM_L,POSTCOMM_R,ZIPCODE_L,ZIPCODE_R,INCMUNI_L,INCMUNI_R,UNINCCOM_L,UNINCCOM_R,NBRHDCOM_L,NBRHDCOM_R,ER_CAD_ZONES,ESN_L,ESN_R,MSAGCOMM_L,MSAGCOMM_R,ONEWAY,VERT_LEVEL,SPEED_LMT,ACCESSCODE,DOT_HWYNAM,DOT_RTNAME,DOT_RTPART,DOT_F_MILE,DOT_T_MILE,DOT_FCLASS,DOT_SRFTYP,DOT_CLASS,DOT_OWN_L,DOT_OWN_R,DOT_AADT,DOT_AADTYR,DOT_THRULANES,BIKE_L,BIKE_R,BIKE_PLN_L,BIKE_PLN_R,BIKE_REGPR,BIKE_NOTES,UNIQUE_ID,LOCAL_UID,UTAHRD_UID,SOURCE,UPDATED,EFFECTIVE,EXPIRE,CREATED,CREATOR,EDITOR,CUSTOMTAGS";
+                //OLD SCHEMA >> arcQueryFilter_loadSegment.SubFields = "Shape,ZIPCODE_L,ZIPCODE_R,FROMADDR_L,TOADDR_L,FROMADDR_R,TOADDR_R,PREDIR,NAME,POSTTYPE,POSTDIR,A1_PREDIR,A1_NAME,A1_POSTTYPE,A1_POSTDIR,A2_PREDIR,A2_NAME,A2_POSTTYPE,A2_POSTDIR,AN_NAME,AN_POSTDIR,POSTCOMM_L,ONEWAY,SPEED_LMT_LMT,VERT_LEVEL,DOT_CLASS,MODIFYDATE,COLLDATE,ACCURACY,SOURCE,NOTES,STATUS,ACCESS,USAGENOTES,BIKE_L,BIKE_R,BIKE_NOTES,BIKE_STATUS,GRID1MIL,GRID100K";
                 arcQueryFilter_loadSegment.WhereClause = "OBJECTID = " + strCountyOID;
 
                 //get the county roads segment for quering new utrans street segment below
@@ -3507,8 +3508,8 @@ namespace UtransEditorAGRC
                 arcPolyline.QueryPoint(esriSegmentExtension.esriNoExtension, 0.5, true, arcMidPoint);
                 //MessageBox.Show("The midpoint of the selected line segment is: " + arcUtransEdits_midPoint.X.ToString() + ", " + arcUtransEdits_midPoint.Y.ToString());
 
-                // spatial intersect for the following fields: ADDR_SYS, ADDR_QUAD, ZIPLEFT, ZIPRIGHT, COFIPS (Maybe USPS_PLACE)
-                // ADDR_SYS and ADDR_QUAD
+                // spatial intersect for the following fields: ADDRSYS_L, QUADRANT_L, ZIPCODE_L, ZIPCODE_R, COUNTY_L (Maybe POSTCOMM_L)
+                // ADDRSYS_L and QUADRANT_L
                 ISpatialFilter arcSpatialFilterCity = new SpatialFilter();
                 arcSpatialFilterCity.Geometry = arcMidPoint;
                 arcSpatialFilterCity.GeometryField = "SHAPE";

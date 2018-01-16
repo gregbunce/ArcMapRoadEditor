@@ -86,7 +86,7 @@ namespace UtransEditorAGRC
 
         }
 
-        #region Overridden Class Methods
+        #region Overridden class Methods
 
         /// <summary>
         /// Occurs when this command is created

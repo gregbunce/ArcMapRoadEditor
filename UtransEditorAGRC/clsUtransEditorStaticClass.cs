@@ -15,7 +15,7 @@ namespace UtransEditorAGRC
     class clsUtransEditorStaticClass
     {
         //set up nlogger for catching errors
-        //private static Logger logger = LogManager.GetCurrentClassLogger();
+        //private static Logger logger = LogManager.GetCurrentclassLogger();
 
         public static SpreadsheetsService service;
         public static string accessToken;

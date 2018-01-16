@@ -21,7 +21,7 @@ namespace UtransEditorAGRC
         IFeatureLayer arcFL_DFC = null;
         IFeatureLayer arcFL_IgnoreFGDB = null;
         IFeature arcFeat_DFC = null;
-        //string[] strCOFIPS_Array;
+        //string[] strCOUNTY_L_Array;
 
         public ExportToIgnoreFC()
         {
@@ -136,13 +136,13 @@ namespace UtransEditorAGRC
                     }
 
 
-                    // split the cofips value to get out the number
-                    string strCOFIPS_Combobox = null;
-                    string[] strCOFIPS_Array = null;
-                    string strCOFIPS_Number = null;
-                    strCOFIPS_Combobox = cboCountyName.Text;
-                    strCOFIPS_Array = strCOFIPS_Combobox.Split('-');
-                    strCOFIPS_Number = strCOFIPS_Array[0].ToString().Trim();
+                    // split the COUNTY_L value to get out the number
+                    string strCOUNTY_L_Combobox = null;
+                    string[] strCOUNTY_L_Array = null;
+                    string strCOUNTY_L_Number = null;
+                    strCOUNTY_L_Combobox = cboCountyName.Text;
+                    strCOUNTY_L_Array = strCOUNTY_L_Combobox.Split('-');
+                    strCOUNTY_L_Number = strCOUNTY_L_Array[0].ToString().Trim();
 
 
                     // set up feature cursor for getting the ignore records from the dfc
@@ -178,7 +178,7 @@ namespace UtransEditorAGRC
                         arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("CURRENT_NOTES"), strCurrentNotes);
                         arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("PREV__NOTES"), strPrevNotes);
                         arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("Date_Ignored"), dateTimePickerExportIgnores.Value.ToShortDateString());
-                        arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("COFIPS"), strCOFIPS_Number);
+                        arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("COUNTY_L"), strCOUNTY_L_Number);
 
                         // set up query filters and cursors for the utrans segment to get values from
                         if (strUtransOID != "-1")
@@ -272,7 +272,7 @@ namespace UtransEditorAGRC
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(arcQF_DFC_Ignore);
                     GC.Collect();
 
-                    MessageBox.Show("Done exporting Ignores from " + strCOFIPS_Array[1].ToString().Trim() + " County's DFC_RESULT layer.", "Finished!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Done exporting Ignores from " + strCOUNTY_L_Array[1].ToString().Trim() + " County's DFC_RESULT layer.", "Finished!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     
                     //close the form
                     this.Close();

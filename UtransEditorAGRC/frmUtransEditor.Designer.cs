@@ -155,7 +155,7 @@
             this.txtCountyFROMADDR_L.Size = new System.Drawing.Size(78, 22);
             this.txtCountyFROMADDR_L.TabIndex = 1;
             this.txtCountyFROMADDR_L.TabStop = false;
-            this.txtCountyFROMADDR_L.Tag = "CoFROMADDR_L";
+            this.txtCountyFROMADDR_L.Tag = "CoLeftFromAddress";
             // 
             // label2
             // 
@@ -227,7 +227,7 @@
             this.txtCountyPOSTDIR.Size = new System.Drawing.Size(55, 22);
             this.txtCountyPOSTDIR.TabIndex = 17;
             this.txtCountyPOSTDIR.TabStop = false;
-            this.txtCountyPOSTDIR.Tag = "CoPOSTDIR";
+            this.txtCountyPOSTDIR.Tag = "CoStreetNamePostDirectional";
             // 
             // txtCountyStType
             // 
@@ -238,7 +238,7 @@
             this.txtCountyStType.Size = new System.Drawing.Size(78, 22);
             this.txtCountyStType.TabIndex = 16;
             this.txtCountyStType.TabStop = false;
-            this.txtCountyStType.Tag = "CoPOSTTYPE";
+            this.txtCountyStType.Tag = "CoStreetNamePostType";
             // 
             // label6
             // 
@@ -259,7 +259,7 @@
             this.txtCountyStName.Size = new System.Drawing.Size(239, 22);
             this.txtCountyStName.TabIndex = 15;
             this.txtCountyStName.TabStop = false;
-            this.txtCountyStName.Tag = "CoNAME";
+            this.txtCountyStName.Tag = "CoStreetName";
             // 
             // label1
             // 
@@ -280,7 +280,7 @@
             this.txtCountyPreDir.Size = new System.Drawing.Size(67, 22);
             this.txtCountyPreDir.TabIndex = 14;
             this.txtCountyPreDir.TabStop = false;
-            this.txtCountyPreDir.Tag = "CoPREDIR";
+            this.txtCountyPreDir.Tag = "CoStreetNamePreDirectional";
             // 
             // txtCountyTOADDR_L
             // 
@@ -291,7 +291,7 @@
             this.txtCountyTOADDR_L.Size = new System.Drawing.Size(67, 22);
             this.txtCountyTOADDR_L.TabIndex = 7;
             this.txtCountyTOADDR_L.TabStop = false;
-            this.txtCountyTOADDR_L.Tag = "CoTOADDR_L";
+            this.txtCountyTOADDR_L.Tag = "CoLeftToAddress";
             // 
             // label10
             // 
@@ -312,7 +312,7 @@
             this.txtCountyFROMADDR_R.Size = new System.Drawing.Size(78, 22);
             this.txtCountyFROMADDR_R.TabIndex = 8;
             this.txtCountyFROMADDR_R.TabStop = false;
-            this.txtCountyFROMADDR_R.Tag = "CoFROMADDR_R";
+            this.txtCountyFROMADDR_R.Tag = "CoRightFromAddress";
             // 
             // label9
             // 
@@ -333,7 +333,7 @@
             this.txtCountyTOADDR_R.Size = new System.Drawing.Size(67, 22);
             this.txtCountyTOADDR_R.TabIndex = 9;
             this.txtCountyTOADDR_R.TabStop = false;
-            this.txtCountyTOADDR_R.Tag = "CoTOADDR_R";
+            this.txtCountyTOADDR_R.Tag = "CoRightToAddress";
             // 
             // label8
             // 
@@ -394,7 +394,7 @@
             this.txtCountyA2_POSTDIR.Name = "txtCountyA2_POSTDIR";
             this.txtCountyA2_POSTDIR.Size = new System.Drawing.Size(76, 22);
             this.txtCountyA2_POSTDIR.TabIndex = 24;
-            this.txtCountyA2_POSTDIR.Tag = "CoA2_POSTDIR";
+            this.txtCountyA2_POSTDIR.Tag = "CoAlias2PostDirectional";
             // 
             // txtCountyA2_PREDIR
             // 
@@ -405,7 +405,7 @@
             this.txtCountyA2_PREDIR.Name = "txtCountyA2_PREDIR";
             this.txtCountyA2_PREDIR.Size = new System.Drawing.Size(67, 22);
             this.txtCountyA2_PREDIR.TabIndex = 24;
-            this.txtCountyA2_PREDIR.Tag = "CoA2_PREDIR";
+            this.txtCountyA2_PREDIR.Tag = "CoAlias2PreDirectional";
             // 
             // txtCountyA1_POSTDIR
             // 
@@ -416,7 +416,7 @@
             this.txtCountyA1_POSTDIR.Name = "txtCountyA1_POSTDIR";
             this.txtCountyA1_POSTDIR.Size = new System.Drawing.Size(76, 22);
             this.txtCountyA1_POSTDIR.TabIndex = 21;
-            this.txtCountyA1_POSTDIR.Tag = "CoA1_POSTDIR";
+            this.txtCountyA1_POSTDIR.Tag = "CoAlias1PostDirectional";
             // 
             // label16
             // 
@@ -436,7 +436,7 @@
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(74, 13);
             this.label18.TabIndex = 23;
-            this.label18.Text = "A1_POSTDIR";
+            this.label18.Text = "A2_POSTDIR";
             // 
             // txtCountyA1_PREDIR
             // 
@@ -447,7 +447,7 @@
             this.txtCountyA1_PREDIR.Name = "txtCountyA1_PREDIR";
             this.txtCountyA1_PREDIR.Size = new System.Drawing.Size(67, 22);
             this.txtCountyA1_PREDIR.TabIndex = 21;
-            this.txtCountyA1_PREDIR.Tag = "CoA1_PREDIR";
+            this.txtCountyA1_PREDIR.Tag = "CoAlias1PreDirectional";
             // 
             // label19
             // 
@@ -488,7 +488,7 @@
             this.txtCountyAN_POSTDIR.Size = new System.Drawing.Size(102, 22);
             this.txtCountyAN_POSTDIR.TabIndex = 9;
             this.txtCountyAN_POSTDIR.TabStop = false;
-            this.txtCountyAN_POSTDIR.Tag = "CoAN_POSTDIR";
+            this.txtCountyAN_POSTDIR.Tag = "CoAliasNumericPostDirectional";
             // 
             // label17
             // 
@@ -509,7 +509,7 @@
             this.txtCountyAN_NAME.Size = new System.Drawing.Size(102, 22);
             this.txtCountyAN_NAME.TabIndex = 8;
             this.txtCountyAN_NAME.TabStop = false;
-            this.txtCountyAN_NAME.Tag = "CoAN_NAME";
+            this.txtCountyAN_NAME.Tag = "CoAliasNumericStreetName";
             // 
             // label14
             // 
@@ -540,7 +540,7 @@
             this.txtCountyA2_POSTTYPE.Size = new System.Drawing.Size(92, 22);
             this.txtCountyA2_POSTTYPE.TabIndex = 5;
             this.txtCountyA2_POSTTYPE.TabStop = false;
-            this.txtCountyA2_POSTTYPE.Tag = "CoA2_POSTTYPE";
+            this.txtCountyA2_POSTTYPE.Tag = "CoAlias2PostType";
             // 
             // txtCountyA2_NAME
             // 
@@ -551,7 +551,7 @@
             this.txtCountyA2_NAME.Size = new System.Drawing.Size(199, 22);
             this.txtCountyA2_NAME.TabIndex = 4;
             this.txtCountyA2_NAME.TabStop = false;
-            this.txtCountyA2_NAME.Tag = "CoA2_NAME";
+            this.txtCountyA2_NAME.Tag = "CoAlias2StreetName";
             // 
             // txtCountyA1_POSTTYPE
             // 
@@ -562,7 +562,7 @@
             this.txtCountyA1_POSTTYPE.Size = new System.Drawing.Size(92, 22);
             this.txtCountyA1_POSTTYPE.TabIndex = 3;
             this.txtCountyA1_POSTTYPE.TabStop = false;
-            this.txtCountyA1_POSTTYPE.Tag = "CoA1_POSTTYPE";
+            this.txtCountyA1_POSTTYPE.Tag = "CoAlias1PostType";
             // 
             // txtCountyA1_NAME
             // 
@@ -573,7 +573,7 @@
             this.txtCountyA1_NAME.Size = new System.Drawing.Size(199, 22);
             this.txtCountyA1_NAME.TabIndex = 2;
             this.txtCountyA1_NAME.TabStop = false;
-            this.txtCountyA1_NAME.Tag = "CoA1_NAME";
+            this.txtCountyA1_NAME.Tag = "CoAlias1StreetName";
             // 
             // label12
             // 
@@ -646,7 +646,7 @@
             this.txtUtransA2_POSTDIR.Name = "txtUtransA2_POSTDIR";
             this.txtUtransA2_POSTDIR.Size = new System.Drawing.Size(76, 22);
             this.txtUtransA2_POSTDIR.TabIndex = 20;
-            this.txtUtransA2_POSTDIR.Tag = "A2_POSTDIR";
+            this.txtUtransA2_POSTDIR.Tag = "Alias2PostDirectional";
             this.txtUtransA2_POSTDIR.TextChanged += new System.EventHandler(this.txtUtransA2_POSTDIR_TextChanged);
             // 
             // txtUtransA1_POSTDIR
@@ -658,7 +658,7 @@
             this.txtUtransA1_POSTDIR.Name = "txtUtransA1_POSTDIR";
             this.txtUtransA1_POSTDIR.Size = new System.Drawing.Size(76, 22);
             this.txtUtransA1_POSTDIR.TabIndex = 14;
-            this.txtUtransA1_POSTDIR.Tag = "A1_POSTDIR";
+            this.txtUtransA1_POSTDIR.Tag = "Alias1PostDirectional";
             this.txtUtransA1_POSTDIR.TextChanged += new System.EventHandler(this.txtUtransA1_POSTDIR_TextChanged);
             // 
             // lblA2_POSTDIR
@@ -669,7 +669,7 @@
             this.lblA2_POSTDIR.Name = "lblA2_POSTDIR";
             this.lblA2_POSTDIR.Size = new System.Drawing.Size(74, 13);
             this.lblA2_POSTDIR.TabIndex = 19;
-            this.lblA2_POSTDIR.Text = "A1_POSTDIR";
+            this.lblA2_POSTDIR.Text = "A2_POSTDIR";
             this.lblA2_POSTDIR.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // lblA1_POSTDIR
@@ -692,7 +692,7 @@
             this.txtUtransA2_PREDIR.Name = "txtUtransA2_PREDIR";
             this.txtUtransA2_PREDIR.Size = new System.Drawing.Size(67, 22);
             this.txtUtransA2_PREDIR.TabIndex = 17;
-            this.txtUtransA2_PREDIR.Tag = "A2_PREDIR";
+            this.txtUtransA2_PREDIR.Tag = "Alias2PreDirectional";
             this.txtUtransA2_PREDIR.TextChanged += new System.EventHandler(this.txtUtransA2_PREDIR_TextChanged);
             // 
             // txtUtransA1_PREDIR
@@ -704,7 +704,7 @@
             this.txtUtransA1_PREDIR.Name = "txtUtransA1_PREDIR";
             this.txtUtransA1_PREDIR.Size = new System.Drawing.Size(67, 22);
             this.txtUtransA1_PREDIR.TabIndex = 14;
-            this.txtUtransA1_PREDIR.Tag = "A1_PREDIR";
+            this.txtUtransA1_PREDIR.Tag = "Alias1PreDirectional";
             this.txtUtransA1_PREDIR.TextChanged += new System.EventHandler(this.txtUtransA1_PREDIR_TextChanged);
             // 
             // lblA2_PREDIR
@@ -738,7 +738,7 @@
             this.txtUtransAN_POSTDIR.Name = "txtUtransAN_POSTDIR";
             this.txtUtransAN_POSTDIR.Size = new System.Drawing.Size(102, 22);
             this.txtUtransAN_POSTDIR.TabIndex = 14;
-            this.txtUtransAN_POSTDIR.Tag = "AN_POSTDIR";
+            this.txtUtransAN_POSTDIR.Tag = "AliasNumericPostDirectional";
             this.txtUtransAN_POSTDIR.TextChanged += new System.EventHandler(this.txtUtransAN_POSTDIR_TextChanged);
             // 
             // txtUtransAN_NAME
@@ -750,7 +750,7 @@
             this.txtUtransAN_NAME.Name = "txtUtransAN_NAME";
             this.txtUtransAN_NAME.Size = new System.Drawing.Size(102, 22);
             this.txtUtransAN_NAME.TabIndex = 13;
-            this.txtUtransAN_NAME.Tag = "AN_NAME";
+            this.txtUtransAN_NAME.Tag = "AliasNumericStreetName";
             this.txtUtransAN_NAME.TextChanged += new System.EventHandler(this.txtUtransAcsAllias_TextChanged);
             // 
             // lblAN_POSTDIR
@@ -806,7 +806,7 @@
             this.txtUtransA2_POSTTYPE.Name = "txtUtransA2_POSTTYPE";
             this.txtUtransA2_POSTTYPE.Size = new System.Drawing.Size(92, 22);
             this.txtUtransA2_POSTTYPE.TabIndex = 12;
-            this.txtUtransA2_POSTTYPE.Tag = "A2_POSTTYPE";
+            this.txtUtransA2_POSTTYPE.Tag = "Alias2PostType";
             this.txtUtransA2_POSTTYPE.TextChanged += new System.EventHandler(this.txtUtransA2_POSTTYPE_TextChanged);
             // 
             // txtUtransA2_NAME
@@ -818,7 +818,7 @@
             this.txtUtransA2_NAME.Name = "txtUtransA2_NAME";
             this.txtUtransA2_NAME.Size = new System.Drawing.Size(199, 22);
             this.txtUtransA2_NAME.TabIndex = 11;
-            this.txtUtransA2_NAME.Tag = "A2_NAME";
+            this.txtUtransA2_NAME.Tag = "Alias2StreetName";
             this.txtUtransA2_NAME.TextChanged += new System.EventHandler(this.txtUtransA2_NAME_TextChanged);
             // 
             // txtUtransA1_POSTTYPE
@@ -830,7 +830,7 @@
             this.txtUtransA1_POSTTYPE.Name = "txtUtransA1_POSTTYPE";
             this.txtUtransA1_POSTTYPE.Size = new System.Drawing.Size(92, 22);
             this.txtUtransA1_POSTTYPE.TabIndex = 10;
-            this.txtUtransA1_POSTTYPE.Tag = "A1_POSTTYPE";
+            this.txtUtransA1_POSTTYPE.Tag = "Alias1PostType";
             this.txtUtransA1_POSTTYPE.TextChanged += new System.EventHandler(this.txtUtransA1_POSTTYPE_TextChanged);
             // 
             // txtUtransA1_NAME
@@ -842,7 +842,7 @@
             this.txtUtransA1_NAME.Name = "txtUtransA1_NAME";
             this.txtUtransA1_NAME.Size = new System.Drawing.Size(199, 22);
             this.txtUtransA1_NAME.TabIndex = 9;
-            this.txtUtransA1_NAME.Tag = "A1_NAME";
+            this.txtUtransA1_NAME.Tag = "Alias1StreetName";
             this.txtUtransA1_NAME.TextChanged += new System.EventHandler(this.txtUtransA1_NAME_TextChanged);
             // 
             // lblA1_POSTTYPE
@@ -902,7 +902,7 @@
             this.txtUtranFROMADDR_L.Name = "txtUtranFROMADDR_L";
             this.txtUtranFROMADDR_L.Size = new System.Drawing.Size(78, 22);
             this.txtUtranFROMADDR_L.TabIndex = 1;
-            this.txtUtranFROMADDR_L.Tag = "FROMADDR_L";
+            this.txtUtranFROMADDR_L.Tag = "LeftFromAddress";
             this.txtUtranFROMADDR_L.TextChanged += new System.EventHandler(this.txtUtranFROMADDR_L_TextChanged);
             this.txtUtranFROMADDR_L.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUtran_HouseNumber_KeyPress);
             // 
@@ -914,7 +914,7 @@
             this.txtUtranTOADDR_L.Name = "txtUtranTOADDR_L";
             this.txtUtranTOADDR_L.Size = new System.Drawing.Size(67, 22);
             this.txtUtranTOADDR_L.TabIndex = 2;
-            this.txtUtranTOADDR_L.Tag = "TOADDR_L";
+            this.txtUtranTOADDR_L.Tag = "LeftToAddress";
             this.txtUtranTOADDR_L.TextChanged += new System.EventHandler(this.txtUtranTOADDR_L_TextChanged);
             this.txtUtranTOADDR_L.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUtran_HouseNumber_KeyPress);
             // 
@@ -951,7 +951,7 @@
             this.txtUtranPOSTDIR.Name = "txtUtranPOSTDIR";
             this.txtUtranPOSTDIR.Size = new System.Drawing.Size(55, 22);
             this.txtUtranPOSTDIR.TabIndex = 8;
-            this.txtUtranPOSTDIR.Tag = "POSTDIR";
+            this.txtUtranPOSTDIR.Tag = "StreetNamePostDirectional";
             this.txtUtranPOSTDIR.TextChanged += new System.EventHandler(this.txtUtranPOSTDIR_TextChanged);
             // 
             // txtUtranStType
@@ -963,7 +963,7 @@
             this.txtUtranStType.Name = "txtUtranStType";
             this.txtUtranStType.Size = new System.Drawing.Size(78, 22);
             this.txtUtranStType.TabIndex = 7;
-            this.txtUtranStType.Tag = "POSTTYPE";
+            this.txtUtranStType.Tag = "StreetNamePostType";
             this.txtUtranStType.TextChanged += new System.EventHandler(this.txtUtranStType_TextChanged);
             // 
             // lblRightTo
@@ -986,7 +986,7 @@
             this.txtUtranStName.Name = "txtUtranStName";
             this.txtUtranStName.Size = new System.Drawing.Size(239, 22);
             this.txtUtranStName.TabIndex = 6;
-            this.txtUtranStName.Tag = "NAME";
+            this.txtUtranStName.Tag = "StreetName";
             this.txtUtranStName.TextChanged += new System.EventHandler(this.txtUtranStName_TextChanged);
             // 
             // lblRightFrom
@@ -1009,7 +1009,7 @@
             this.txtUtranPreDir.Name = "txtUtranPreDir";
             this.txtUtranPreDir.Size = new System.Drawing.Size(67, 22);
             this.txtUtranPreDir.TabIndex = 5;
-            this.txtUtranPreDir.Tag = "PREDIR";
+            this.txtUtranPreDir.Tag = "StreetNamePreDirectional";
             this.txtUtranPreDir.TextChanged += new System.EventHandler(this.txtUtranPreDir_TextChanged);
             // 
             // lblPOSTDIR
@@ -1031,7 +1031,7 @@
             this.txtUtranFROMADDR_R.Name = "txtUtranFROMADDR_R";
             this.txtUtranFROMADDR_R.Size = new System.Drawing.Size(78, 22);
             this.txtUtranFROMADDR_R.TabIndex = 3;
-            this.txtUtranFROMADDR_R.Tag = "FROMADDR_R";
+            this.txtUtranFROMADDR_R.Tag = "RightFromAddress";
             this.txtUtranFROMADDR_R.TextChanged += new System.EventHandler(this.txtUtranFROMADDR_R_TextChanged);
             this.txtUtranFROMADDR_R.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUtran_HouseNumber_KeyPress);
             // 
@@ -1054,7 +1054,7 @@
             this.txtUtranTOADDR_R.Name = "txtUtranTOADDR_R";
             this.txtUtranTOADDR_R.Size = new System.Drawing.Size(67, 22);
             this.txtUtranTOADDR_R.TabIndex = 4;
-            this.txtUtranTOADDR_R.Tag = "TOADDR_R";
+            this.txtUtranTOADDR_R.Tag = "RightToAddress";
             this.txtUtranTOADDR_R.TextChanged += new System.EventHandler(this.txtUtranTOADDR_R_TextChanged);
             this.txtUtranTOADDR_R.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUtran_HouseNumber_KeyPress);
             // 
