@@ -2446,30 +2446,30 @@ namespace UtransEditorAGRC
                         if (!ctrlCurrent.Tag.ToString().Contains("Co"))
                         {
                             //check for emptly values in the numeric fields and populate with zeros in utrans
-                            if (ctrlCurrent.Tag.ToString() == "FROMADDR_L" & ctrlCurrent.Text.ToString() == "")
+                            if (ctrlCurrent.Tag.ToString() == "LeftFromAddress" & ctrlCurrent.Text.ToString() == "")
                             {
-                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), 0);
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
                             }
-                            else if (ctrlCurrent.Tag.ToString() == "TOADDR_L" & ctrlCurrent.Text.ToString() == "")
+                            else if (ctrlCurrent.Tag.ToString() == "LeftToAddress" & ctrlCurrent.Text.ToString() == "")
                             {
-                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), 0);
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
                             }
-                            else if (ctrlCurrent.Tag.ToString() == "FROMADDR_R" & ctrlCurrent.Text.ToString() == "")
+                            else if (ctrlCurrent.Tag.ToString() == "RightFromAddress" & ctrlCurrent.Text.ToString() == "")
                             {
-                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), 0);
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
                             }
-                            else if (ctrlCurrent.Tag.ToString() == "TOADDR_R" & ctrlCurrent.Text.ToString() == "")
+                            else if (ctrlCurrent.Tag.ToString() == "RightToAddress" & ctrlCurrent.Text.ToString() == "")
                             {
-                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), 0);
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
                             }
                             else
                             {
                                 //populate the field with the value in the corresponding textbox
-                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), ctrlCurrent.Text.Trim());
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), ctrlCurrent.Text.Trim());
                             }
                         }
                     }
@@ -2602,13 +2602,13 @@ namespace UtransEditorAGRC
                     if (arcFeatureMetroAreas_left != null)
                     {
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), arcFeatureMetroAreas_left.get_Value(arcFeatureMetroAreas_left.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureMetroAreas_left);
                     }
                     else
                     {
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), "");
                     }
 
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureMetroAreas_left);
                     arcMetroAreasCursor_left = null;
                     arcFeatureMetroAreas_left = null;
                     //arcSpatialFilter_left = null;
@@ -2714,13 +2714,13 @@ namespace UtransEditorAGRC
                     if (arcFeatureMetroAreas_right != null)
                     {
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), arcFeatureMetroAreas_right.get_Value(arcFeatureMetroAreas_right.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureMetroAreas_right);
                     }
                     else
                     {
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), "");
                     }
 
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureMetroAreas_right);
                     arcMetroAreasCursor_right = null;
                     arcFeatureMetroAreas_right = null;
                     //arcSpatialFilter_right = null;
