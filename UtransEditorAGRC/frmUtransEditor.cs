@@ -339,6 +339,9 @@ namespace UtransEditorAGRC
         {
             try
             {
+                // set the cursor focus to the utrans from left address range textbox
+                txtUtranFROMADDR_L.Focus();
+
                 //test if the logger is working
                 //clsGlobals.logger.Trace("test on selection changed");
 
@@ -413,6 +416,7 @@ namespace UtransEditorAGRC
 
                 // revert title to default - incase previous was a udot street
                 groupBoxUtransSeg.Text = "Selected UTRANS Road Segment";
+                groupBoxUtransSeg.ForeColor = Color.Black;
 
                 //get the objectids from dfc layer for selecting on corresponding layer
                 strCountyOID = "";
@@ -565,13 +569,15 @@ namespace UtransEditorAGRC
                         if (checkIfUdotStreet != "")
                         {
                             groupBoxUtransSeg.Text = groupBoxUtransSeg.Text + " (UDOT STREET)";
+                            groupBoxUtransSeg.ForeColor = Color.Red;
                         }
 
                         // check if agrc adjustments have been made on this feature
                         string utransNotesFieldValue = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("UTRANS_NOTES")).ToString();
                         if (utransNotesFieldValue.Contains("AGRC ADJUSTED"))
                         {
-                            groupBoxUtransSeg.Text = groupBoxUtransSeg.Text + " (AGRC ADJUSTED STREET)";
+                            groupBoxUtransSeg.Text = groupBoxUtransSeg.Text + "  (" + utransNotesFieldValue + ")";
+                            groupBoxUtransSeg.ForeColor = Color.Red;
                         }
                     }
 

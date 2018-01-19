@@ -645,7 +645,7 @@
             this.txtUtransA2_POSTDIR.MaxLength = 1;
             this.txtUtransA2_POSTDIR.Name = "txtUtransA2_POSTDIR";
             this.txtUtransA2_POSTDIR.Size = new System.Drawing.Size(76, 22);
-            this.txtUtransA2_POSTDIR.TabIndex = 20;
+            this.txtUtransA2_POSTDIR.TabIndex = 16;
             this.txtUtransA2_POSTDIR.Tag = "Alias2PostDirectional";
             this.txtUtransA2_POSTDIR.TextChanged += new System.EventHandler(this.txtUtransA2_POSTDIR_TextChanged);
             // 
@@ -657,7 +657,7 @@
             this.txtUtransA1_POSTDIR.MaxLength = 1;
             this.txtUtransA1_POSTDIR.Name = "txtUtransA1_POSTDIR";
             this.txtUtransA1_POSTDIR.Size = new System.Drawing.Size(76, 22);
-            this.txtUtransA1_POSTDIR.TabIndex = 14;
+            this.txtUtransA1_POSTDIR.TabIndex = 12;
             this.txtUtransA1_POSTDIR.Tag = "Alias1PostDirectional";
             this.txtUtransA1_POSTDIR.TextChanged += new System.EventHandler(this.txtUtransA1_POSTDIR_TextChanged);
             // 
@@ -691,7 +691,7 @@
             this.txtUtransA2_PREDIR.MaxLength = 1;
             this.txtUtransA2_PREDIR.Name = "txtUtransA2_PREDIR";
             this.txtUtransA2_PREDIR.Size = new System.Drawing.Size(67, 22);
-            this.txtUtransA2_PREDIR.TabIndex = 17;
+            this.txtUtransA2_PREDIR.TabIndex = 13;
             this.txtUtransA2_PREDIR.Tag = "Alias2PreDirectional";
             this.txtUtransA2_PREDIR.TextChanged += new System.EventHandler(this.txtUtransA2_PREDIR_TextChanged);
             // 
@@ -703,7 +703,7 @@
             this.txtUtransA1_PREDIR.MaxLength = 1;
             this.txtUtransA1_PREDIR.Name = "txtUtransA1_PREDIR";
             this.txtUtransA1_PREDIR.Size = new System.Drawing.Size(67, 22);
-            this.txtUtransA1_PREDIR.TabIndex = 14;
+            this.txtUtransA1_PREDIR.TabIndex = 9;
             this.txtUtransA1_PREDIR.Tag = "Alias1PreDirectional";
             this.txtUtransA1_PREDIR.TextChanged += new System.EventHandler(this.txtUtransA1_PREDIR_TextChanged);
             // 
@@ -737,7 +737,7 @@
             this.txtUtransAN_POSTDIR.MaxLength = 1;
             this.txtUtransAN_POSTDIR.Name = "txtUtransAN_POSTDIR";
             this.txtUtransAN_POSTDIR.Size = new System.Drawing.Size(102, 22);
-            this.txtUtransAN_POSTDIR.TabIndex = 14;
+            this.txtUtransAN_POSTDIR.TabIndex = 18;
             this.txtUtransAN_POSTDIR.Tag = "AliasNumericPostDirectional";
             this.txtUtransAN_POSTDIR.TextChanged += new System.EventHandler(this.txtUtransAN_POSTDIR_TextChanged);
             // 
@@ -749,7 +749,7 @@
             this.txtUtransAN_NAME.MaxLength = 8;
             this.txtUtransAN_NAME.Name = "txtUtransAN_NAME";
             this.txtUtransAN_NAME.Size = new System.Drawing.Size(102, 22);
-            this.txtUtransAN_NAME.TabIndex = 13;
+            this.txtUtransAN_NAME.TabIndex = 17;
             this.txtUtransAN_NAME.Tag = "AliasNumericStreetName";
             this.txtUtransAN_NAME.TextChanged += new System.EventHandler(this.txtUtransAcsAllias_TextChanged);
             // 
@@ -805,7 +805,7 @@
             this.txtUtransA2_POSTTYPE.MaxLength = 4;
             this.txtUtransA2_POSTTYPE.Name = "txtUtransA2_POSTTYPE";
             this.txtUtransA2_POSTTYPE.Size = new System.Drawing.Size(92, 22);
-            this.txtUtransA2_POSTTYPE.TabIndex = 12;
+            this.txtUtransA2_POSTTYPE.TabIndex = 15;
             this.txtUtransA2_POSTTYPE.Tag = "Alias2PostType";
             this.txtUtransA2_POSTTYPE.TextChanged += new System.EventHandler(this.txtUtransA2_POSTTYPE_TextChanged);
             // 
@@ -817,7 +817,7 @@
             this.txtUtransA2_NAME.MaxLength = 30;
             this.txtUtransA2_NAME.Name = "txtUtransA2_NAME";
             this.txtUtransA2_NAME.Size = new System.Drawing.Size(199, 22);
-            this.txtUtransA2_NAME.TabIndex = 11;
+            this.txtUtransA2_NAME.TabIndex = 14;
             this.txtUtransA2_NAME.Tag = "Alias2StreetName";
             this.txtUtransA2_NAME.TextChanged += new System.EventHandler(this.txtUtransA2_NAME_TextChanged);
             // 
@@ -829,7 +829,7 @@
             this.txtUtransA1_POSTTYPE.MaxLength = 4;
             this.txtUtransA1_POSTTYPE.Name = "txtUtransA1_POSTTYPE";
             this.txtUtransA1_POSTTYPE.Size = new System.Drawing.Size(92, 22);
-            this.txtUtransA1_POSTTYPE.TabIndex = 10;
+            this.txtUtransA1_POSTTYPE.TabIndex = 11;
             this.txtUtransA1_POSTTYPE.Tag = "Alias1PostType";
             this.txtUtransA1_POSTTYPE.TextChanged += new System.EventHandler(this.txtUtransA1_POSTTYPE_TextChanged);
             // 
@@ -841,7 +841,7 @@
             this.txtUtransA1_NAME.MaxLength = 30;
             this.txtUtransA1_NAME.Name = "txtUtransA1_NAME";
             this.txtUtransA1_NAME.Size = new System.Drawing.Size(199, 22);
-            this.txtUtransA1_NAME.TabIndex = 9;
+            this.txtUtransA1_NAME.TabIndex = 10;
             this.txtUtransA1_NAME.Tag = "Alias1StreetName";
             this.txtUtransA1_NAME.TextChanged += new System.EventHandler(this.txtUtransA1_NAME_TextChanged);
             // 
@@ -923,7 +923,6 @@
             this.lblLeftFrom.AutoSize = true;
             this.lblLeftFrom.BackColor = System.Drawing.SystemColors.Control;
             this.lblLeftFrom.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLeftFrom.ForeColor = System.Drawing.SystemColors.ControlText;
             this.lblLeftFrom.Location = new System.Drawing.Point(8, 31);
             this.lblLeftFrom.Name = "lblLeftFrom";
             this.lblLeftFrom.Size = new System.Drawing.Size(81, 13);
@@ -1104,7 +1103,7 @@
             this.cboStatusField.Location = new System.Drawing.Point(11, 19);
             this.cboStatusField.Name = "cboStatusField";
             this.cboStatusField.Size = new System.Drawing.Size(160, 21);
-            this.cboStatusField.TabIndex = 11;
+            this.cboStatusField.TabIndex = 20;
             this.cboStatusField.TabStop = false;
             this.cboStatusField.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             this.cboStatusField.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.cboStatusField_MouseDoubleClick);
@@ -1145,7 +1144,7 @@
             this.btnSaveToUtrans.Location = new System.Drawing.Point(1200, 411);
             this.btnSaveToUtrans.Name = "btnSaveToUtrans";
             this.btnSaveToUtrans.Size = new System.Drawing.Size(166, 27);
-            this.btnSaveToUtrans.TabIndex = 15;
+            this.btnSaveToUtrans.TabIndex = 21;
             this.btnSaveToUtrans.Text = "Save in UTRANS";
             this.btnSaveToUtrans.UseVisualStyleBackColor = true;
             this.btnSaveToUtrans.Click += new System.EventHandler(this.btnSaveToUtrans_Click);
@@ -1175,6 +1174,7 @@
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(58, 32);
             this.btnNext.TabIndex = 0;
+            this.btnNext.TabStop = false;
             this.btnNext.Text = ">";
             this.btnNext.UseVisualStyleBackColor = true;
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
@@ -1289,7 +1289,7 @@
             this.cboCartoCode.Location = new System.Drawing.Point(15, 19);
             this.cboCartoCode.Name = "cboCartoCode";
             this.cboCartoCode.Size = new System.Drawing.Size(292, 21);
-            this.cboCartoCode.TabIndex = 0;
+            this.cboCartoCode.TabIndex = 19;
             this.cboCartoCode.SelectedIndexChanged += new System.EventHandler(this.cboCartoCode_SelectedIndexChanged);
             // 
             // chkShowVertices

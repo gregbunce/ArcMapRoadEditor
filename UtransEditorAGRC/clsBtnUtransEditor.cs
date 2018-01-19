@@ -77,7 +77,7 @@ namespace UtransEditorAGRC
             //
             base.m_category = "AGRC"; //localizable text
             base.m_caption = "UTRANS Editor";  //localizable text
-            base.m_message = "This tool assists in the UTRANS update process.  Requires the following layers as named in the map: ''UTRANS.TRANSADMIN.Roads_Edit'', ''COUNTY_STREETS'', ''DFC_RESULT''.  Also, must be editing on UTRANS layer.";  //localizable text 
+            base.m_message = "This tool assists in the UTRANS update process.  Requires the following layers as named in the map: ''UTRANS.TRANSADMIN.Roads_Edit'', ''COUNTY_STREETS'', ''DFC_RESULT'', ''SGID10.LOCATION.AddressSystemQuadrants'', ''SGID10.BOUNDARIES.ZipCodes'', ''SGID10.BOUNDARIES.Counties'', ''SGID10.BOUNDARIES.Municipalities'', ''SGID10.BOUNDARIES.MetroTownships''.  Also, must be editing on UTRANS layer.";  //localizable text 
             base.m_toolTip = "AGRC UTRANS Editor Tool";  //localizable text 
             base.m_name = "UtransEditorTool";   //unique id, non-localizable (e.g. "MyCategory_ArcMapCommand")
             base.m_bitmap = Properties.Resources.clsBtnUtransEditor;
@@ -130,6 +130,12 @@ namespace UtransEditorAGRC
                     bool isEditable = false;
                     bool isCountyStreets = false;
                     bool isDfcResult = false;
+                    bool isAddrSystem = false;
+                    bool isZipcode = false;
+                    bool isCounties = false;
+                    bool isMuni = false;
+                    bool isMetroTwnShp = false;
+
 
                     //get a reference to ieditlayers to see which layers are editable
                     IEditLayers arcEditLayers = clsGlobals.arcEditor as IEditLayers;
@@ -157,9 +163,30 @@ namespace UtransEditorAGRC
                         {
                             isDfcResult = true;
                         }
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.LOCATION.AddressSystemQuadrants")
+                        {
+                            isAddrSystem = true;
+                        }
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.ZipCodes")
+                        {
+                            isZipcode = true;
+                        }
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.Counties")
+                        {
+                            isCounties = true;
+                        }
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.Municipalities")
+                        {
+                            isMuni = true;
+                        }
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.MetroTownships")
+                        {
+                            isMetroTwnShp = true;
+                        }
                     }
+
                     //if all the needed layers are in the map, and utrans streets are editable then enable button
-                    if (isEditable & isCountyStreets & isDfcResult)
+                    if (isEditable & isCountyStreets & isDfcResult & isAddrSystem & isZipcode & isCounties & isMuni & isMetroTwnShp)
                     {
                         // inform the global bool variable that utrans can edit - allowing other tools to enable as a result
                         clsGlobals.blnCanUseUtransTool = true;
