@@ -163,23 +163,23 @@ namespace UtransEditorAGRC
                         {
                             isDfcResult = true;
                         }
-                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.LOCATION.AddressSystemQuadrants")
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.LOCATION.ADDRESSSYSTEMQUADRANTS")
                         {
                             isAddrSystem = true;
                         }
-                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.ZipCodes")
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.ZIPCODES")
                         {
                             isZipcode = true;
                         }
-                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.Counties")
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.COUNTIES")
                         {
                             isCounties = true;
                         }
-                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.Municipalities")
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.MUNICIPALITIES")
                         {
                             isMuni = true;
                         }
-                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.MetroTownships")
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.METROTOWNSHIPS")
                         {
                             isMetroTwnShp = true;
                         }
