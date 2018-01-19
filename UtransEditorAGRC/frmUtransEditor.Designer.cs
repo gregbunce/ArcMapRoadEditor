@@ -392,8 +392,10 @@
             this.txtCountyA2_POSTDIR.Location = new System.Drawing.Point(384, 76);
             this.txtCountyA2_POSTDIR.MaxLength = 1;
             this.txtCountyA2_POSTDIR.Name = "txtCountyA2_POSTDIR";
+            this.txtCountyA2_POSTDIR.ReadOnly = true;
             this.txtCountyA2_POSTDIR.Size = new System.Drawing.Size(76, 22);
             this.txtCountyA2_POSTDIR.TabIndex = 24;
+            this.txtCountyA2_POSTDIR.TabStop = false;
             this.txtCountyA2_POSTDIR.Tag = "CoAlias2PostDirectional";
             // 
             // txtCountyA2_PREDIR
@@ -403,8 +405,10 @@
             this.txtCountyA2_PREDIR.Location = new System.Drawing.Point(12, 77);
             this.txtCountyA2_PREDIR.MaxLength = 1;
             this.txtCountyA2_PREDIR.Name = "txtCountyA2_PREDIR";
+            this.txtCountyA2_PREDIR.ReadOnly = true;
             this.txtCountyA2_PREDIR.Size = new System.Drawing.Size(67, 22);
             this.txtCountyA2_PREDIR.TabIndex = 24;
+            this.txtCountyA2_PREDIR.TabStop = false;
             this.txtCountyA2_PREDIR.Tag = "CoAlias2PreDirectional";
             // 
             // txtCountyA1_POSTDIR
@@ -414,8 +418,10 @@
             this.txtCountyA1_POSTDIR.Location = new System.Drawing.Point(384, 48);
             this.txtCountyA1_POSTDIR.MaxLength = 1;
             this.txtCountyA1_POSTDIR.Name = "txtCountyA1_POSTDIR";
+            this.txtCountyA1_POSTDIR.ReadOnly = true;
             this.txtCountyA1_POSTDIR.Size = new System.Drawing.Size(76, 22);
             this.txtCountyA1_POSTDIR.TabIndex = 21;
+            this.txtCountyA1_POSTDIR.TabStop = false;
             this.txtCountyA1_POSTDIR.Tag = "CoAlias1PostDirectional";
             // 
             // label16
@@ -445,8 +451,10 @@
             this.txtCountyA1_PREDIR.Location = new System.Drawing.Point(12, 49);
             this.txtCountyA1_PREDIR.MaxLength = 1;
             this.txtCountyA1_PREDIR.Name = "txtCountyA1_PREDIR";
+            this.txtCountyA1_PREDIR.ReadOnly = true;
             this.txtCountyA1_PREDIR.Size = new System.Drawing.Size(67, 22);
             this.txtCountyA1_PREDIR.TabIndex = 21;
+            this.txtCountyA1_PREDIR.TabStop = false;
             this.txtCountyA1_PREDIR.Tag = "CoAlias1PreDirectional";
             // 
             // label19
@@ -1085,8 +1093,7 @@
             this.linkLabelAttrDoc.Location = new System.Drawing.Point(12, 422);
             this.linkLabelAttrDoc.Name = "linkLabelAttrDoc";
             this.linkLabelAttrDoc.Size = new System.Drawing.Size(122, 13);
-            this.linkLabelAttrDoc.TabIndex = 9;
-            this.linkLabelAttrDoc.TabStop = true;
+            this.linkLabelAttrDoc.TabIndex = 100;
             this.linkLabelAttrDoc.Text = "Attribute Reference Doc";
             this.linkLabelAttrDoc.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
@@ -1104,7 +1111,6 @@
             this.cboStatusField.Name = "cboStatusField";
             this.cboStatusField.Size = new System.Drawing.Size(160, 21);
             this.cboStatusField.TabIndex = 20;
-            this.cboStatusField.TabStop = false;
             this.cboStatusField.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             this.cboStatusField.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.cboStatusField_MouseDoubleClick);
             // 
@@ -1301,6 +1307,7 @@
             this.chkShowVertices.Name = "chkShowVertices";
             this.chkShowVertices.Size = new System.Drawing.Size(140, 17);
             this.chkShowVertices.TabIndex = 24;
+            this.chkShowVertices.TabStop = false;
             this.chkShowVertices.Text = "Show Vertices on New?";
             this.chkShowVertices.UseVisualStyleBackColor = true;
             this.chkShowVertices.Visible = false;
@@ -1333,8 +1340,7 @@
             this.linkLabelDefQuery.Location = new System.Drawing.Point(12, 442);
             this.linkLabelDefQuery.Name = "linkLabelDefQuery";
             this.linkLabelDefQuery.Size = new System.Drawing.Size(136, 13);
-            this.linkLabelDefQuery.TabIndex = 27;
-            this.linkLabelDefQuery.TabStop = true;
+            this.linkLabelDefQuery.TabIndex = 101;
             this.linkLabelDefQuery.Text = "DFC_RESULT Def Queries";
             this.linkLabelDefQuery.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelDefQuery_LinkClicked);
             // 

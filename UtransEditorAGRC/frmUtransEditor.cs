@@ -1567,6 +1567,14 @@ namespace UtransEditorAGRC
                 }
                 //fontLabelHasEdits.Dispose();
                 //fontLabelRegular.Dispose();
+
+                string strRemoveApostrophe = txtUtranStName.Text;
+                // remove apostrophes in street names
+                if (strRemoveApostrophe.Contains("'"))
+                {
+                    txtUtranStName.Text = strRemoveApostrophe.Replace("'", "");
+                }
+
             }
             catch (Exception ex)
             {
