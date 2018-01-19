@@ -557,14 +557,21 @@ namespace UtransEditorAGRC
                             }
                         }
 
-                        //get utrans cartocode
+                        // get utrans cartocode
                         strUtransCartoCode = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("CARTOCODE")).ToString().Trim();
 
-                        //also check if u_dot street
+                        // check if udot street
                         string checkIfUdotStreet = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("DOT_RTNAME")).ToString();
                         if (checkIfUdotStreet != "")
                         {
                             groupBoxUtransSeg.Text = groupBoxUtransSeg.Text + " (UDOT STREET)";
+                        }
+
+                        // check if agrc adjustments have been made on this feature
+                        string utransNotesFieldValue = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("UTRANS_NOTES")).ToString();
+                        if (utransNotesFieldValue.Contains("AGRC ADJUSTED"))
+                        {
+                            groupBoxUtransSeg.Text = groupBoxUtransSeg.Text + " (AGRC ADJUSTED STREET)";
                         }
                     }
 
@@ -2568,7 +2575,7 @@ namespace UtransEditorAGRC
                         //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
 
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureAddrSys_left);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcAddrSysCursor_left);
                     arcAddrSysCursor_left = null;
                     arcFeatureAddrSys_left = null;
                     //arcSpatialFilter_left = null;
@@ -2589,7 +2596,7 @@ namespace UtransEditorAGRC
                         //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
 
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureCounty_left);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcCountyCursor_left);
                     arcCountyCursor_left = null;
                     arcFeatureCounty_left = null;
                     //arcSpatialFilter_left = null;
@@ -2602,13 +2609,13 @@ namespace UtransEditorAGRC
                     if (arcFeatureMetroAreas_left != null)
                     {
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), arcFeatureMetroAreas_left.get_Value(arcFeatureMetroAreas_left.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureMetroAreas_left);
                     }
                     else
                     {
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), "");
                     }
 
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_left);
                     arcMetroAreasCursor_left = null;
                     arcFeatureMetroAreas_left = null;
                     //arcSpatialFilter_left = null;
@@ -2638,9 +2645,8 @@ namespace UtransEditorAGRC
                     }
                     //clear out variables
                     // release the cursor
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureZip_right);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcZipCursor_right);
                     //GC.Collect();
-                    arcFeatureZip_right = null;
                     arcFeatureZip_right = null;
 
 
@@ -2680,7 +2686,7 @@ namespace UtransEditorAGRC
                         //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
 
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureAddrSys_right);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcAddrSysCursor_right);
                     arcAddrSysCursor_right = null;
                     arcFeatureAddrSys_right = null;
                     //arcSpatialFilter_right = null;
@@ -2701,7 +2707,7 @@ namespace UtransEditorAGRC
                         //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
 
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureCounty_right);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcCountyCursor_right);
                     arcCountyCursor_right = null;
                     arcFeatureCounty_right = null;
                     //arcSpatialFilter_right = null;
@@ -2714,13 +2720,13 @@ namespace UtransEditorAGRC
                     if (arcFeatureMetroAreas_right != null)
                     {
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), arcFeatureMetroAreas_right.get_Value(arcFeatureMetroAreas_right.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureMetroAreas_right);
                     }
                     else
                     {
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), "");
                     }
 
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_right);
                     arcMetroAreasCursor_right = null;
                     arcFeatureMetroAreas_right = null;
                     //arcSpatialFilter_right = null;
