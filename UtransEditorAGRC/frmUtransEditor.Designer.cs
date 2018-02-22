@@ -1074,6 +1074,7 @@
             this.lblStName.Size = new System.Drawing.Size(38, 13);
             this.lblStName.TabIndex = 11;
             this.lblStName.Text = "NAME";
+            this.lblStName.Click += new System.EventHandler(this.lblStName_Click);
             this.lblStName.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // lblPreDir
@@ -1094,6 +1095,7 @@
             this.linkLabelAttrDoc.Name = "linkLabelAttrDoc";
             this.linkLabelAttrDoc.Size = new System.Drawing.Size(122, 13);
             this.linkLabelAttrDoc.TabIndex = 100;
+            this.linkLabelAttrDoc.TabStop = true;
             this.linkLabelAttrDoc.Text = "Attribute Reference Doc";
             this.linkLabelAttrDoc.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
@@ -1341,6 +1343,7 @@
             this.linkLabelDefQuery.Name = "linkLabelDefQuery";
             this.linkLabelDefQuery.Size = new System.Drawing.Size(136, 13);
             this.linkLabelDefQuery.TabIndex = 101;
+            this.linkLabelDefQuery.TabStop = true;
             this.linkLabelDefQuery.Text = "DFC_RESULT Def Queries";
             this.linkLabelDefQuery.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelDefQuery_LinkClicked);
             // 

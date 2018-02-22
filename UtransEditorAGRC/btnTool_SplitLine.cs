@@ -134,11 +134,6 @@ namespace UtransEditorAGRC
         }
 
 
-
-
-
-
-
         /// Occurs when this tool (button) is clicked
         public override void OnClick()
         {
@@ -209,10 +204,10 @@ namespace UtransEditorAGRC
                 }
 
                 //cast the selected layer as a feature layer
-                IGeoFeatureLayer pGFlayer = (IGeoFeatureLayer)arcMxDoc.SelectedLayer;
+                clsGlobals.pGFlayer = (IGeoFeatureLayer)arcMxDoc.SelectedLayer;
 
                 //check if the feaure layer is a polygon or line layer
-                if (pGFlayer.FeatureClass.ShapeType != esriGeometryType.esriGeometryPolygon & pGFlayer.FeatureClass.ShapeType != esriGeometryType.esriGeometryPolyline)
+                if (clsGlobals.pGFlayer.FeatureClass.ShapeType != esriGeometryType.esriGeometryPolygon & clsGlobals.pGFlayer.FeatureClass.ShapeType != esriGeometryType.esriGeometryPolyline)
                 {
                     MessageBox.Show("Please select a polygon or line layer.", "Must be Polygon or Line Layer", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
@@ -717,6 +712,11 @@ namespace UtransEditorAGRC
                     }
                 }
 
+
+                // update the uniqueid
+                string uniqueId1 = getNewUniqueID(arcNewFeature1);
+                arcNewFeature1.set_Value(arcNewFeature1.Fields.FindField("UNIQUE_ID"), uniqueId1);
+
                 //store feature1
                 arcNewFeature1.Store();
 
@@ -879,6 +879,10 @@ namespace UtransEditorAGRC
                     }
                 }
 
+                // update the uniqueid
+                string uniqueId2 = getNewUniqueID(arcNewFeature2);
+                arcNewFeature2.set_Value(arcNewFeature2.Fields.FindField("UNIQUE_ID"), uniqueId2);
+
                 // store the features
                 //arcNewFeature1.Store();
                 arcNewFeature2.Store();
@@ -886,13 +890,11 @@ namespace UtransEditorAGRC
                 // stop the edit operation
                 clsGlobals.arcEditor.StopOperation("AGRC Split Line");
 
-
             }
             catch (Exception ex)
             {
                 // abort the operation if there's an error
                 clsGlobals.arcEditor.AbortOperation();
-
 
                 MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
                 "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
@@ -1052,5 +1054,175 @@ namespace UtransEditorAGRC
                 features.Add(feature);
             return features;
         }
+
+
+
+        // this method is called after the user splits a segments, and the new segments need new uniqueIDs
+        public string getNewUniqueID(IFeature arcSplitedRoadSegment)
+        {
+            try
+            {
+                // Get access to the national grid feature class
+                if (clsGlobals.arcFeatClass_USNG == null)
+                {
+                    // connect to sgid database
+                    clsGlobals.workspaceSGID = clsUtransEditorStaticClass.ConnectToTransactionalVersion("", "sde:sqlserver:sgid.agrc.utah.gov", "SGID10", "DBMS", "sde.DEFAULT", "agrc", "agrc");
+                    clsGlobals.featureWorkspaceSGID = (IFeatureWorkspace)clsGlobals.workspaceSGID;
+
+                    // get access to the us national grid feature class
+                    clsGlobals.arcFeatClass_USNG = clsGlobals.featureWorkspaceSGID.OpenFeatureClass("SGID10.INDICES.NationalGrid");
+                }
+
+                // get the feature's geometry
+                IGeometry arcEdit_geometry = arcSplitedRoadSegment.ShapeCopy;
+                IPolyline arcEdit_polyline = null;
+                arcEdit_polyline = arcEdit_geometry as IPolyline;
+
+                // midpoint variable for UniqueID (use this for non right/left fields)
+                IPoint arcEdit_midPoint = null;
+                //get the midpoint of the line, pass it into a point
+                arcEdit_midPoint = new ESRI.ArcGIS.Geometry.Point();
+                arcEdit_polyline.QueryPoint(esriSegmentExtension.esriNoExtension, 0.5, true, arcEdit_midPoint);
+
+                // get the intersected boundaries value
+                IFeature arcFeatureIntersected = clsUtransEditorStaticClass.GetIntersectedSGIDBoundary(arcEdit_midPoint, clsGlobals.arcFeatClass_USNG);
+
+                // get the uniqueid if a national grid polygon was returned
+                if (arcFeatureIntersected != null)
+                {
+                    //string strGridName = arcFeatureIntersected.get_Value(arcFeatureIntersected.Fields.FindField("GRID_NAME")).ToString().Trim();
+                    string strGrid1Mil = arcFeatureIntersected.get_Value(arcFeatureIntersected.Fields.FindField("GRID1MIL")).ToString().Trim();
+                    string strGrid100k = arcFeatureIntersected.get_Value(arcFeatureIntersected.Fields.FindField("GRID100K")).ToString().Trim();
+
+                    string strGrid1Mil_UTMZone = strGrid1Mil.Substring(0, 2);
+                    string strFullName = "";
+                    string strUSNG_UniqueID = "";
+                    double dblMeterX;
+                    double dblMeterY;
+                    ISpatialReference utm12 = arcEdit_midPoint.SpatialReference;
+                    double dblUtm12_X = arcEdit_midPoint.X;
+                    double dblUtm12_Y = arcEdit_midPoint.Y;
+
+                    // reproject the point if it's in utm zone 11
+                    if (strGrid1Mil_UTMZone == "11")
+                    {
+                        ISpatialReferenceFactory srFactory = new SpatialReferenceEnvironmentClass();
+                        IProjectedCoordinateSystem utm11 = srFactory.CreateProjectedCoordinateSystem((int)esriSRProjCSType.esriSRProjCS_NAD1983UTM_11N);
+
+                        IPoint arcMidPoint_UTM11 = new PointClass();
+                        arcMidPoint_UTM11.PutCoords(dblUtm12_X, dblUtm12_Y);
+                        IGeometry arcGeomMidPnt_UTM11 = arcMidPoint_UTM11;
+                        arcGeomMidPnt_UTM11.SpatialReference = utm12;
+
+                        arcGeomMidPnt_UTM11.Project(utm11);
+                        arcMidPoint_UTM11 = arcGeomMidPnt_UTM11 as IPoint;
+
+                        dblMeterX = (double)arcMidPoint_UTM11.X;
+                        dblMeterY = (double)arcMidPoint_UTM11.Y;
+
+                    }
+                    else
+                    {
+                        dblMeterX = (double)arcEdit_midPoint.X;
+                        dblMeterY = (double)arcEdit_midPoint.Y;
+                    }
+
+                    // add .5 to so when we conver to long and the value gets truncated, it will still regain our desired value (if you need more info on this, talk to Bert)
+                    dblMeterX = dblMeterX + .5;
+                    dblMeterY = dblMeterY + .5;
+                    long lngMeterX = (long)dblMeterX;
+                    long lngMeterY = (long)dblMeterY;
+
+
+                    // check if it's a utrans/sgid road schema polyline >>> having NAME, POSTTYPE, or POSTDIR fields
+                    if (clsGlobals.pGFlayer.FeatureClass.AliasName.Contains("Roads") | clsGlobals.pGFlayer.FeatureClass.AliasName.Contains("Roads_Edit"))
+                    {
+                        string strStreetName = arcSplitedRoadSegment.get_Value(arcSplitedRoadSegment.Fields.FindField("NAME")).ToString().Trim();
+                        string strStreetType = arcSplitedRoadSegment.get_Value(arcSplitedRoadSegment.Fields.FindField("POSTTYPE")).ToString().Trim();
+                        string strSufDir = arcSplitedRoadSegment.get_Value(arcSplitedRoadSegment.Fields.FindField("POSTDIR")).ToString().Trim();
+
+                        // check if the utrans road is numberic or integer
+                        int intStreetNameIsNum;
+                        bool blnIsNumbericStreetName = int.TryParse(strStreetName, out intStreetNameIsNum);
+
+                        if (blnIsNumbericStreetName)
+                        {
+                            if (strStreetName != "")
+                            {
+                                if (strSufDir != "")
+                                {
+                                    strFullName = "_" + strStreetName + "_" + strSufDir;
+                                }
+                                else
+                                {
+                                    strFullName = "_" + strStreetName;
+                                }
+                            }
+                            else
+                            {
+                                strFullName = "";
+                            }
+                        }
+                        else
+                        {
+                            // concatinate the streetname and streettype
+                            if (strStreetName != "")
+                            {
+                                if (strStreetType != "")
+                                {
+                                    strFullName = "_" + strStreetName + "_" + strStreetType;
+                                }
+                                else
+                                {
+                                    strFullName = "_" + strStreetName;
+                                }
+                            }
+                            else
+                            {
+                                strFullName = "";
+                            }
+                        }
+                    }
+
+                    // replace spaces with underscores (for cases where the street name is two words.  Ex: BIG CANYON ==> BIG_CANYON)
+                    strFullName = strFullName.Replace(" ", "_");
+
+                    // trim the x and y meter values to get the needed four characters from each value
+                    string strMeterX_NoDecimal = lngMeterX.ToString();
+                    string strMeterY_NoDecimal = lngMeterY.ToString();
+
+                    // remove the begining characters
+                    strMeterX_NoDecimal = strMeterX_NoDecimal.Remove(0, 1);
+                    strMeterY_NoDecimal = strMeterY_NoDecimal.Remove(0, 2);
+
+                    // remove the ending characters
+                    strMeterY_NoDecimal = strMeterY_NoDecimal.Remove(strMeterY_NoDecimal.Length - 1);
+                    strMeterX_NoDecimal = strMeterX_NoDecimal.Remove(strMeterX_NoDecimal.Length - 1);
+
+                    // piece all the unique_id fields together
+                    strUSNG_UniqueID = strGrid1Mil + strGrid100k + strMeterX_NoDecimal + strMeterY_NoDecimal + strFullName;
+
+                    // return the new uniqueid
+                    return strUSNG_UniqueID.Trim();
+                }
+                else
+                {
+                    // return the new uniqueid
+                    return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error - getNewUniqueID!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                // return the new uniqueid
+                return "";
+            }
+        }
+
+
     }
 }

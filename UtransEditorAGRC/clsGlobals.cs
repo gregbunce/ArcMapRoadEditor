@@ -1,6 +1,7 @@
 ﻿using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Editor;
 using ESRI.ArcGIS.Framework;
+using ESRI.ArcGIS.Geodatabase;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -164,6 +165,30 @@ namespace UtransEditorAGRC
         }
 
         public static bool blnCanUseUtransTool
+        {
+            get;
+            set;
+        }
+
+        public static IFeatureClass arcFeatClass_USNG
+        {
+            get;
+            set;
+        }
+
+        public static IWorkspace workspaceSGID
+        {
+            get;
+            set;
+        }
+
+        public static IFeatureWorkspace featureWorkspaceSGID
+        {
+            get;
+            set;
+        }
+
+        public static IGeoFeatureLayer pGFlayer
         {
             get;
             set;

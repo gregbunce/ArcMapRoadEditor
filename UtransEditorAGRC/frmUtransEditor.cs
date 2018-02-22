@@ -1568,12 +1568,12 @@ namespace UtransEditorAGRC
                 //fontLabelHasEdits.Dispose();
                 //fontLabelRegular.Dispose();
 
-                string strRemoveApostrophe = txtUtranStName.Text;
-                // remove apostrophes in street names
-                if (strRemoveApostrophe.Contains("'"))
-                {
-                    txtUtranStName.Text = strRemoveApostrophe.Replace("'", "");
-                }
+                //string strRemoveApostrophe = txtUtranStName.Text;
+                //// remove apostrophes in street names
+                //if (strRemoveApostrophe.Contains("'"))
+                //{
+                //    txtUtranStName.Text = strRemoveApostrophe.Replace("'", "");
+                //}
 
             }
             catch (Exception ex)
@@ -2486,6 +2486,12 @@ namespace UtransEditorAGRC
                             {
                                 arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
+                            }
+                            else if (ctrlCurrent.Tag.ToString() == "StreetName" & ctrlCurrent.Text.ToString().Contains("'")) // streetname contains an apostrophe, so remove it
+                            {
+                                // remove the apostrophe
+                                string strRemoveApostrophe = ctrlCurrent.Text.ToString().Replace("'","");
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), strRemoveApostrophe);
                             }
                             else
                             {
@@ -3732,6 +3738,11 @@ namespace UtransEditorAGRC
         }
 
         private void groupBoxCountySeg_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblStName_Click(object sender, EventArgs e)
         {
 
         }
