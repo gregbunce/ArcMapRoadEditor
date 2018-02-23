@@ -13,7 +13,7 @@ namespace UtransEditorAGRC
 {
     class clsGlobals
     {
-
+        // Globals
         public static IApplication arcApplication
         {
             get;
