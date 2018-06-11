@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using ESRI.ArcGIS.Display;
+using System.Globalization;
 using ESRI.ArcGIS.GeoDatabaseUI;
 //using NLog;
 //using NLog.Config;
@@ -47,6 +48,9 @@ namespace UtransEditorAGRC
         string txtUtransInitialAN_NAME;
         string txtUtransInitialAN_POSTDIR;
         int intUtransInitialCartoCodeIndex;
+        int intUtransInitialVertLevelIndex;
+        int intUtransInitialOneWayIndex;
+        int intUtransInitialSpeedLmtIndex;
         string strGoogleLogLeftTo;
         string strGoogleLogLeftFrom;
         string strGoogleLogRightTo;
@@ -72,7 +76,11 @@ namespace UtransEditorAGRC
         string strChangeType = "";
         string strDFC_RESULT_oid = "";
         string strUtransCartoCode = "";
+        string strUtransOneWay = "";
+        string strUtransVertLevel = "";
+        string strUtransSpeedLmt = "";
         string strCountyCartoCode = "";
+        string checkIfUdotStreet = "";
 
         bool boolVerticesOn = false;
 
@@ -364,8 +372,14 @@ namespace UtransEditorAGRC
 
                 //reset the cartocode combobox to nothing
                 cboCartoCode.SelectedIndex = -1;
+                cboOneWay.SelectedIndex = -1; // show two way as default by using 0
+                cboVertLevel.SelectedIndex = -1; // show groundlevel as default by using 0
+                cboSpeed.SelectedIndex = -1;
                 cboStatusField.SelectedIndex = 0; // show the completed value by default
-                groupBox5.Font = fontLabelRegular;
+                groupBox5.Font = fontLabelRegular; // cartocode label
+                groupBox8.Font = fontLabelRegular; // oneway label
+                groupBox9.Font = fontLabelRegular; // vertlevel label
+                groupBox10.Font = fontLabelRegular; // speed label
 
                 //enable the textboxes - in case last record was "N" and were disabled
                 ////////txtUtranFROMADDR_L.ReadOnly = false;
@@ -564,8 +578,17 @@ namespace UtransEditorAGRC
                         // get utrans cartocode
                         strUtransCartoCode = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("CARTOCODE")).ToString().Trim();
 
+                        // get utrans oneway
+                        strUtransOneWay = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("ONEWAY")).ToString().Trim();
+
+                        // get utrans vertlevel
+                        strUtransVertLevel = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("VERT_LEVEL")).ToString().Trim();
+
+                        // get utrans speed
+                        strUtransSpeedLmt = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("SPEED_LMT")).ToString().Trim();
+
                         // check if udot street
-                        string checkIfUdotStreet = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("DOT_RTNAME")).ToString();
+                        checkIfUdotStreet = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("DOT_RTNAME")).ToString();
                         if (checkIfUdotStreet != "")
                         {
                             groupBoxUtransSeg.Text = groupBoxUtransSeg.Text + " (UDOT STREET)";
@@ -586,6 +609,16 @@ namespace UtransEditorAGRC
 
                     //populate the cartocode combobox
                     populateCartoCodeComboBox();
+
+                    // populate vertical level combobox
+                    populateVertLevel();
+
+                    // populate speed lmt combobox
+                    populateSpeedLmt();
+
+                    // populate one way combobox
+                    populateOneWay();
+
 
                 }
                 else //if the user selects more or less than one record in the dfc fc - clear out the textboxes
@@ -721,7 +754,7 @@ namespace UtransEditorAGRC
 
 
 
-        //populate the cartocode combobox
+        //populate the cartocode combobox based on existing utrans value
         private void populateCartoCodeComboBox() 
         {
             try
@@ -792,13 +825,17 @@ namespace UtransEditorAGRC
                         intUtransInitialCartoCodeIndex = 14;
                         cboCartoCode.SelectedIndex = 14;
                         break;
-                    case "99":
+                    case "16":
                         intUtransInitialCartoCodeIndex = 15;
                         cboCartoCode.SelectedIndex = 15;
                         break;
-                    case "16":
+                    case "17":
                         intUtransInitialCartoCodeIndex = 16;
                         cboCartoCode.SelectedIndex = 16;
+                        break;
+                    case "18":
+                        intUtransInitialCartoCodeIndex = 17;
+                        cboCartoCode.SelectedIndex = 17;
                         break;
                     default:
                         intUtransInitialCartoCodeIndex = -1;
@@ -816,10 +853,183 @@ namespace UtransEditorAGRC
                 MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
                 "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
                 "Error Location:" + Environment.NewLine + ex.StackTrace,
-                "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                "UTRANS Editor tool error populate cartocode combox!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
+
+        // populate vertical level combobox based on existing utrans value
+        private void populateVertLevel()
+        {
+            try
+            {
+                switch (strUtransVertLevel)
+                {
+                    case "0":
+                        //get a refernce to vertlevel to see if there will be edits (make it bold on the event handler if there will be edits)
+                        intUtransInitialVertLevelIndex = 0;
+                        cboVertLevel.SelectedIndex = 0;
+                        break;
+                    case "1":
+                        intUtransInitialVertLevelIndex = 1;
+                        cboVertLevel.SelectedIndex = 1;
+                        break;
+                    case "2":
+                        intUtransInitialVertLevelIndex = 2;
+                        cboVertLevel.SelectedIndex = 2;
+                        break;
+                    case "3":
+                        intUtransInitialVertLevelIndex = 3;
+                        cboVertLevel.SelectedIndex = 3;
+                        break;
+                    default:
+                        intUtransInitialCartoCodeIndex = -1;
+                        cboVertLevel.SelectedIndex = -1;
+                        break;
+                }
+
+                //get a refernce to vertlevel to see if there will be edits (make it bold on the event handler if there will be edits)
+                intUtransInitialVertLevelIndex = cboVertLevel.SelectedIndex;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error populate vert level combobox!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+
+        // populate speed lmt combobox
+        private void populateSpeedLmt()
+        {
+            try
+            {
+                switch (strUtransSpeedLmt)
+                {
+                    case "5":
+                        //get a refernce to speedlmt to see if there will be edits (make it bold on the event handler if there will be edits)
+                        intUtransInitialSpeedLmtIndex = 0;
+                        cboSpeed.SelectedIndex = 0;
+                        break;
+                    case "10":
+                        intUtransInitialSpeedLmtIndex = 1;
+                        cboSpeed.SelectedIndex = 1;
+                        break;
+                    case "15":
+                        intUtransInitialSpeedLmtIndex = 2;
+                        cboSpeed.SelectedIndex = 2;
+                        break;
+                    case "20":
+                        intUtransInitialSpeedLmtIndex = 3;
+                        cboSpeed.SelectedIndex = 3;
+                        break;
+                    case "25":
+                        intUtransInitialSpeedLmtIndex = 4;
+                        cboSpeed.SelectedIndex = 4;
+                        break;
+                    case "30":
+                        intUtransInitialSpeedLmtIndex = 5;
+                        cboSpeed.SelectedIndex = 5;
+                        break;
+                    case "35":
+                        intUtransInitialSpeedLmtIndex = 6;
+                        cboSpeed.SelectedIndex = 6;
+                        break;
+                    case "40":
+                        intUtransInitialSpeedLmtIndex = 7;
+                        cboSpeed.SelectedIndex = 7;
+                        break;
+                    case "45":
+                        intUtransInitialSpeedLmtIndex = 8;
+                        cboSpeed.SelectedIndex = 8;
+                        break;
+                    case "50":
+                        intUtransInitialSpeedLmtIndex = 9;
+                        cboSpeed.SelectedIndex = 9;
+                        break;
+                    case "55":
+                        intUtransInitialSpeedLmtIndex = 10;
+                        cboSpeed.SelectedIndex = 10;
+                        break;
+                    case "60":
+                        intUtransInitialSpeedLmtIndex = 11;
+                        cboSpeed.SelectedIndex = 11;
+                        break;
+                    case "65":
+                        intUtransInitialSpeedLmtIndex = 12;
+                        cboSpeed.SelectedIndex = 12;
+                        break;
+                    case "70":
+                        intUtransInitialSpeedLmtIndex = 13;
+                        cboSpeed.SelectedIndex = 13;
+                        break;
+                    case "75":
+                        intUtransInitialSpeedLmtIndex = 14;
+                        cboSpeed.SelectedIndex = 14;
+                        break;
+                    case "80":
+                        intUtransInitialSpeedLmtIndex = 15;
+                        cboSpeed.SelectedIndex = 15;
+                        break;
+                    default:
+                        intUtransInitialSpeedLmtIndex = -1;
+                        cboSpeed.SelectedIndex = -1;
+                        break;
+                }
+
+                //get a refernce to speedlmt to see if there will be edits (make it bold on the event handler if there will be edits)
+                intUtransInitialSpeedLmtIndex = cboSpeed.SelectedIndex;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error populate seed limit combobox!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+
+        }
+
+
+        // populate one way combobox
+        private void populateOneWay()
+        {
+            try
+            {
+                switch (strUtransOneWay)
+                {
+                    case "0":
+                        //get a refernce to oneway to see if there will be edits (make it bold on the event handler if there will be edits)
+                        intUtransInitialOneWayIndex = 0;
+                        cboOneWay.SelectedIndex = 0;
+                        break;
+                    case "1":
+                        intUtransInitialOneWayIndex = 1;
+                        cboOneWay.SelectedIndex = 1;
+                        break;
+                    case "2":
+                        intUtransInitialOneWayIndex = 2;
+                        cboOneWay.SelectedIndex = 2;
+                        break;
+                    default:
+                        intUtransInitialCartoCodeIndex = -1;
+                        cboCartoCode.SelectedIndex = -1;
+                        break;
+                }
+
+                //get a refernce to oneway to see if there will be edits (make it bold on the event handler if there will be edits)
+                intUtransInitialOneWayIndex = cboOneWay.SelectedIndex;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error populate oneway combobox!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
 
 
 
@@ -2143,6 +2353,36 @@ namespace UtransEditorAGRC
                     }
                 }
 
+                //check if a vertlevel has been chosen
+                if (cboVertLevel.SelectedIndex == -1) //or maybe check for .text == ""
+                {
+                    DialogResult dialogResult1 = MessageBox.Show("Warning!  You are saving a street segment that has not been assigned a VERT_LEVEL." + Environment.NewLine + "Would you like to continue the save without a VERT_LEVEL?", "Format Warning!", MessageBoxButtons.YesNo);
+                    if (dialogResult1 == DialogResult.Yes)
+                    {
+                        // do nothing... continue to saving
+                    }
+                    else if (dialogResult1 == DialogResult.No) //exit the save operation becuase the user chose to select a VERT_LEVEL
+                    {
+                        //exit out and don't proceed to saving...
+                        return;
+                    }
+                }
+
+                //check if a oneway has been chosen
+                if (cboOneWay.SelectedIndex == -1) //or maybe check for .text == ""
+                {
+                    DialogResult dialogResult1 = MessageBox.Show("Warning!  You are saving a street segment that has not been assigned a ONEWAY." + Environment.NewLine + "Would you like to continue the save without a ONEWAY?", "Format Warning!", MessageBoxButtons.YesNo);
+                    if (dialogResult1 == DialogResult.Yes)
+                    {
+                        // do nothing... continue to saving
+                    }
+                    else if (dialogResult1 == DialogResult.No) //exit the save operation becuase the user chose to select a ONEWAY
+                    {
+                        //exit out and don't proceed to saving...
+                        return;
+                    }
+                }
+
 
                 //check what's selected in the combobox for status field, if completed is selected then proceed to save, else calc value in dfc field and don't save in utrans
                 // calculate status field, if not text = COMPLETED
@@ -2565,18 +2805,17 @@ namespace UtransEditorAGRC
 
                     if (arcFeatureMuni_left != null)
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_L"), arcFeatureMuni_left.get_Value(arcFeatureMuni_left.Fields.FindField("NAME")).ToString().ToUpper().Trim());
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_L"), arcFeatureMuni_left.get_Value(arcFeatureMuni_left.Fields.FindField("NAME")).ToString().Trim());
                     }
                     else
                     {
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_L"), "");
                         //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
-
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMuniCursor_left);
-                    arcMuniCursor_left = null;
-                    arcFeatureMuni_left = null;
-                    //arcSpatialFilter_left = null;
+                    ////System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMuniCursor_left);
+                    ////arcMuniCursor_left = null;
+                    ////arcFeatureMuni_left = null;
+                    //////arcSpatialFilter_left = null;
 
 
                     // query the ADDRESS SYSTEM layer left
@@ -2585,7 +2824,11 @@ namespace UtransEditorAGRC
 
                     if (arcFeatureAddrSys_left != null)
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_L"), arcFeatureAddrSys_left.get_Value(arcFeatureAddrSys_left.Fields.FindField("GRID_NAME")).ToString().ToUpper().Trim());
+                        // get the grid name, then title case it so it conforms to the domain values
+                        string gridName = arcFeatureAddrSys_left.get_Value(arcFeatureAddrSys_left.Fields.FindField("GRID_NAME")).ToString().Trim();
+                        string gridName_TitleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(gridName.ToLower());
+
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_L"), gridName_TitleCase.Trim());
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_L"), arcFeatureAddrSys_left.get_Value(arcFeatureAddrSys_left.Fields.FindField("QUADRANT")).ToString().ToUpper().Trim());
                     }
                     else
@@ -2594,7 +2837,6 @@ namespace UtransEditorAGRC
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_L"), "");
                         //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
-
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(arcAddrSysCursor_left);
                     arcAddrSysCursor_left = null;
                     arcFeatureAddrSys_left = null;
@@ -2615,11 +2857,10 @@ namespace UtransEditorAGRC
                         MessageBox.Show("A county could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                         //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
-
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcCountyCursor_left);
-                    arcCountyCursor_left = null;
-                    arcFeatureCounty_left = null;
-                    //arcSpatialFilter_left = null;
+                    ////System.Runtime.InteropServices.Marshal.ReleaseComObject(arcCountyCursor_left);
+                    ////arcCountyCursor_left = null;
+                    ////arcFeatureCounty_left = null;
+                    //////arcSpatialFilter_left = null;
 
 
                     // query the UNINCCOM layer left
@@ -2634,10 +2875,49 @@ namespace UtransEditorAGRC
                     {
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), "");
                     }
-
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_left);
                     arcMetroAreasCursor_left = null;
                     arcFeatureMetroAreas_left = null;
+                    //arcSpatialFilter_left = null;
+
+                    // assign DOT_OWN_L field
+                    // if dot_rtname like '0%' then it's udot, if not then check for muni, if not muni then use county
+                    if (checkIfUdotStreet.StartsWith("0"))
+                    {
+                        // then it's a udot street
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_L"), "UDOT");
+                    }
+                    else
+                    {
+                        // it's not a udot street so make other checks...
+                        // check if there's a left muni
+                        if (arcFeatureMuni_left != null)
+                        {
+                            arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_L"), "MU " + arcFeatureMuni_left.get_Value(arcFeatureMuni_left.Fields.FindField("NAME")).ToString().Trim());
+                        }
+                        else
+                        {
+                            // use the county number to get the name
+                            if (arcFeatureCounty_left != null)
+                            {
+                                // get the county name from number
+                                string countyDOTOwnName = getCountyNameFromNumber(arcFeatureCounty_left.get_Value(arcFeatureCounty_left.Fields.FindField("FIPS_STR")).ToString());
+                                // assign county value
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_L"), countyDOTOwnName);
+                            }
+                            else
+                            {
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_L"), "");
+                            }
+                        }
+                    }
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMuniCursor_left);
+                    arcMuniCursor_left = null;
+                    arcFeatureMuni_left = null;
+                    //arcSpatialFilter_left = null;
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcCountyCursor_left);
+                    arcCountyCursor_left = null;
+                    arcFeatureCounty_left = null;
                     //arcSpatialFilter_left = null;
 
 
@@ -2676,18 +2956,17 @@ namespace UtransEditorAGRC
 
                     if (arcFeatureMuni_right != null)
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_R"), arcFeatureMuni_right.get_Value(arcFeatureMuni_right.Fields.FindField("NAME")).ToString().ToUpper().Trim());
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_R"), arcFeatureMuni_right.get_Value(arcFeatureMuni_right.Fields.FindField("NAME")).ToString().Trim());
                     }
                     else
                     {
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_R"), "");
                         //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
-
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMuniCursor_right);
-                    arcMuniCursor_right = null;
-                    arcFeatureMuni_right = null;
-                    //arcSpatialFilter_right = null;
+                    ////System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMuniCursor_right);
+                    ////arcMuniCursor_right = null;
+                    ////arcFeatureMuni_right = null;
+                    //////arcSpatialFilter_right = null;
 
 
                     // query the ADDRESS SYSTEM layer right
@@ -2696,7 +2975,11 @@ namespace UtransEditorAGRC
 
                     if (arcFeatureAddrSys_right != null)
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_R"), arcFeatureAddrSys_right.get_Value(arcFeatureAddrSys_right.Fields.FindField("GRID_NAME")).ToString().ToUpper().Trim());
+                        // get the grid name, then title case it so it conforms to the domain values
+                        string gridName = arcFeatureAddrSys_right.get_Value(arcFeatureAddrSys_right.Fields.FindField("GRID_NAME")).ToString().Trim();
+                        string gridName_TitleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(gridName.ToLower());
+
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_R"), gridName_TitleCase.Trim());
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_R"), arcFeatureAddrSys_right.get_Value(arcFeatureAddrSys_right.Fields.FindField("QUADRANT")).ToString().ToUpper().Trim());
                     }
                     else
@@ -2705,7 +2988,6 @@ namespace UtransEditorAGRC
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_R"), "");
                         //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
-
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(arcAddrSysCursor_right);
                     arcAddrSysCursor_right = null;
                     arcFeatureAddrSys_right = null;
@@ -2726,11 +3008,10 @@ namespace UtransEditorAGRC
                         MessageBox.Show("A county could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                         //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
-
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcCountyCursor_right);
-                    arcCountyCursor_right = null;
-                    arcFeatureCounty_right = null;
-                    //arcSpatialFilter_right = null;
+                    //System.Runtime.InteropServices.Marshal.ReleaseComObject(arcCountyCursor_right);
+                    //arcCountyCursor_right = null;
+                    //arcFeatureCounty_right = null;
+                    ////arcSpatialFilter_right = null;
 
 
                     // query the UNINCCOM layer right
@@ -2745,10 +3026,50 @@ namespace UtransEditorAGRC
                     {
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), "");
                     }
-
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_right);
                     arcMetroAreasCursor_right = null;
                     arcFeatureMetroAreas_right = null;
+                    //arcSpatialFilter_right = null;
+
+
+                    // assign DOT_OWN_R field
+                    // if dot_rtname like '0%' then it's udot, if not then check for muni, if not muni then use county
+                    if (checkIfUdotStreet.StartsWith("0"))
+                    {
+                        // then it's a udot street
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_R"), "UDOT");
+                    }
+                    else
+                    {
+                        // it's not a udot street so make other checks...
+                        // check if there's a right muni
+                        if (arcFeatureMuni_right != null)
+                        {
+                            arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_R"), "MU " + arcFeatureMuni_right.get_Value(arcFeatureMuni_right.Fields.FindField("NAME")).ToString().Trim());
+                        }
+                        else
+                        {
+                            // use the county number to get the name
+                            if (arcFeatureCounty_right != null)
+                            {
+                                // get the county name from number
+                                string countyDOTOwnName = getCountyNameFromNumber(arcFeatureCounty_right.get_Value(arcFeatureCounty_right.Fields.FindField("FIPS_STR")).ToString());
+                                // assign county value
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_R"), countyDOTOwnName);
+                            }
+                            else
+                            {
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_R"), "");
+                            }
+                        }
+                    }
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcCountyCursor_right);
+                    arcCountyCursor_right = null;
+                    arcFeatureCounty_right = null;
+                    //arcSpatialFilter_right = null;
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMuniCursor_right);
+                    arcMuniCursor_right = null;
+                    arcFeatureMuni_right = null;
                     //arcSpatialFilter_right = null;
 
 
@@ -2858,24 +3179,54 @@ namespace UtransEditorAGRC
                     //string strAscAlias = txtUtransAN_NAME.Text.Trim() + " " + txtUtransAN_POSTDIR.Text.Trim();
                     //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ACSALIAS"), strAscAlias.Trim());
 
-                    // CARTOCODE
-                    if (cboCartoCode.SelectedIndex == 15) //this is the 99 value
+                    // CARTOCODE //
+                    if (cboCartoCode.SelectedIndex == -1)
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("CARTOCODE"), 99);
-                    }
-                    else if (cboCartoCode.SelectedIndex == -1)
-                    {
+                        // the user did not specify a list item
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("CARTOCODE"), null);
-                    }
-                    else if (cboCartoCode.SelectedIndex == 16) //don't add one (as done in the else) to this case b/c of the 99 value throws-off the index thing, so it's 16
-                    {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("CARTOCODE"), 16);
                     }
                     else
                     {
+                        // use the list item number and add one b/c it's zero-based
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("CARTOCODE"), (cboCartoCode.SelectedIndex + 1));
                     }
-                    
+
+                    // ONEWAY //
+                    if (cboOneWay.SelectedIndex == -1)
+                    {
+                        // the user did not specify a list item
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ONEWAY"), null);
+                    }
+                    else
+                    {
+                        // use the list item number b/c it's zero-based
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ONEWAY"), (cboOneWay.SelectedIndex));
+                    }
+
+                    // VERT_LEVEL //
+                    if (cboVertLevel.SelectedIndex == -1)
+                    {
+                        // the user did not specify a list item
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("VERT_LEVEL"), null);
+                    }
+                    else
+                    {
+                        // use the list item number b/c it's zero-based
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("VERT_LEVEL"), (cboVertLevel.SelectedIndex));
+                    }
+
+                    // SPEED_LMT //
+                    if (cboSpeed.SelectedIndex == -1)
+                    {
+                        // the user did not specify a list item
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("SPEED_LMT"), null);
+                    }
+                    else
+                    {
+                        // use the list item number b/c it's zero-based
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("SPEED_LMT"), (cboSpeed.SelectedItem.ToString()));
+                    }
+
                     //store the feature if not a duplicate
                     arcUtransEdit_Feature.Store();
 
@@ -3317,8 +3668,7 @@ namespace UtransEditorAGRC
         }
 
 
-
-        //this method is called if the user selects something in the cartocode combobox
+        //these methods check if edits are about to happen on the combobox data, and if so make the field name label bold
         private void cboCartoCode_SelectedIndexChanged(object sender, EventArgs e)
         {
             //make label bold if the selected index is different from intial index (from on-selection-changed)
@@ -3332,12 +3682,51 @@ namespace UtransEditorAGRC
                 groupBox5.Font = fontLabelRegular;
                 cboCartoCode.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
             }
-            
             //fontLabelHasEdits.Dispose();
             //fontLabelRegular.Dispose();
-            
         }
-
+        private void cboVertLevel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //make label bold if the selected index is different from intial index (from on-selection-changed)
+            if (intUtransInitialVertLevelIndex != cboVertLevel.SelectedIndex)
+            {
+                groupBox9.Font = fontLabelHasEdits;
+                cboVertLevel.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
+            }
+            else
+            {
+                groupBox9.Font = fontLabelRegular;
+                cboVertLevel.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
+            }
+        }
+        private void cboOneWay_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //make label bold if the selected index is different from intial index (from on-selection-changed)
+            if (intUtransInitialOneWayIndex != cboOneWay.SelectedIndex)
+            {
+                groupBox8.Font = fontLabelHasEdits;
+                cboOneWay.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
+            }
+            else
+            {
+                groupBox8.Font = fontLabelRegular;
+                cboOneWay.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
+            }
+        }
+        private void cboSpeed_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //make label bold if the selected index is different from intial index (from on-selection-changed)
+            if (intUtransInitialSpeedLmtIndex != cboSpeed.SelectedIndex)
+            {
+                groupBox10.Font = fontLabelHasEdits;
+                cboSpeed.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
+            }
+            else
+            {
+                groupBox10.Font = fontLabelRegular;
+                cboSpeed.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
+            }
+        }
 
 
         // this method is called when the update oid button is clicked
@@ -3745,6 +4134,75 @@ namespace UtransEditorAGRC
         private void lblStName_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void groupBox8_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private string getCountyNameFromNumber(string countyNumber)
+        {
+            if (countyNumber == "49001")
+                return "CO Beaver";
+            else if (countyNumber == "49003")
+                return "CO Box Elder";
+            else if (countyNumber == "49005")
+                return "CO Cache";
+            else if (countyNumber == "49007")
+                return "CO Carbon";
+            else if (countyNumber == "49009")
+                return "CO Daggett";
+            else if (countyNumber == "49011")
+                return "CO Davis";
+            else if (countyNumber == "49013")
+                return "CO Duchesne";
+            else if (countyNumber == "49015")
+                return "CO Emery";
+            else if (countyNumber == "49017")
+                return "CO Garfield";
+            else if (countyNumber == "49019")
+                return "CO Grand";
+            else if (countyNumber == "49021")
+                return "CO Iron";
+            else if (countyNumber == "49023")
+                return "CO Juab";
+            else if (countyNumber == "49025")
+                return "CO Kane";
+            else if (countyNumber == "49027")
+                return "CO Millard";
+            else if (countyNumber == "49029")
+                return "CO Morgan";
+            else if (countyNumber == "49031")
+                return "CO Piute";
+            else if (countyNumber == "49033")
+                return "CO Rich";
+            else if (countyNumber == "49035")
+                return "CO Salt Lake";
+            else if (countyNumber == "49037")
+                return "CO San Juan";
+            else if (countyNumber == "49039")
+                return "CO Sanpete";
+            else if (countyNumber == "49041")
+                return "CO Sevier";
+            else if (countyNumber == "49043")
+                return "CO Summit";
+            else if (countyNumber == "49045")
+                return "CO Tooele";
+            else if (countyNumber == "49047")
+                return "CO Uintah";
+            else if (countyNumber == "49049")
+                return "CO Utah";
+            else if (countyNumber == "49051")
+                return "CO Wasatch";
+            else if (countyNumber == "49053")
+                return "CO Washington";
+            else if (countyNumber == "49055")
+                return "CO Wayne";
+            else if (countyNumber == "49057")
+                return "CO Weber";
+            else
+                return "";
         }
     }
 }

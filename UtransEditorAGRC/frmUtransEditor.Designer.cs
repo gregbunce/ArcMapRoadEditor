@@ -120,9 +120,6 @@
             this.lblVersionName = new System.Windows.Forms.Label();
             this.btnNext = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.btnPrev = new System.Windows.Forms.Button();
-            this.label34 = new System.Windows.Forms.Label();
-            this.label33 = new System.Windows.Forms.Label();
             this.btnCopyNewSegment = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btnUpdateDfcObjectID = new System.Windows.Forms.Button();
@@ -134,6 +131,12 @@
             this.linkLabelDefQuery = new System.Windows.Forms.LinkLabel();
             this.lblCounter = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.cboOneWay = new System.Windows.Forms.ComboBox();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.cboVertLevel = new System.Windows.Forms.ComboBox();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.cboSpeed = new System.Windows.Forms.ComboBox();
             this.groupBoxCountySeg.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -144,6 +147,9 @@
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            this.groupBox9.SuspendLayout();
+            this.groupBox10.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtCountyFROMADDR_L
@@ -1091,7 +1097,7 @@
             // linkLabelAttrDoc
             // 
             this.linkLabelAttrDoc.AutoSize = true;
-            this.linkLabelAttrDoc.Location = new System.Drawing.Point(12, 422);
+            this.linkLabelAttrDoc.Location = new System.Drawing.Point(12, 454);
             this.linkLabelAttrDoc.Name = "linkLabelAttrDoc";
             this.linkLabelAttrDoc.Size = new System.Drawing.Size(122, 13);
             this.linkLabelAttrDoc.TabIndex = 100;
@@ -1119,12 +1125,12 @@
             // groupBoxStatusField
             // 
             this.groupBoxStatusField.Controls.Add(this.cboStatusField);
-            this.groupBoxStatusField.Location = new System.Drawing.Point(960, 411);
+            this.groupBoxStatusField.Location = new System.Drawing.Point(1189, 398);
             this.groupBoxStatusField.Name = "groupBoxStatusField";
             this.groupBoxStatusField.Size = new System.Drawing.Size(177, 49);
             this.groupBoxStatusField.TabIndex = 12;
             this.groupBoxStatusField.TabStop = false;
-            this.groupBoxStatusField.Text = "Change Status Field";
+            this.groupBoxStatusField.Text = "Change Status";
             // 
             // label29
             // 
@@ -1149,9 +1155,9 @@
             // 
             // btnSaveToUtrans
             // 
-            this.btnSaveToUtrans.Location = new System.Drawing.Point(1200, 411);
+            this.btnSaveToUtrans.Location = new System.Drawing.Point(1189, 454);
             this.btnSaveToUtrans.Name = "btnSaveToUtrans";
-            this.btnSaveToUtrans.Size = new System.Drawing.Size(166, 27);
+            this.btnSaveToUtrans.Size = new System.Drawing.Size(177, 27);
             this.btnSaveToUtrans.TabIndex = 21;
             this.btnSaveToUtrans.Text = "Save in UTRANS";
             this.btnSaveToUtrans.UseVisualStyleBackColor = true;
@@ -1160,7 +1166,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(12, 461);
+            this.label31.Location = new System.Drawing.Point(12, 493);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(145, 13);
             this.label31.TabIndex = 16;
@@ -1169,7 +1175,7 @@
             // lblVersionName
             // 
             this.lblVersionName.AutoSize = true;
-            this.lblVersionName.Location = new System.Drawing.Point(152, 461);
+            this.lblVersionName.Location = new System.Drawing.Point(152, 493);
             this.lblVersionName.Name = "lblVersionName";
             this.lblVersionName.Size = new System.Drawing.Size(71, 13);
             this.lblVersionName.TabIndex = 17;
@@ -1178,7 +1184,8 @@
             // btnNext
             // 
             this.btnNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNext.Location = new System.Drawing.Point(80, 15);
+            this.btnNext.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNext.Location = new System.Drawing.Point(6, 23);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(58, 32);
             this.btnNext.TabIndex = 0;
@@ -1190,52 +1197,19 @@
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.btnNext);
-            this.groupBox6.Controls.Add(this.btnPrev);
-            this.groupBox6.Controls.Add(this.label34);
-            this.groupBox6.Controls.Add(this.label33);
-            this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox6.Location = new System.Drawing.Point(728, 399);
+            this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox6.Location = new System.Drawing.Point(1014, 418);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(145, 74);
+            this.groupBox6.Size = new System.Drawing.Size(79, 63);
             this.groupBox6.TabIndex = 19;
             this.groupBox6.TabStop = false;
-            // 
-            // btnPrev
-            // 
-            this.btnPrev.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPrev.Location = new System.Drawing.Point(7, 15);
-            this.btnPrev.Name = "btnPrev";
-            this.btnPrev.Size = new System.Drawing.Size(58, 32);
-            this.btnPrev.TabIndex = 0;
-            this.btnPrev.TabStop = false;
-            this.btnPrev.Text = "<";
-            this.btnPrev.UseVisualStyleBackColor = true;
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label34.Location = new System.Drawing.Point(90, 50);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(35, 16);
-            this.label34.TabIndex = 2;
-            this.label34.Text = "Next";
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label33.Location = new System.Drawing.Point(16, 50);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(36, 16);
-            this.label33.TabIndex = 1;
-            this.label33.Text = "Prev";
+            this.groupBox6.Text = "Next";
             // 
             // btnCopyNewSegment
             // 
             this.btnCopyNewSegment.BackgroundImage = global::UtransEditorAGRC.Properties.Resources.EditingCopyParallel32;
             this.btnCopyNewSegment.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnCopyNewSegment.Location = new System.Drawing.Point(1143, 411);
+            this.btnCopyNewSegment.Location = new System.Drawing.Point(1133, 423);
             this.btnCopyNewSegment.Name = "btnCopyNewSegment";
             this.btnCopyNewSegment.Size = new System.Drawing.Size(50, 53);
             this.btnCopyNewSegment.TabIndex = 22;
@@ -1265,9 +1239,9 @@
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.cboCartoCode);
-            this.groupBox5.Location = new System.Drawing.Point(337, 399);
+            this.groupBox5.Location = new System.Drawing.Point(341, 399);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(316, 50);
+            this.groupBox5.Size = new System.Drawing.Size(354, 50);
             this.groupBox5.TabIndex = 23;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "CARTOCODE";
@@ -1292,11 +1266,12 @@
             "13 - Non-road feature (i.e. ferry)",
             "14 - Driveway",
             "15 - Proposed",
-            "99 - UDOT FAE Calibration (Non-Road Feature)",
-            "16 - 4WD and/or high clearance may be required "});
+            "16 - 4WD and/or high clearance may be required",
+            "17 - Service access roads",
+            "18 - General access roads"});
             this.cboCartoCode.Location = new System.Drawing.Point(15, 19);
             this.cboCartoCode.Name = "cboCartoCode";
-            this.cboCartoCode.Size = new System.Drawing.Size(292, 21);
+            this.cboCartoCode.Size = new System.Drawing.Size(333, 21);
             this.cboCartoCode.TabIndex = 19;
             this.cboCartoCode.SelectedIndexChanged += new System.EventHandler(this.cboCartoCode_SelectedIndexChanged);
             // 
@@ -1305,7 +1280,7 @@
             this.chkShowVertices.AutoSize = true;
             this.chkShowVertices.Checked = true;
             this.chkShowVertices.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowVertices.Location = new System.Drawing.Point(1200, 449);
+            this.chkShowVertices.Location = new System.Drawing.Point(1136, 484);
             this.chkShowVertices.Name = "chkShowVertices";
             this.chkShowVertices.Size = new System.Drawing.Size(140, 17);
             this.chkShowVertices.TabIndex = 24;
@@ -1317,16 +1292,16 @@
             // groupBox7
             // 
             this.groupBox7.Controls.Add(this.btnUpdateDfcObjectID);
-            this.groupBox7.Location = new System.Drawing.Point(171, 399);
+            this.groupBox7.Location = new System.Drawing.Point(137, 399);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(154, 48);
+            this.groupBox7.Size = new System.Drawing.Size(198, 48);
             this.groupBox7.TabIndex = 25;
             this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Did You Split A Line?";
+            this.groupBox7.Text = "Split a line OR wrong segment ID\'d?";
             // 
             // btnClearVertices
             // 
-            this.btnClearVertices.Location = new System.Drawing.Point(15, 393);
+            this.btnClearVertices.Location = new System.Drawing.Point(16, 414);
             this.btnClearVertices.Name = "btnClearVertices";
             this.btnClearVertices.Size = new System.Drawing.Size(91, 23);
             this.btnClearVertices.TabIndex = 26;
@@ -1339,7 +1314,7 @@
             // linkLabelDefQuery
             // 
             this.linkLabelDefQuery.AutoSize = true;
-            this.linkLabelDefQuery.Location = new System.Drawing.Point(12, 442);
+            this.linkLabelDefQuery.Location = new System.Drawing.Point(12, 474);
             this.linkLabelDefQuery.Name = "linkLabelDefQuery";
             this.linkLabelDefQuery.Size = new System.Drawing.Size(136, 13);
             this.linkLabelDefQuery.TabIndex = 101;
@@ -1365,11 +1340,105 @@
             this.label3.TabIndex = 29;
             this.label3.Text = "Remaining: ";
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.cboOneWay);
+            this.groupBox8.Location = new System.Drawing.Point(701, 399);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(262, 50);
+            this.groupBox8.TabIndex = 102;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "ONEWAY";
+            this.groupBox8.Enter += new System.EventHandler(this.groupBox8_Enter);
+            // 
+            // cboOneWay
+            // 
+            this.cboOneWay.AutoCompleteCustomSource.AddRange(new string[] {
+            "0 - Two way",
+            "1 - One way Direction of Arc",
+            "2 - One way Opposite Direction of Arc"});
+            this.cboOneWay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboOneWay.FormattingEnabled = true;
+            this.cboOneWay.Items.AddRange(new object[] {
+            "0 - Two way",
+            "1 - One way Direction of Arc",
+            "2 - One way Opposite Direction of Arc"});
+            this.cboOneWay.Location = new System.Drawing.Point(13, 19);
+            this.cboOneWay.Name = "cboOneWay";
+            this.cboOneWay.Size = new System.Drawing.Size(241, 21);
+            this.cboOneWay.TabIndex = 0;
+            this.cboOneWay.SelectedIndexChanged += new System.EventHandler(this.cboOneWay_SelectedIndexChanged);
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.cboVertLevel);
+            this.groupBox9.Location = new System.Drawing.Point(341, 454);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(354, 50);
+            this.groupBox9.TabIndex = 103;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "VERT_LEVEL";
+            // 
+            // cboVertLevel
+            // 
+            this.cboVertLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboVertLevel.FormattingEnabled = true;
+            this.cboVertLevel.Items.AddRange(new object[] {
+            "0 - Ground/Lowest",
+            "1 - Overpassing Level 1",
+            "2 - Overpassing Level 2",
+            "3 - Overpassing Level 3"});
+            this.cboVertLevel.Location = new System.Drawing.Point(15, 20);
+            this.cboVertLevel.Name = "cboVertLevel";
+            this.cboVertLevel.Size = new System.Drawing.Size(333, 21);
+            this.cboVertLevel.TabIndex = 0;
+            this.cboVertLevel.SelectedIndexChanged += new System.EventHandler(this.cboVertLevel_SelectedIndexChanged);
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.cboSpeed);
+            this.groupBox10.Location = new System.Drawing.Point(701, 455);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(262, 50);
+            this.groupBox10.TabIndex = 103;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "SPEED_LMT";
+            // 
+            // cboSpeed
+            // 
+            this.cboSpeed.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboSpeed.FormattingEnabled = true;
+            this.cboSpeed.Items.AddRange(new object[] {
+            "5",
+            "10",
+            "15",
+            "20",
+            "25",
+            "30",
+            "35",
+            "40",
+            "45",
+            "50",
+            "55",
+            "60",
+            "65",
+            "70",
+            "75",
+            "80"});
+            this.cboSpeed.Location = new System.Drawing.Point(13, 20);
+            this.cboSpeed.Name = "cboSpeed";
+            this.cboSpeed.Size = new System.Drawing.Size(241, 21);
+            this.cboSpeed.TabIndex = 0;
+            this.cboSpeed.SelectedIndexChanged += new System.EventHandler(this.cboSpeed_SelectedIndexChanged);
+            // 
             // frmUtransEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1378, 481);
+            this.ClientSize = new System.Drawing.Size(1378, 516);
+            this.Controls.Add(this.groupBox10);
+            this.Controls.Add(this.groupBox9);
+            this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.lblCounter);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.linkLabelDefQuery);
@@ -1407,9 +1476,11 @@
             this.groupBox1.PerformLayout();
             this.groupBoxStatusField.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox10.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1489,9 +1560,6 @@
         private System.Windows.Forms.Label lblVersionName;
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Button btnPrev;
-        private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.Label label33;
         private System.Windows.Forms.Button btnCopyNewSegment;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.GroupBox groupBox5;
@@ -1519,5 +1587,11 @@
         private System.Windows.Forms.TextBox txtCountyA1_POSTDIR;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.ComboBox cboOneWay;
+        private System.Windows.Forms.ComboBox cboVertLevel;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.ComboBox cboSpeed;
     }
 }
