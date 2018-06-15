@@ -78,7 +78,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(206, 13);
             this.label3.TabIndex = 3;
-            this.label3.Text = "Choose UTRANS.StatewideStreets Layer:";
+            this.label3.Text = "Choose UTRANS.Roads_Edit Layer:";
             // 
             // label4
             // 
@@ -216,7 +216,7 @@
             this.MinimizeBox = false;
             this.Name = "ExportToIgnoreFC";
             this.ShowIcon = false;
-            this.Text = "Export Ignored Records to Feature Class";
+            this.Text = "Export Ignored Records to Feature class";
             this.Load += new System.EventHandler(this.ExportToIgnoreFC_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

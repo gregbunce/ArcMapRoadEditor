@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
+using ESRI.ArcGIS.esriSystem;
+using ESRI.ArcGIS.Geodatabase;
+using ESRI.ArcGIS.Geometry;
 //using NLog;
 
 namespace UtransEditorAGRC
@@ -15,7 +18,7 @@ namespace UtransEditorAGRC
     class clsUtransEditorStaticClass
     {
         //set up nlogger for catching errors
-        //private static Logger logger = LogManager.GetCurrentClassLogger();
+        //private static Logger logger = LogManager.GetCurrentclassLogger();
 
         public static SpreadsheetsService service;
         public static string accessToken;
@@ -231,10 +234,10 @@ namespace UtransEditorAGRC
                 row.Elements.Add(new ListEntry.Custom() { LocalName = "agrcnotes", Value = clsGlobals.strUserInputForSpreadsheet.ToString().Trim() });
                 row.Elements.Add(new ListEntry.Custom() { LocalName = "agrcsegment", Value = clsGlobals.strAgrcSegment.ToString().Trim() });
                 row.Elements.Add(new ListEntry.Custom() { LocalName = "cntysegment", Value = clsGlobals.strCountySegmentTrimed });
-                row.Elements.Add(new ListEntry.Custom() { LocalName = "leftfrom", Value = clsGlobals.strCountyL_F_Add });
-                row.Elements.Add(new ListEntry.Custom() { LocalName = "leftto", Value = clsGlobals.strCountyL_T_Add });
-                row.Elements.Add(new ListEntry.Custom() { LocalName = "rightfrom", Value = clsGlobals.strCountyR_F_Add });
-                row.Elements.Add(new ListEntry.Custom() { LocalName = "rightto", Value = clsGlobals.strCountyR_T_Add });
+                row.Elements.Add(new ListEntry.Custom() { LocalName = "leftfrom", Value = clsGlobals.strCountyFROMADDR_L });
+                row.Elements.Add(new ListEntry.Custom() { LocalName = "leftto", Value = clsGlobals.strCountyTOADDR_L });
+                row.Elements.Add(new ListEntry.Custom() { LocalName = "rightfrom", Value = clsGlobals.strCountyFROMADDR_R });
+                row.Elements.Add(new ListEntry.Custom() { LocalName = "rightto", Value = clsGlobals.strCountyTOADDR_R });
                 row.Elements.Add(new ListEntry.Custom() { LocalName = "city", Value = clsGlobals.strGoogleSpreadsheetCityField });
                 // Send the new row to the API for insertion.
                 service.Insert(listFeed, row);
@@ -250,6 +253,54 @@ namespace UtransEditorAGRC
             }
         }
 
+
+        //connect to sde - method (this method has the same name so we can use method overloading)
+        #region "Connect to SDE"
+        public static ESRI.ArcGIS.Geodatabase.IWorkspace ConnectToTransactionalVersion(String server, String instance, String database, String authenication, String version, String username, String pass)
+        {
+            IPropertySet propertySet = new PropertySetClass();
+            propertySet.SetProperty("SERVER", server);
+            //propertySet.SetProperty("DBCLIENT", dbclient);
+            propertySet.SetProperty("INSTANCE", instance);
+            propertySet.SetProperty("DATABASE", database);
+            propertySet.SetProperty("AUTHENTICATION_MODE", authenication);
+            propertySet.SetProperty("VERSION", version);
+            propertySet.SetProperty("USER", username);
+            propertySet.SetProperty("PASSWORD", pass);
+
+            Type factoryType = Type.GetTypeFromProgID("esriDataSourcesGDB.SdeWorkspaceFactory");
+            IWorkspaceFactory workspaceFactory = (IWorkspaceFactory)Activator.CreateInstance(factoryType);
+            return workspaceFactory.Open(propertySet, 0);
+        }
+        #endregion
+
+
+        public static IFeature GetIntersectedSGIDBoundary(IPoint arcPnt, IFeatureClass arcFeatClass)
+        {
+            try
+            {
+                ISpatialFilter arcSpatialFilter = new SpatialFilter();
+                arcSpatialFilter.Geometry = arcPnt;
+                arcSpatialFilter.GeometryField = "SHAPE";
+                arcSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+                arcSpatialFilter.SubFields = "*";
+
+                IFeatureCursor arcFeatCur = arcFeatClass.Search(arcSpatialFilter, false);
+                IFeature arcFeatureToReturn = arcFeatCur.NextFeature();
+
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatCur);
+
+                return arcFeatureToReturn;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "Push Utrans Roads to SGID!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return null;
+            }
+        }
 
     }
 }

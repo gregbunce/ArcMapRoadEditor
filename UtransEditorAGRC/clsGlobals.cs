@@ -1,6 +1,7 @@
 ﻿using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Editor;
 using ESRI.ArcGIS.Framework;
+using ESRI.ArcGIS.Geodatabase;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace UtransEditorAGRC
 {
     class clsGlobals
     {
-
+        // Globals
         public static IApplication arcApplication
         {
             get;
@@ -61,6 +62,12 @@ namespace UtransEditorAGRC
         }
 
         public static IFeatureLayer arcFLayerMunicipalities
+        {
+            get;
+            set;
+        }
+
+        public static IFeatureLayer arcFLayerMetroTwnShips
         {
             get;
             set;
@@ -115,25 +122,25 @@ namespace UtransEditorAGRC
 
         }
 
-        public static string strCountyL_F_Add
+        public static string strCountyFROMADDR_L
         {
             get;
             set;
         }
 
-        public static string strCountyL_T_Add
+        public static string strCountyTOADDR_L
         {
             get;
             set;
         }
 
-        public static string strCountyR_F_Add
+        public static string strCountyFROMADDR_R
         {
             get;
             set;
         }
 
-        public static string strCountyR_T_Add
+        public static string strCountyTOADDR_R
         {
             get;
             set;
@@ -163,6 +170,28 @@ namespace UtransEditorAGRC
             set;
         }
 
+        public static IFeatureClass arcFeatClass_USNG
+        {
+            get;
+            set;
+        }
 
+        public static IWorkspace workspaceSGID
+        {
+            get;
+            set;
+        }
+
+        public static IFeatureWorkspace featureWorkspaceSGID
+        {
+            get;
+            set;
+        }
+
+        public static IGeoFeatureLayer pGFlayer
+        {
+            get;
+            set;
+        }
     }
 }

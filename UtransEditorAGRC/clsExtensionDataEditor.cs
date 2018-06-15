@@ -174,19 +174,19 @@ namespace UtransEditorAGRC
                 //        try
                 //        {
                 //            IFeatureLayer arcFLayer = arcMapp.get_Layer(i) as IFeatureLayer;
-                //            IFeatureClass arcFClass = arcFLayer.FeatureClass;
-                //            IObjectClass arcObjClass = arcFClass as IObjectClass;
-                //            if (arcObjClass.AliasName.ToString().ToUpper() == "UTRANS.TRANSADMIN.STATEWIDESTREETS")
+                //            IFeatureClass arcFclass = arcFLayer.FeatureClass;
+                //            IObjectclass arcObjclass = arcFclass as IObjectclass;
+                //            if (arcObjclass.AliasName.ToString().ToUpper() == "UTRANS.TRANSADMIN.STATEWIDESTREETS")
                 //            {
                 //                clsGlobals.arcGeoFLayerUtransStreets = arcMapp.get_Layer(i) as IGeoFeatureLayer;
                 //                MessageBox.Show("referenced utrans streets");
                 //            }
-                //            if (arcObjClass.AliasName.ToString().ToUpper() == "COUNTY_STREETS")
+                //            if (arcObjclass.AliasName.ToString().ToUpper() == "COUNTY_STREETS")
                 //            {
                 //                clsGlobals.arcGeoFLayerCountyStreets = arcMapp.get_Layer(i) as IGeoFeatureLayer;
                 //                MessageBox.Show("referenced county streets");
                 //            }
-                //            if (arcObjClass.AliasName.ToString().ToUpper() == "DFC_RESULT")
+                //            if (arcObjclass.AliasName.ToString().ToUpper() == "DFC_RESULT")
                 //            {
                 //                clsGlobals.arcGeoFLayerDfcResult = arcMapp.get_Layer(i) as IGeoFeatureLayer;
                 //                MessageBox.Show("referenced dfc results");

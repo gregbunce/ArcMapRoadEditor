@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using ESRI.ArcGIS.Display;
+using System.Globalization;
 using ESRI.ArcGIS.GeoDatabaseUI;
 //using NLog;
 //using NLog.Config;
@@ -28,21 +29,28 @@ namespace UtransEditorAGRC
         // create a list of controls that contains address pieces for managing edits
         private List<Control> ctrlList = new List<Control>();
 
-        string txtUtransInitialL_F_Add;
+        string txtUtransInitialFROMADDR_L;
         string txtUtransInitialL_TAdd;
-        string txtUtransInitialR_F_Add;
-        string txtUtransInitialR_T_Add;
+        string txtUtransInitialFROMADDR_R;
+        string txtUtransInitialTOADDR_R;
         string txtUtransInitialPreDir;
         string txtUtransInitialStName;
         string txtUtransInitialStType;
-        string txtUtransInitialSufDir;
-        string txtUtransInitialAlias1;
-        string txtUtransInitialAlias1Type;
-        string txtUtransInitialAlias2;
-        string txtUtransInitialAlias2Type;
-        string txtUtransInitialAcsAlias;
-        string txtUtransInitialAscSuf;
+        string txtUtransInitialPOSTDIR;
+        string txtUtransInitialA1_NAME;
+        string txtUtransInitialA1_POSTTYPE;
+        string txtUtransInitialA2_NAME;
+        string txtUtransInitialA2_POSTTYPE;
+        string txtUtransInitialA1_PREDIR;
+        string txtUtransInitialA1_POSTDIR;
+        string txtUtransInitialA2_PREDIR;
+        string txtUtransInitialA2_POSTDIR;
+        string txtUtransInitialAN_NAME;
+        string txtUtransInitialAN_POSTDIR;
         int intUtransInitialCartoCodeIndex;
+        int intUtransInitialVertLevelIndex;
+        int intUtransInitialOneWayIndex;
+        int intUtransInitialSpeedLmtIndex;
         string strGoogleLogLeftTo;
         string strGoogleLogLeftFrom;
         string strGoogleLogRightTo;
@@ -68,7 +76,11 @@ namespace UtransEditorAGRC
         string strChangeType = "";
         string strDFC_RESULT_oid = "";
         string strUtransCartoCode = "";
+        string strUtransOneWay = "";
+        string strUtransVertLevel = "";
+        string strUtransSpeedLmt = "";
         string strCountyCartoCode = "";
+        string checkIfUdotStreet = "";
 
         bool boolVerticesOn = false;
 
@@ -159,7 +171,7 @@ namespace UtransEditorAGRC
                             IFeatureLayer arcFLayer = arcMapp.get_Layer(i) as IFeatureLayer;
                             IFeatureClass arcFClass = arcFLayer.FeatureClass;
                             IObjectClass arcObjClass = arcFClass as IObjectClass;
-                            if (arcObjClass.AliasName.ToString().ToUpper() == "UTRANS.TRANSADMIN.STATEWIDESTREETS")
+                            if (arcObjClass.AliasName.ToString().ToUpper() == "UTRANS.TRANSADMIN.ROADS_EDIT")
                             {
                                 clsGlobals.arcGeoFLayerUtransStreets = arcMapp.get_Layer(i) as IGeoFeatureLayer;
                                 //MessageBox.Show("referenced utrans streets");
@@ -190,6 +202,10 @@ namespace UtransEditorAGRC
                             {
                                 clsGlobals.arcFLayerMunicipalities = arcMapp.get_Layer(i) as IFeatureLayer;
                             }
+                            if (arcObjClass.AliasName.ToString() == "SGID10.BOUNDARIES.MetroTownships")
+                            {
+                                clsGlobals.arcFLayerMetroTwnShips = arcMapp.get_Layer(i) as IFeatureLayer;
+                            }
                         }
                         catch (Exception) { }//in case there is an error looping through layers (sometimes on group layers or dynamic xy layers), just keep going
                         
@@ -212,7 +228,7 @@ namespace UtransEditorAGRC
                 }
                 else if (clsGlobals.arcGeoFLayerUtransStreets == null)
                 {
-                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'UTRANS.TRANSADMIN.STATEWIDESTREETS' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'UTRANS.TRANSADMIN.ROADS_EDIT' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Close();
                     return;
                 }
@@ -240,8 +256,13 @@ namespace UtransEditorAGRC
                     this.Close();
                     return;
                 }
-  
-                
+                else if (clsGlobals.arcFLayerMetroTwnShips == null)
+                {
+                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID10.BOUNDARIES.MetroTownships' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.Close();
+                    return;
+                }
+
                 //clear the selection in the map, so we can start fresh with the tool and user's inputs
                 arcMapp.ClearSelection();
                 
@@ -251,34 +272,42 @@ namespace UtransEditorAGRC
 
 
                 //add textboxes to the control list
-                ctrlList.Add(this.txtCountyAcsName);
-                ctrlList.Add(this.txtCountyAcsSuf);
-                ctrlList.Add(this.txtCountyAlias1);
-                ctrlList.Add(this.txtCountyAlias1Type);
-                ctrlList.Add(this.txtCountyAlias2);
-                ctrlList.Add(this.txtCountyAlias2Type);
-                ctrlList.Add(this.txtCountyL_F_Add);
-                ctrlList.Add(this.txtCountyL_T_Add);
+                ctrlList.Add(this.txtCountyAN_NAME);
+                ctrlList.Add(this.txtCountyAN_POSTDIR);
+                ctrlList.Add(this.txtCountyA1_PREDIR);
+                ctrlList.Add(this.txtCountyA1_NAME);
+                ctrlList.Add(this.txtCountyA1_POSTTYPE);
+                ctrlList.Add(this.txtCountyA1_POSTDIR);
+                ctrlList.Add(this.txtCountyA2_PREDIR);
+                ctrlList.Add(this.txtCountyA2_NAME);
+                ctrlList.Add(this.txtCountyA2_POSTTYPE);
+                ctrlList.Add(this.txtCountyA2_POSTDIR);
+                ctrlList.Add(this.txtCountyFROMADDR_L);
+                ctrlList.Add(this.txtCountyTOADDR_L);
                 ctrlList.Add(this.txtCountyPreDir);
-                ctrlList.Add(this.txtCountyR_F_Add);
-                ctrlList.Add(this.txtCountyR_T_Add);
+                ctrlList.Add(this.txtCountyFROMADDR_R);
+                ctrlList.Add(this.txtCountyTOADDR_R);
                 ctrlList.Add(this.txtCountyStName);
                 ctrlList.Add(this.txtCountyStType);
-                ctrlList.Add(this.txtCountySufDir);
-                ctrlList.Add(this.txtUtranL_F_Add);
-                ctrlList.Add(this.txtUtranL_T_Add);
+                ctrlList.Add(this.txtCountyPOSTDIR);
+                ctrlList.Add(this.txtUtranFROMADDR_L);
+                ctrlList.Add(this.txtUtranTOADDR_L);
                 ctrlList.Add(this.txtUtranPreDir);
-                ctrlList.Add(this.txtUtranR_F_Add);
-                ctrlList.Add(this.txtUtranR_T_Add);
-                ctrlList.Add(this.txtUtransAcsName);
-                ctrlList.Add(this.txtUtransAcsSuf);
-                ctrlList.Add(this.txtUtransAlias1);
-                ctrlList.Add(this.txtUtransAlias1Type);
-                ctrlList.Add(this.txtUtransAlias2);
-                ctrlList.Add(this.txtUtransAlias2Type);
+                ctrlList.Add(this.txtUtranFROMADDR_R);
+                ctrlList.Add(this.txtUtranTOADDR_R);
+                ctrlList.Add(this.txtUtransAN_NAME);
+                ctrlList.Add(this.txtUtransAN_POSTDIR);
+                ctrlList.Add(this.txtUtransA1_PREDIR);
+                ctrlList.Add(this.txtUtransA1_NAME);
+                ctrlList.Add(this.txtUtransA1_POSTTYPE);
+                ctrlList.Add(this.txtUtransA1_POSTDIR);
+                ctrlList.Add(this.txtUtransA2_PREDIR);
+                ctrlList.Add(this.txtUtransA2_NAME);
+                ctrlList.Add(this.txtUtransA2_POSTTYPE);
+                ctrlList.Add(this.txtUtransA2_POSTDIR);
                 ctrlList.Add(this.txtUtranStName);
                 ctrlList.Add(this.txtUtranStType);
-                ctrlList.Add(this.txtUtranSufDir);
+                ctrlList.Add(this.txtUtranPOSTDIR);
 
 
                 //make sure the backcolor of each color is white
@@ -318,6 +347,9 @@ namespace UtransEditorAGRC
         {
             try
             {
+                // set the cursor focus to the utrans from left address range textbox
+                txtUtranFROMADDR_L.Focus();
+
                 //test if the logger is working
                 //clsGlobals.logger.Trace("test on selection changed");
 
@@ -340,24 +372,30 @@ namespace UtransEditorAGRC
 
                 //reset the cartocode combobox to nothing
                 cboCartoCode.SelectedIndex = -1;
+                cboOneWay.SelectedIndex = -1; // show two way as default by using 0
+                cboVertLevel.SelectedIndex = -1; // show groundlevel as default by using 0
+                cboSpeed.SelectedIndex = -1;
                 cboStatusField.SelectedIndex = 0; // show the completed value by default
-                groupBox5.Font = fontLabelRegular;
+                groupBox5.Font = fontLabelRegular; // cartocode label
+                groupBox8.Font = fontLabelRegular; // oneway label
+                groupBox9.Font = fontLabelRegular; // vertlevel label
+                groupBox10.Font = fontLabelRegular; // speed label
 
                 //enable the textboxes - in case last record was "N" and were disabled
-                ////////txtUtranL_F_Add.ReadOnly = false;
-                ////////txtUtranL_T_Add.ReadOnly = false;
+                ////////txtUtranFROMADDR_L.ReadOnly = false;
+                ////////txtUtranTOADDR_L.ReadOnly = false;
                 ////////txtUtranPreDir.ReadOnly = false;
-                ////////txtUtranR_F_Add.ReadOnly = false;
-                ////////txtUtranR_T_Add.ReadOnly = false;
-                ////////txtUtransAcsName.ReadOnly = false;
-                ////////txtUtransAcsSuf.ReadOnly = false;
-                ////////txtUtransAlias1.ReadOnly = false;
-                ////////txtUtransAlias1Type.ReadOnly = false;
-                ////////txtUtransAlias2.ReadOnly = false;
-                ////////txtUtransAlias2Type.ReadOnly = false;
+                ////////txtUtranFROMADDR_R.ReadOnly = false;
+                ////////txtUtranTOADDR_R.ReadOnly = false;
+                ////////txtUtransAN_NAME.ReadOnly = false;
+                ////////txtUtransAN_POSTDIR.ReadOnly = false;
+                ////////txtUtransA1_NAME.ReadOnly = false;
+                ////////txtUtransA1_POSTTYPE.ReadOnly = false;
+                ////////txtUtransA2_NAME.ReadOnly = false;
+                ////////txtUtransA2_POSTTYPE.ReadOnly = false;
                 ////////txtUtranStName.ReadOnly = false;
                 ////////txtUtranStType.ReadOnly = false;
-                ////////txtUtranSufDir.ReadOnly = false;
+                ////////txtUtranPOSTDIR.ReadOnly = false;
 
                 lblLeftFrom.Enabled = true;
                 lblRightFrom.Enabled = true;
@@ -366,13 +404,17 @@ namespace UtransEditorAGRC
                 lblPreDir.Enabled = true;
                 lblStName.Enabled = true;
                 lblStType.Enabled = true;
-                lblSufDir.Enabled = true;
-                lblAcsName.Enabled = true;
-                lblAcsSuf.Enabled = true;
-                lblAlias.Enabled = true;
-                lblAlias1Type.Enabled = true;
-                lblAlias2.Enabled = true;
-                lblAlias2Type.Enabled = true;
+                lblPOSTDIR.Enabled = true;
+                lblAN_NAME.Enabled = true;
+                lblAN_POSTDIR.Enabled = true;
+                lblA1_NAME.Enabled = true;
+                lblA1_PREDIR.Enabled = true;
+                lblA1_POSTTYPE.Enabled = true;
+                lblA1_POSTDIR.Enabled = true;
+                lblA2_PREDIR.Enabled = true;
+                lblA2_NAME.Enabled = true;
+                lblA2_POSTTYPE.Enabled = true;
+                lblA2_POSTDIR.Enabled = true;
 
                 //disable the save to utrans button - until a change has been detected
                 //btnSaveToUtrans.Enabled = false;
@@ -388,6 +430,7 @@ namespace UtransEditorAGRC
 
                 // revert title to default - incase previous was a udot street
                 groupBoxUtransSeg.Text = "Selected UTRANS Road Segment";
+                groupBoxUtransSeg.ForeColor = Color.Black;
 
                 //get the objectids from dfc layer for selecting on corresponding layer
                 strCountyOID = "";
@@ -397,20 +440,24 @@ namespace UtransEditorAGRC
 
 
                 //clear utrans existing variables - for reuse
-                txtUtransInitialL_F_Add = null;
+                txtUtransInitialFROMADDR_L = null;
                 txtUtransInitialL_TAdd = null;;
-                txtUtransInitialR_F_Add = null;
-                txtUtransInitialR_T_Add = null;
+                txtUtransInitialFROMADDR_R = null;
+                txtUtransInitialTOADDR_R = null;
                 txtUtransInitialPreDir = null;
                 txtUtransInitialStName = null;
                 txtUtransInitialStType = null;
-                txtUtransInitialSufDir = null;;
-                txtUtransInitialAlias1 = null;
-                txtUtransInitialAlias1Type = null;
-                txtUtransInitialAlias2 = null;
-                txtUtransInitialAlias2Type = null;
-                txtUtransInitialAcsAlias = null;
-                txtUtransInitialAscSuf = null;
+                txtUtransInitialPOSTDIR = null;;
+                txtUtransInitialA1_NAME = null;
+                txtUtransInitialA1_POSTTYPE = null;
+                txtUtransInitialA2_NAME = null;
+                txtUtransInitialA2_POSTTYPE = null;
+                txtUtransInitialA1_PREDIR = null;
+                txtUtransInitialA1_POSTDIR = null;
+                txtUtransInitialA2_PREDIR = null;
+                txtUtransInitialA2_POSTDIR = null;
+                txtUtransInitialAN_NAME = null;
+                txtUtransInitialAN_POSTDIR = null;
 
                 arcFeatureSelection = clsGlobals.arcGeoFLayerDfcResult as IFeatureSelection;
                 arcSelSet = arcFeatureSelection.SelectionSet;
@@ -512,7 +559,7 @@ namespace UtransEditorAGRC
 
                         //get the county's cartocode
                         //strCountyCartoCode = arcCountyFeature.get_Value(arcCountyFeature.Fields.FindFieldByAliasName("CARTOCODE")).ToString().Trim();
-                        clsGlobals.strCountyID = arcCountyFeature.get_Value(arcCountyFeature.Fields.FindFieldByAliasName("COFIPS")).ToString().Trim();
+                        clsGlobals.strCountyID = arcCountyFeature.get_Value(arcCountyFeature.Fields.FindField("COUNTY_L")).ToString().Trim();
                     }
 
 
@@ -528,14 +575,32 @@ namespace UtransEditorAGRC
                             }
                         }
 
-                        //get utrans cartocode
+                        // get utrans cartocode
                         strUtransCartoCode = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("CARTOCODE")).ToString().Trim();
 
-                        //also check if u_dot street
-                        string checkIfUdotStreet = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("DOT_RTNAME")).ToString();
+                        // get utrans oneway
+                        strUtransOneWay = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("ONEWAY")).ToString().Trim();
+
+                        // get utrans vertlevel
+                        strUtransVertLevel = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("VERT_LEVEL")).ToString().Trim();
+
+                        // get utrans speed
+                        strUtransSpeedLmt = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("SPEED_LMT")).ToString().Trim();
+
+                        // check if udot street
+                        checkIfUdotStreet = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("DOT_RTNAME")).ToString();
                         if (checkIfUdotStreet != "")
                         {
                             groupBoxUtransSeg.Text = groupBoxUtransSeg.Text + " (UDOT STREET)";
+                            groupBoxUtransSeg.ForeColor = Color.Red;
+                        }
+
+                        // check if agrc adjustments have been made on this feature
+                        string utransNotesFieldValue = arcUtransFeature.get_Value(arcUtransFeature.Fields.FindField("UTRANS_NOTES")).ToString();
+                        if (utransNotesFieldValue.Contains("AGRC ADJUSTED"))
+                        {
+                            groupBoxUtransSeg.Text = groupBoxUtransSeg.Text + "  (" + utransNotesFieldValue + ")";
+                            groupBoxUtransSeg.ForeColor = Color.Red;
                         }
                     }
 
@@ -544,6 +609,16 @@ namespace UtransEditorAGRC
 
                     //populate the cartocode combobox
                     populateCartoCodeComboBox();
+
+                    // populate vertical level combobox
+                    populateVertLevel();
+
+                    // populate speed lmt combobox
+                    populateSpeedLmt();
+
+                    // populate one way combobox
+                    populateOneWay();
+
 
                 }
                 else //if the user selects more or less than one record in the dfc fc - clear out the textboxes
@@ -562,28 +637,36 @@ namespace UtransEditorAGRC
                 arcActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, null, null);
 
                 //populate variables to hold the initial textbox text for utrans streets - in case the user wants to revert to it
-                txtUtransInitialL_F_Add = txtUtranL_F_Add.Text;
-                txtUtransInitialL_TAdd = txtUtranL_T_Add.Text;
-                txtUtransInitialR_F_Add = txtUtranR_F_Add.Text;
-                txtUtransInitialR_T_Add = txtUtranR_T_Add.Text;
+                txtUtransInitialFROMADDR_L = txtUtranFROMADDR_L.Text;
+                txtUtransInitialL_TAdd = txtUtranTOADDR_L.Text;
+                txtUtransInitialFROMADDR_R = txtUtranFROMADDR_R.Text;
+                txtUtransInitialTOADDR_R = txtUtranTOADDR_R.Text;
                 txtUtransInitialPreDir = txtUtranPreDir.Text;
                 txtUtransInitialStName = txtUtranStName.Text;
                 txtUtransInitialStType = txtUtranStType.Text;
-                txtUtransInitialSufDir = txtUtranSufDir.Text;
-                txtUtransInitialAlias1 = txtUtransAlias1.Text;
-                txtUtransInitialAlias1Type = txtUtransAlias1Type.Text;
-                txtUtransInitialAlias2 = txtUtransAlias2.Text;
-                txtUtransInitialAlias2Type = txtUtransAlias2Type.Text;
-                txtUtransInitialAcsAlias = txtUtransAcsName.Text;
-                txtUtransInitialAscSuf = txtUtransAcsSuf.Text;
+                txtUtransInitialPOSTDIR = txtUtranPOSTDIR.Text;
+                txtUtransInitialA1_NAME = txtUtransA1_NAME.Text;
+                txtUtransInitialA1_POSTTYPE = txtUtransA1_POSTTYPE.Text;
+                txtUtransInitialA2_NAME = txtUtransA2_NAME.Text;
+                txtUtransInitialA2_POSTTYPE = txtUtransA2_POSTTYPE.Text;
+                txtUtransInitialA1_PREDIR = txtUtransA1_PREDIR.Text;
+                txtUtransInitialA1_POSTDIR = txtUtransA1_POSTDIR.Text;
+                txtUtransInitialA2_PREDIR = txtUtransA2_PREDIR.Text;
+                txtUtransInitialA2_POSTDIR = txtUtransA2_POSTDIR.Text;
+                txtUtransInitialAN_NAME = txtUtransAN_NAME.Text;
+                txtUtransInitialAN_POSTDIR = txtUtransAN_POSTDIR.Text;
 
                 //revert labels back to regular (non-italic)
-                lblAcsName.Font = fontLabelRegular;
-                lblAcsSuf.Font = fontLabelRegular;
-                lblAlias.Font = fontLabelRegular;
-                lblAlias1Type.Font = fontLabelRegular;
-                lblAlias2.Font = fontLabelRegular;
-                lblAlias2Type.Font = fontLabelRegular;
+                lblAN_NAME.Font = fontLabelRegular;
+                lblAN_POSTDIR.Font = fontLabelRegular;
+                lblA1_PREDIR.Font = fontLabelRegular;
+                lblA1_NAME.Font = fontLabelRegular;
+                lblA1_POSTTYPE.Font = fontLabelRegular;
+                lblA1_POSTDIR.Font = fontLabelRegular;
+                lblA2_PREDIR.Font = fontLabelRegular;
+                lblA2_NAME.Font = fontLabelRegular;
+                lblA2_POSTTYPE.Font = fontLabelRegular;
+                lblA2_POSTDIR.Font = fontLabelRegular;
                 lblLeftFrom.Font = fontLabelRegular;
                 lblLeftTo.Font = fontLabelRegular;
                 lblPreDir.Font = fontLabelRegular;
@@ -591,42 +674,46 @@ namespace UtransEditorAGRC
                 lblRightTo.Font = fontLabelRegular;
                 lblStName.Font = fontLabelRegular;
                 lblStType.Font = fontLabelRegular;
-                lblSufDir.Font = fontLabelRegular;
+                lblPOSTDIR.Font = fontLabelRegular;
 
                 //if it's a new record
                 if (strChangeType == "N" & strUtransOID == "-1")
                 {
                     //make the textboxes a light red color, indicating there's no attributes for this feature
-                    txtUtranL_F_Add.BackColor = Color.LightGray;
-                    txtUtranL_T_Add.BackColor = Color.LightGray;
+                    txtUtranFROMADDR_L.BackColor = Color.LightGray;
+                    txtUtranTOADDR_L.BackColor = Color.LightGray;
                     txtUtranPreDir.BackColor = Color.LightGray;
-                    txtUtranR_F_Add.BackColor = Color.LightGray;
-                    txtUtranR_T_Add.BackColor = Color.LightGray;
-                    txtUtransAcsName.BackColor = Color.LightGray;
-                    txtUtransAcsSuf.BackColor = Color.LightGray;
-                    txtUtransAlias1.BackColor = Color.LightGray;
-                    txtUtransAlias1Type.BackColor = Color.LightGray;
-                    txtUtransAlias2.BackColor = Color.LightGray;
-                    txtUtransAlias2Type.BackColor = Color.LightGray;
+                    txtUtranFROMADDR_R.BackColor = Color.LightGray;
+                    txtUtranTOADDR_R.BackColor = Color.LightGray;
+                    txtUtransAN_NAME.BackColor = Color.LightGray;
+                    txtUtransAN_POSTDIR.BackColor = Color.LightGray;
+                    txtUtransA1_PREDIR.BackColor = Color.LightGray;
+                    txtUtransA1_NAME.BackColor = Color.LightGray;
+                    txtUtransA1_POSTTYPE.BackColor = Color.LightGray;
+                    txtUtransA1_POSTDIR.BackColor = Color.LightGray;
+                    txtUtransA2_PREDIR.BackColor = Color.LightGray;
+                    txtUtransA2_NAME.BackColor = Color.LightGray;
+                    txtUtransA2_POSTTYPE.BackColor = Color.LightGray;
+                    txtUtransA2_POSTDIR.BackColor = Color.LightGray;
                     txtUtranStName.BackColor = Color.LightGray;
                     txtUtranStType.BackColor = Color.LightGray;
-                    txtUtranSufDir.BackColor = Color.LightGray;
+                    txtUtranPOSTDIR.BackColor = Color.LightGray;
 
                     //i could change this to loop the control list and update all the controls with a tag like utrans
-                    ////////txtUtranL_F_Add.ReadOnly = true;
-                    ////////txtUtranL_T_Add.ReadOnly = true;
+                    ////////txtUtranFROMADDR_L.ReadOnly = true;
+                    ////////txtUtranTOADDR_L.ReadOnly = true;
                     ////////txtUtranPreDir.ReadOnly = true;
-                    ////////txtUtranR_F_Add.ReadOnly = true;
-                    ////////txtUtranR_T_Add.ReadOnly = true;
-                    ////////txtUtransAcsName.ReadOnly = true;
-                    ////////txtUtransAcsSuf.ReadOnly = true;
-                    ////////txtUtransAlias1.ReadOnly = true;
-                    ////////txtUtransAlias1Type.ReadOnly = true;
-                    ////////txtUtransAlias2.ReadOnly = true;
-                    ////////txtUtransAlias2Type.ReadOnly = true;
+                    ////////txtUtranFROMADDR_R.ReadOnly = true;
+                    ////////txtUtranTOADDR_R.ReadOnly = true;
+                    ////////txtUtransAN_NAME.ReadOnly = true;
+                    ////////txtUtransAN_POSTDIR.ReadOnly = true;
+                    ////////txtUtransA1_NAME.ReadOnly = true;
+                    ////////txtUtransA1_POSTTYPE.ReadOnly = true;
+                    ////////txtUtransA2_NAME.ReadOnly = true;
+                    ////////txtUtransA2_POSTTYPE.ReadOnly = true;
                     ////////txtUtranStName.ReadOnly = true;
                     ////////txtUtranStType.ReadOnly = true;
-                    ////////txtUtranSufDir.ReadOnly = true;
+                    ////////txtUtranPOSTDIR.ReadOnly = true;
 
                     lblLeftFrom.Enabled = false;
                     lblRightFrom.Enabled = false;
@@ -635,14 +722,18 @@ namespace UtransEditorAGRC
                     lblPreDir.Enabled = false;
                     lblStName.Enabled = false;
                     lblStType.Enabled = false;
-                    lblSufDir.Enabled = false;
-                    lblAcsName.Enabled = false;
-                    lblAcsSuf.Enabled = false;
-                    lblAlias.Enabled = false;
-                    lblAlias1Type.Enabled = false;
-                    lblAlias2.Enabled = false;
-                    lblAlias2Type.Enabled = false;
-                    
+                    lblPOSTDIR.Enabled = false;
+                    lblAN_NAME.Enabled = false;
+                    lblAN_POSTDIR.Enabled = false;
+                    lblA1_PREDIR.Enabled = false;
+                    lblA1_NAME.Enabled = false;
+                    lblA1_POSTTYPE.Enabled = false;
+                    lblA1_POSTDIR.Enabled = false;
+                    lblA2_PREDIR.Enabled = false;
+                    lblA2_NAME.Enabled = false;
+                    lblA2_POSTTYPE.Enabled = false;
+                    lblA2_POSTDIR.Enabled = false;
+
                     //show get new feature button and make save button not enabled
                     btnCopyNewSegment.Visible = true;
                     chkShowVertices.Visible = true;
@@ -663,7 +754,7 @@ namespace UtransEditorAGRC
 
 
 
-        //populate the cartocode combobox
+        //populate the cartocode combobox based on existing utrans value
         private void populateCartoCodeComboBox() 
         {
             try
@@ -734,13 +825,17 @@ namespace UtransEditorAGRC
                         intUtransInitialCartoCodeIndex = 14;
                         cboCartoCode.SelectedIndex = 14;
                         break;
-                    case "99":
+                    case "16":
                         intUtransInitialCartoCodeIndex = 15;
                         cboCartoCode.SelectedIndex = 15;
                         break;
-                    case "16":
+                    case "17":
                         intUtransInitialCartoCodeIndex = 16;
                         cboCartoCode.SelectedIndex = 16;
+                        break;
+                    case "18":
+                        intUtransInitialCartoCodeIndex = 17;
+                        cboCartoCode.SelectedIndex = 17;
                         break;
                     default:
                         intUtransInitialCartoCodeIndex = -1;
@@ -758,10 +853,183 @@ namespace UtransEditorAGRC
                 MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
                 "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
                 "Error Location:" + Environment.NewLine + ex.StackTrace,
-                "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                "UTRANS Editor tool error populate cartocode combox!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
+
+        // populate vertical level combobox based on existing utrans value
+        private void populateVertLevel()
+        {
+            try
+            {
+                switch (strUtransVertLevel)
+                {
+                    case "0":
+                        //get a refernce to vertlevel to see if there will be edits (make it bold on the event handler if there will be edits)
+                        intUtransInitialVertLevelIndex = 0;
+                        cboVertLevel.SelectedIndex = 0;
+                        break;
+                    case "1":
+                        intUtransInitialVertLevelIndex = 1;
+                        cboVertLevel.SelectedIndex = 1;
+                        break;
+                    case "2":
+                        intUtransInitialVertLevelIndex = 2;
+                        cboVertLevel.SelectedIndex = 2;
+                        break;
+                    case "3":
+                        intUtransInitialVertLevelIndex = 3;
+                        cboVertLevel.SelectedIndex = 3;
+                        break;
+                    default:
+                        intUtransInitialCartoCodeIndex = -1;
+                        cboVertLevel.SelectedIndex = -1;
+                        break;
+                }
+
+                //get a refernce to vertlevel to see if there will be edits (make it bold on the event handler if there will be edits)
+                intUtransInitialVertLevelIndex = cboVertLevel.SelectedIndex;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error populate vert level combobox!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+
+        // populate speed lmt combobox
+        private void populateSpeedLmt()
+        {
+            try
+            {
+                switch (strUtransSpeedLmt)
+                {
+                    case "5":
+                        //get a refernce to speedlmt to see if there will be edits (make it bold on the event handler if there will be edits)
+                        intUtransInitialSpeedLmtIndex = 0;
+                        cboSpeed.SelectedIndex = 0;
+                        break;
+                    case "10":
+                        intUtransInitialSpeedLmtIndex = 1;
+                        cboSpeed.SelectedIndex = 1;
+                        break;
+                    case "15":
+                        intUtransInitialSpeedLmtIndex = 2;
+                        cboSpeed.SelectedIndex = 2;
+                        break;
+                    case "20":
+                        intUtransInitialSpeedLmtIndex = 3;
+                        cboSpeed.SelectedIndex = 3;
+                        break;
+                    case "25":
+                        intUtransInitialSpeedLmtIndex = 4;
+                        cboSpeed.SelectedIndex = 4;
+                        break;
+                    case "30":
+                        intUtransInitialSpeedLmtIndex = 5;
+                        cboSpeed.SelectedIndex = 5;
+                        break;
+                    case "35":
+                        intUtransInitialSpeedLmtIndex = 6;
+                        cboSpeed.SelectedIndex = 6;
+                        break;
+                    case "40":
+                        intUtransInitialSpeedLmtIndex = 7;
+                        cboSpeed.SelectedIndex = 7;
+                        break;
+                    case "45":
+                        intUtransInitialSpeedLmtIndex = 8;
+                        cboSpeed.SelectedIndex = 8;
+                        break;
+                    case "50":
+                        intUtransInitialSpeedLmtIndex = 9;
+                        cboSpeed.SelectedIndex = 9;
+                        break;
+                    case "55":
+                        intUtransInitialSpeedLmtIndex = 10;
+                        cboSpeed.SelectedIndex = 10;
+                        break;
+                    case "60":
+                        intUtransInitialSpeedLmtIndex = 11;
+                        cboSpeed.SelectedIndex = 11;
+                        break;
+                    case "65":
+                        intUtransInitialSpeedLmtIndex = 12;
+                        cboSpeed.SelectedIndex = 12;
+                        break;
+                    case "70":
+                        intUtransInitialSpeedLmtIndex = 13;
+                        cboSpeed.SelectedIndex = 13;
+                        break;
+                    case "75":
+                        intUtransInitialSpeedLmtIndex = 14;
+                        cboSpeed.SelectedIndex = 14;
+                        break;
+                    case "80":
+                        intUtransInitialSpeedLmtIndex = 15;
+                        cboSpeed.SelectedIndex = 15;
+                        break;
+                    default:
+                        intUtransInitialSpeedLmtIndex = -1;
+                        cboSpeed.SelectedIndex = -1;
+                        break;
+                }
+
+                //get a refernce to speedlmt to see if there will be edits (make it bold on the event handler if there will be edits)
+                intUtransInitialSpeedLmtIndex = cboSpeed.SelectedIndex;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error populate seed limit combobox!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+
+        }
+
+
+        // populate one way combobox
+        private void populateOneWay()
+        {
+            try
+            {
+                switch (strUtransOneWay)
+                {
+                    case "0":
+                        //get a refernce to oneway to see if there will be edits (make it bold on the event handler if there will be edits)
+                        intUtransInitialOneWayIndex = 0;
+                        cboOneWay.SelectedIndex = 0;
+                        break;
+                    case "1":
+                        intUtransInitialOneWayIndex = 1;
+                        cboOneWay.SelectedIndex = 1;
+                        break;
+                    case "2":
+                        intUtransInitialOneWayIndex = 2;
+                        cboOneWay.SelectedIndex = 2;
+                        break;
+                    default:
+                        intUtransInitialCartoCodeIndex = -1;
+                        cboCartoCode.SelectedIndex = -1;
+                        break;
+                }
+
+                //get a refernce to oneway to see if there will be edits (make it bold on the event handler if there will be edits)
+                intUtransInitialOneWayIndex = cboOneWay.SelectedIndex;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error populate oneway combobox!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
 
 
 
@@ -783,12 +1051,12 @@ namespace UtransEditorAGRC
                     //lblStType.Font = fontLabelDataMismatch;
                     //boolHadDifferenceStType = true;
                 }
-                if (txtCountySufDir.Text.ToUpper().ToString() != txtUtranSufDir.Text.ToUpper().ToString())
+                if (txtCountyPOSTDIR.Text.ToUpper().ToString() != txtUtranPOSTDIR.Text.ToUpper().ToString())
                 {
-                    txtUtranSufDir.BackColor = Color.LightYellow;
-                    txtCountySufDir.BackColor = Color.LightYellow;
-                    //lblSufDir.Font = fontLabelDataMismatch;
-                    //boolHadDifferenceSufDir = true;
+                    txtUtranPOSTDIR.BackColor = Color.LightYellow;
+                    txtCountyPOSTDIR.BackColor = Color.LightYellow;
+                    //lblPOSTDIR.Font = fontLabelDataMismatch;
+                    //boolHadDifferencePOSTDIR = true;
                 }
                 if (txtCountyPreDir.Text.ToUpper().ToString() != txtUtranPreDir.Text.ToUpper().ToString())
                 {
@@ -797,79 +1065,106 @@ namespace UtransEditorAGRC
                     //lblPreDir.Font = fontLabelDataMismatch;
                     //boolHadDifferencePreDir = true;
                 }
-                if (txtCountyL_F_Add.Text.ToString() != txtUtranL_F_Add.Text.ToString())
+                if (txtCountyFROMADDR_L.Text.ToString() != txtUtranFROMADDR_L.Text.ToString())
                 {
-                    txtUtranL_F_Add.BackColor = Color.LightYellow;
-                    txtCountyL_F_Add.BackColor = Color.LightYellow;
+                    txtUtranFROMADDR_L.BackColor = Color.LightYellow;
+                    txtCountyFROMADDR_L.BackColor = Color.LightYellow;
                     //lblLeftFrom.Font = fontLabelDataMismatch;
                     //capture the curent text - incase we want to revert to it
-                    //txtUtransExistingL_F_Add = txtUtranL_F_Add.Text;
-                    //boolHadDifferenceL_F_Add = true;
+                    //txtUtransExistingFROMADDR_L = txtUtranFROMADDR_L.Text;
+                    //boolHadDifferenceFROMADDR_L = true;
                 }
-                if (txtCountyL_T_Add.Text.ToString() != txtUtranL_T_Add.Text.ToString())
+                if (txtCountyTOADDR_L.Text.ToString() != txtUtranTOADDR_L.Text.ToString())
                 {
-                    txtUtranL_T_Add.BackColor = Color.LightYellow;
-                    txtCountyL_T_Add.BackColor = Color.LightYellow;
+                    txtUtranTOADDR_L.BackColor = Color.LightYellow;
+                    txtCountyTOADDR_L.BackColor = Color.LightYellow;
                     //lblLeftTo.Font = fontLabelDataMismatch;
-                    //boolHadDifferenceL_T_Add = true;
+                    //boolHadDifferenceTOADDR_L = true;
                 }
-                if (txtCountyR_F_Add.Text.ToString() != txtUtranR_F_Add.Text.ToString())
+                if (txtCountyFROMADDR_R.Text.ToString() != txtUtranFROMADDR_R.Text.ToString())
                 {
-                    txtUtranR_F_Add.BackColor = Color.LightYellow;
-                    txtCountyR_F_Add.BackColor = Color.LightYellow;
+                    txtUtranFROMADDR_R.BackColor = Color.LightYellow;
+                    txtCountyFROMADDR_R.BackColor = Color.LightYellow;
                     //lblRightFrom.Font = fontLabelDataMismatch;
-                    //boolHadDifferenceR_F_Add = true;
+                    //boolHadDifferenceFROMADDR_R = true;
                 }
-                if (txtCountyR_T_Add.Text.ToString() != txtUtranR_T_Add.Text.ToString())
+                if (txtCountyTOADDR_R.Text.ToString() != txtUtranTOADDR_R.Text.ToString())
                 {
-                    txtUtranR_T_Add.BackColor = Color.LightYellow;
-                    txtCountyR_T_Add.BackColor = Color.LightYellow;
+                    txtUtranTOADDR_R.BackColor = Color.LightYellow;
+                    txtCountyTOADDR_R.BackColor = Color.LightYellow;
                     //lblRightTo.Font = fontLabelDataMismatch;
-                    //boolHadDifferenceR_T_Add = true;
+                    //boolHadDifferenceTOADDR_R = true;
                 }
-                if (txtCountyAcsName.Text.ToUpper().ToString() != txtUtransAcsName.Text.ToUpper().ToString())
+                if (txtCountyAN_NAME.Text.ToUpper().ToString() != txtUtransAN_NAME.Text.ToUpper().ToString())
                 {
-                    txtUtransAcsName.BackColor = Color.LightYellow;
-                    txtCountyAcsName.BackColor = Color.LightYellow;
+                    txtUtransAN_NAME.BackColor = Color.LightYellow;
+                    txtCountyAN_NAME.BackColor = Color.LightYellow;
                     //lblAcsAlias.Font = fontLabelDataMismatch;
                     //boolHadDifferenceAcsAlias = true;
                 }
-                if (txtCountyAcsSuf.Text.ToUpper().ToString() != txtUtransAcsSuf.Text.ToUpper().ToString())
+                if (txtCountyAN_POSTDIR.Text.ToUpper().ToString() != txtUtransAN_POSTDIR.Text.ToUpper().ToString())
                 {
-                    txtUtransAcsSuf.BackColor = Color.LightYellow;
-                    txtCountyAcsSuf.BackColor = Color.LightYellow;
-                    //lblAcsSuf.Font = fontLabelDataMismatch;
+                    txtUtransAN_POSTDIR.BackColor = Color.LightYellow;
+                    txtCountyAN_POSTDIR.BackColor = Color.LightYellow;
+                    //lblAN_POSTDIR.Font = fontLabelDataMismatch;
                     //boolHadDifferenceAscSuf = true;
                 }
-                if (txtCountyAlias1.Text.ToUpper().ToString() != txtUtransAlias1.Text.ToUpper().ToString())
+                if (txtCountyA1_PREDIR.Text.ToUpper().ToString() != txtUtransA1_PREDIR.Text.ToUpper().ToString())
                 {
-                    txtUtransAlias1.BackColor = Color.LightYellow;
-                    txtCountyAlias1.BackColor = Color.LightYellow;
+                    txtUtransA1_PREDIR.BackColor = Color.LightYellow;
+                    txtCountyA1_PREDIR.BackColor = Color.LightYellow;
                     //lblAlias.Font = fontLabelDataMismatch;
-                    //boolHadDifferenceAlias1 = true;
+                    //boolHadDifferenceA1_NAME = true;
                 }
-                if (txtCountyAlias1Type.Text.ToUpper().ToString() != txtUtransAlias1Type.Text.ToUpper().ToString())
+                if (txtCountyA1_NAME.Text.ToUpper().ToString() != txtUtransA1_NAME.Text.ToUpper().ToString())
                 {
-                    txtUtransAlias1Type.BackColor = Color.LightYellow;
-                    txtCountyAlias1Type.BackColor = Color.LightYellow;
-                    //lblAlias1Type.Font = fontLabelDataMismatch;
-                    //boolHadDifferenceAlias1Type = true;
+                    txtUtransA1_NAME.BackColor = Color.LightYellow;
+                    txtCountyA1_NAME.BackColor = Color.LightYellow;
+                    //lblAlias.Font = fontLabelDataMismatch;
+                    //boolHadDifferenceA1_NAME = true;
                 }
-                if (txtCountyAlias2.Text.ToUpper().ToString() != txtUtransAlias2.Text.ToUpper().ToString())
+                if (txtCountyA1_POSTTYPE.Text.ToUpper().ToString() != txtUtransA1_POSTTYPE.Text.ToUpper().ToString())
                 {
-                    txtUtransAlias2.BackColor = Color.LightYellow;
-                    txtCountyAlias2.BackColor = Color.LightYellow;
-                    //lblAlias2.Font = fontLabelDataMismatch;
-                    //boolHadDifferenceAlias2 = true;
+                    txtUtransA1_POSTTYPE.BackColor = Color.LightYellow;
+                    txtCountyA1_POSTTYPE.BackColor = Color.LightYellow;
+                    //lblA1_POSTTYPE.Font = fontLabelDataMismatch;
+                    //boolHadDifferenceA1_POSTTYPE = true;
                 }
-                if (txtCountyAlias2Type.Text.ToUpper().ToString() != txtUtransAlias2.Text.ToUpper().ToString())
+                if (txtCountyA1_POSTDIR.Text.ToUpper().ToString() != txtUtransA1_POSTDIR.Text.ToUpper().ToString())
                 {
-                    txtUtransAlias2.BackColor = Color.LightYellow;
-                    txtCountyAlias2.BackColor = Color.LightYellow;
-                    //lblAlias2Type.Font = fontLabelDataMismatch;
-                    //boolHadDifferenceAlias2Type = true;
+                    txtUtransA1_POSTDIR.BackColor = Color.LightYellow;
+                    txtCountyA1_POSTDIR.BackColor = Color.LightYellow;
+                    //lblAlias.Font = fontLabelDataMismatch;
+                    //boolHadDifferenceA1_NAME = true;
                 }
-
+                if (txtCountyA2_PREDIR.Text.ToUpper().ToString() != txtUtransA2_PREDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_PREDIR.BackColor = Color.LightYellow;
+                    txtCountyA2_PREDIR.BackColor = Color.LightYellow;
+                    //lblA2_NAME.Font = fontLabelDataMismatch;
+                    //boolHadDifferenceA2_NAME = true;
+                }
+                if (txtCountyA2_NAME.Text.ToUpper().ToString() != txtUtransA2_NAME.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_NAME.BackColor = Color.LightYellow;
+                    txtCountyA2_NAME.BackColor = Color.LightYellow;
+                    //lblA2_NAME.Font = fontLabelDataMismatch;
+                    //boolHadDifferenceA2_NAME = true;
+                }
+                if (txtCountyA2_POSTTYPE.Text.ToUpper().ToString() != txtUtransA2_POSTTYPE.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_POSTTYPE.BackColor = Color.LightYellow;
+                    txtCountyA2_POSTTYPE.BackColor = Color.LightYellow;
+                    //lblA2_POSTTYPE.Font = fontLabelDataMismatch;
+                    //boolHadDifferenceA2_POSTTYPE = true;
+                }
+                if (txtCountyA2_POSTDIR.Text.ToUpper().ToString() != txtUtransA2_POSTDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_POSTDIR.BackColor = Color.LightYellow;
+                    txtCountyA2_POSTDIR.BackColor = Color.LightYellow;
+                    //lblA2_POSTTYPE.Font = fontLabelDataMismatch;
+                    //boolHadDifferenceA2_POSTTYPE = true;
+                }
             }
             catch (Exception ex)
             {
@@ -880,7 +1175,6 @@ namespace UtransEditorAGRC
                 "Error Location:" + Environment.NewLine + ex.StackTrace,
                 "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-        
         }
 
 
@@ -953,68 +1247,68 @@ namespace UtransEditorAGRC
                 //get a reference to the label that was doublecliked
                 Label clickedLabel = sender as Label;
 
-                // L_F_ADD
-                if (clickedLabel.Text == "L_F_ADD")
+                // FROMADDR_L
+                if (clickedLabel.Text == "FROMADDR_L")
                 {
-                    if (txtUtranL_F_Add.Text != txtCountyL_F_Add.Text)
+                    if (txtUtranFROMADDR_L.Text != txtCountyFROMADDR_L.Text)
                     {
-                        txtUtranL_F_Add.Text = txtCountyL_F_Add.Text;
+                        txtUtranFROMADDR_L.Text = txtCountyFROMADDR_L.Text;
                         return;
                     }
-                    if (txtUtranL_F_Add.Text == txtCountyL_F_Add.Text)
+                    if (txtUtranFROMADDR_L.Text == txtCountyFROMADDR_L.Text)
                     {
-                        txtUtranL_F_Add.Text = txtUtransInitialL_F_Add;
+                        txtUtranFROMADDR_L.Text = txtUtransInitialFROMADDR_L;
                         return;
                     }
                 }
 
-                // L_T_ADD
-                if (clickedLabel.Text == "L_T_ADD")
+                // TOADDR_L
+                if (clickedLabel.Text == "TOADDR_L")
                 {
-                    if (txtUtranL_T_Add.Text != txtCountyL_T_Add.Text)
+                    if (txtUtranTOADDR_L.Text != txtCountyTOADDR_L.Text)
                     {
-                        txtUtranL_T_Add.Text = txtCountyL_T_Add.Text;
+                        txtUtranTOADDR_L.Text = txtCountyTOADDR_L.Text;
                         return;
                     }
-                    if (txtUtranL_T_Add.Text == txtCountyL_T_Add.Text)
+                    if (txtUtranTOADDR_L.Text == txtCountyTOADDR_L.Text)
                     {
-                        txtUtranL_T_Add.Text = txtUtransInitialL_TAdd;
+                        txtUtranTOADDR_L.Text = txtUtransInitialL_TAdd;
                         return;
                     }
                 }
 
-                // R_F_ADD
-                if (clickedLabel.Text == "R_F_ADD")
+                // FROMADDR_R
+                if (clickedLabel.Text == "FROMADDR_R")
                 {
-                    if (txtUtranR_F_Add.Text != txtCountyR_F_Add.Text)
+                    if (txtUtranFROMADDR_R.Text != txtCountyFROMADDR_R.Text)
                     {
-                        txtUtranR_F_Add.Text = txtCountyR_F_Add.Text;
+                        txtUtranFROMADDR_R.Text = txtCountyFROMADDR_R.Text;
                         return;
                     }
-                    if (txtUtranR_F_Add.Text == txtCountyR_F_Add.Text)
+                    if (txtUtranFROMADDR_R.Text == txtCountyFROMADDR_R.Text)
                     {
-                        txtUtranR_F_Add.Text = txtUtransInitialR_F_Add;
+                        txtUtranFROMADDR_R.Text = txtUtransInitialFROMADDR_R;
                         return;
                     }
                 }
 
-                // R_T_ADD
-                if (clickedLabel.Text == "R_T_ADD")
+                // TOADDR_R
+                if (clickedLabel.Text == "TOADDR_R")
                 {
-                    if (txtUtranR_T_Add.Text != txtCountyR_T_Add.Text)
+                    if (txtUtranTOADDR_R.Text != txtCountyTOADDR_R.Text)
                     {
-                        txtUtranR_T_Add.Text = txtCountyR_T_Add.Text;
+                        txtUtranTOADDR_R.Text = txtCountyTOADDR_R.Text;
                         return;
                     }
-                    if (txtUtranR_T_Add.Text == txtCountyR_T_Add.Text)
+                    if (txtUtranTOADDR_R.Text == txtCountyTOADDR_R.Text)
                     {
-                        txtUtranR_T_Add.Text = txtUtransInitialR_T_Add;
+                        txtUtranTOADDR_R.Text = txtUtransInitialTOADDR_R;
                         return;
                     }
                 }
 
-                // STREETNAME
-                if (clickedLabel.Text == "STREETNAME")
+                // NAME
+                if (clickedLabel.Text == "NAME")
                 {
                     if (txtUtranStName.Text != txtCountyStName.Text)
                     {
@@ -1043,8 +1337,8 @@ namespace UtransEditorAGRC
                     }
                 }
 
-                // STREETTYPE
-                if (clickedLabel.Text == "STREETTYPE")
+                // POSTTYPE
+                if (clickedLabel.Text == "POSTTYPE")
                 {
                     if (txtUtranStType.Text != txtCountyStType.Text)
                     {
@@ -1058,107 +1352,167 @@ namespace UtransEditorAGRC
                     }
                 }
 
-                // SUFDIR
-                if (clickedLabel.Text == "SUFDIR")
+                // POSTDIR
+                if (clickedLabel.Text == "POSTDIR")
                 {
-                    if (txtUtranSufDir.Text != txtCountySufDir.Text)
+                    if (txtUtranPOSTDIR.Text != txtCountyPOSTDIR.Text)
                     {
-                        txtUtranSufDir.Text = txtCountySufDir.Text;
+                        txtUtranPOSTDIR.Text = txtCountyPOSTDIR.Text;
                         return;
                     }
-                    if (txtUtranSufDir.Text == txtCountySufDir.Text)
+                    if (txtUtranPOSTDIR.Text == txtCountyPOSTDIR.Text)
                     {
-                        txtUtranSufDir.Text = txtUtransInitialSufDir;
+                        txtUtranPOSTDIR.Text = txtUtransInitialPOSTDIR;
                         return;
                     }
                 }
 
-                // ALIAS1
-                if (clickedLabel.Text == "ALIAS1")
+                // A1_PREDIR
+                if (clickedLabel.Text == "A1_PREDIR")
                 {
-                    if (txtUtransAlias1.Text != txtCountyAlias1.Text)
+                    if (txtUtransA1_PREDIR.Text != txtCountyA1_PREDIR.Text)
                     {
-                        txtUtransAlias1.Text = txtCountyAlias1.Text;
+                        txtUtransA1_PREDIR.Text = txtCountyA1_PREDIR.Text;
                         return;
                     }
-                    if (txtUtransAlias1.Text == txtCountyAlias1.Text)
+                    if (txtUtransA1_PREDIR.Text == txtCountyA1_PREDIR.Text)
                     {
-                        txtUtransAlias1.Text = txtUtransInitialAlias1;
+                        txtUtransA1_PREDIR.Text = txtUtransInitialA1_PREDIR;
                         return;
                     }
                 }
 
-                // ALIAS1TYPE
-                if (clickedLabel.Text == "ALIAS1TYPE")
+                // A1_NAME
+                if (clickedLabel.Text == "A1_NAME")
                 {
-                    if (txtUtransAlias1Type.Text != txtCountyAlias1Type.Text)
+                    if (txtUtransA1_NAME.Text != txtCountyA1_NAME.Text)
                     {
-                        txtUtransAlias1Type.Text = txtCountyAlias1Type.Text;
+                        txtUtransA1_NAME.Text = txtCountyA1_NAME.Text;
                         return;
                     }
-                    if (txtUtransAlias1Type.Text == txtCountyAlias1Type.Text)
+                    if (txtUtransA1_NAME.Text == txtCountyA1_NAME.Text)
                     {
-                        txtUtransAlias1Type.Text = txtUtransInitialAlias1Type;
+                        txtUtransA1_NAME.Text = txtUtransInitialA1_NAME;
                         return;
                     }
                 }
 
-                // ALIAS2
-                if (clickedLabel.Text == "ALIAS2")
+                // A1_POSTTYPE
+                if (clickedLabel.Text == "A1_POSTTYPE")
                 {
-                    if (txtUtransAlias2.Text != txtCountyAlias2.Text)
+                    if (txtUtransA1_POSTTYPE.Text != txtCountyA1_POSTTYPE.Text)
                     {
-                        txtUtransAlias2.Text = txtCountyAlias2.Text;
+                        txtUtransA1_POSTTYPE.Text = txtCountyA1_POSTTYPE.Text;
                         return;
                     }
-                    if (txtUtransAlias2.Text == txtCountyAlias2.Text)
+                    if (txtUtransA1_POSTTYPE.Text == txtCountyA1_POSTTYPE.Text)
                     {
-                        txtUtransAlias2.Text = txtUtransInitialAlias2;
+                        txtUtransA1_POSTTYPE.Text = txtUtransInitialA1_POSTTYPE;
                         return;
                     }
                 }
 
-                // ALIAS2TYPE
-                if (clickedLabel.Text == "ALIAS2TYPE")
+                // A1_POSTDIR
+                if (clickedLabel.Text == "A1_POSTDIR")
                 {
-                    if (txtUtransAlias2Type.Text != txtCountyAlias2Type.Text)
+                    if (txtUtransA1_POSTDIR.Text != txtCountyA1_POSTDIR.Text)
                     {
-                        txtUtransAlias2Type.Text = txtCountyAlias2Type.Text;
+                        txtUtransA1_POSTDIR.Text = txtCountyA1_POSTDIR.Text;
                         return;
                     }
-                    if (txtUtransAlias2Type.Text == txtCountyAlias2Type.Text)
+                    if (txtUtransA1_POSTDIR.Text == txtCountyA1_POSTDIR.Text)
                     {
-                        txtUtransAlias2Type.Text = txtUtransInitialAlias2Type;
+                        txtUtransA1_POSTDIR.Text = txtUtransInitialA1_POSTDIR;
                         return;
                     }
                 }
 
-                // ACSNAME
-                if (clickedLabel.Text == "ACSNAME")
+                // A2_PREDIR
+                if (clickedLabel.Text == "A2_PREDIR")
                 {
-                    if (txtUtransAcsName.Text != txtCountyAcsName.Text)
+                    if (txtUtransA2_PREDIR.Text != txtCountyA2_PREDIR.Text)
                     {
-                        txtUtransAcsName.Text = txtCountyAcsName.Text;
+                        txtUtransA2_PREDIR.Text = txtCountyA2_PREDIR.Text;
                         return;
                     }
-                    if (txtUtransAcsName.Text == txtCountyAcsName.Text)
+                    if (txtUtransA2_PREDIR.Text == txtCountyA2_PREDIR.Text)
                     {
-                        txtUtransAcsName.Text = txtUtransInitialAcsAlias;
+                        txtUtransA2_PREDIR.Text = txtUtransInitialA2_PREDIR;
                         return;
                     }
                 }
 
-                // ACSSUF
-                if (clickedLabel.Text == "ACSSUF")
+                // A2_NAME
+                if (clickedLabel.Text == "A2_NAME")
                 {
-                    if (txtUtransAcsSuf.Text != txtCountyAcsSuf.Text)
+                    if (txtUtransA2_NAME.Text != txtCountyA2_NAME.Text)
                     {
-                        txtUtransAcsSuf.Text = txtCountyAcsSuf.Text;
+                        txtUtransA2_NAME.Text = txtCountyA2_NAME.Text;
                         return;
                     }
-                    if (txtUtransAcsSuf.Text == txtCountyAcsSuf.Text)
+                    if (txtUtransA2_NAME.Text == txtCountyA2_NAME.Text)
                     {
-                        txtUtransAcsSuf.Text = txtUtransInitialAscSuf;
+                        txtUtransA2_NAME.Text = txtUtransInitialA2_NAME;
+                        return;
+                    }
+                }
+
+                // A2_POSTTYPE
+                if (clickedLabel.Text == "A2_POSTTYPE")
+                {
+                    if (txtUtransA2_POSTTYPE.Text != txtCountyA2_POSTTYPE.Text)
+                    {
+                        txtUtransA2_POSTTYPE.Text = txtCountyA2_POSTTYPE.Text;
+                        return;
+                    }
+                    if (txtUtransA2_POSTTYPE.Text == txtCountyA2_POSTTYPE.Text)
+                    {
+                        txtUtransA2_POSTTYPE.Text = txtUtransInitialA2_POSTTYPE;
+                        return;
+                    }
+                }
+
+                // A2_POSTDIR
+                if (clickedLabel.Text == "A2_POSTDIR")
+                {
+                    if (txtUtransA2_POSTDIR.Text != txtCountyA2_POSTDIR.Text)
+                    {
+                        txtUtransA2_POSTDIR.Text = txtCountyA2_POSTDIR.Text;
+                        return;
+                    }
+                    if (txtUtransA2_POSTDIR.Text == txtCountyA2_POSTDIR.Text)
+                    {
+                        txtUtransA2_POSTDIR.Text = txtUtransInitialA2_POSTDIR;
+                        return;
+                    }
+                }
+
+                // AN_NAME
+                if (clickedLabel.Text == "AN_NAME")
+                {
+                    if (txtUtransAN_NAME.Text != txtCountyAN_NAME.Text)
+                    {
+                        txtUtransAN_NAME.Text = txtCountyAN_NAME.Text;
+                        return;
+                    }
+                    if (txtUtransAN_NAME.Text == txtCountyAN_NAME.Text)
+                    {
+                        txtUtransAN_NAME.Text = txtUtransInitialAN_NAME;
+                        return;
+                    }
+                }
+
+                // AN_POSTDIR
+                if (clickedLabel.Text == "AN_POSTDIR")
+                {
+                    if (txtUtransAN_POSTDIR.Text != txtCountyAN_POSTDIR.Text)
+                    {
+                        txtUtransAN_POSTDIR.Text = txtCountyAN_POSTDIR.Text;
+                        return;
+                    }
+                    if (txtUtransAN_POSTDIR.Text == txtCountyAN_POSTDIR.Text)
+                    {
+                        txtUtransAN_POSTDIR.Text = txtUtransInitialAN_POSTDIR;
                         return;
                     }
                 }
@@ -1177,23 +1531,23 @@ namespace UtransEditorAGRC
 
         // the following methods handle textbox text changes // 
 
-        // L_F_ADD
-        private void txtUtranL_F_Add_TextChanged(object sender, EventArgs e)
+        // FROMADDR_L
+        private void txtUtranFROMADDR_L_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtranL_F_Add.Text.ToUpper().ToString() != txtCountyL_F_Add.Text.ToUpper().ToString())
+                if (txtUtranFROMADDR_L.Text.ToUpper().ToString() != txtCountyFROMADDR_L.Text.ToUpper().ToString())
                 {
-                    txtUtranL_F_Add.BackColor = Color.LightYellow;
-                    txtCountyL_F_Add.BackColor = Color.LightYellow;
+                    txtUtranFROMADDR_L.BackColor = Color.LightYellow;
+                    txtCountyFROMADDR_L.BackColor = Color.LightYellow;
                 }
-                else if (txtUtranL_F_Add.Text.ToUpper().ToString() == txtCountyL_F_Add.Text.ToUpper().ToString())
+                else if (txtUtranFROMADDR_L.Text.ToUpper().ToString() == txtCountyFROMADDR_L.Text.ToUpper().ToString())
                 {
-                    txtUtranL_F_Add.BackColor = Color.White;
-                    txtCountyL_F_Add.BackColor = Color.White;
+                    txtUtranFROMADDR_L.BackColor = Color.White;
+                    txtCountyFROMADDR_L.BackColor = Color.White;
                 }
 
-                if (txtUtranL_F_Add.Text != txtUtransInitialL_F_Add)
+                if (txtUtranFROMADDR_L.Text != txtUtransInitialFROMADDR_L)
                 {
                     lblLeftFrom.Font = fontLabelHasEdits;
                     //lblLeftFrom.ForeColor = Color.LightSalmon;
@@ -1220,23 +1574,23 @@ namespace UtransEditorAGRC
             }
         }
 
-        // L_T_ADD
-        private void txtUtranL_T_Add_TextChanged(object sender, EventArgs e)
+        // TOADDR_L
+        private void txtUtranTOADDR_L_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtranL_T_Add.Text.ToUpper().ToString() != txtCountyL_T_Add.Text.ToUpper().ToString())
+                if (txtUtranTOADDR_L.Text.ToUpper().ToString() != txtCountyTOADDR_L.Text.ToUpper().ToString())
                 {
-                    txtUtranL_T_Add.BackColor = Color.LightYellow;
-                    txtCountyL_T_Add.BackColor = Color.LightYellow;
+                    txtUtranTOADDR_L.BackColor = Color.LightYellow;
+                    txtCountyTOADDR_L.BackColor = Color.LightYellow;
                 }
-                else if (txtUtranL_T_Add.Text.ToUpper().ToString() == txtCountyL_T_Add.Text.ToUpper().ToString())
+                else if (txtUtranTOADDR_L.Text.ToUpper().ToString() == txtCountyTOADDR_L.Text.ToUpper().ToString())
                 {
-                    txtUtranL_T_Add.BackColor = Color.White;
-                    txtCountyL_T_Add.BackColor = Color.White;
+                    txtUtranTOADDR_L.BackColor = Color.White;
+                    txtCountyTOADDR_L.BackColor = Color.White;
                 }
 
-                if (txtUtranL_T_Add.Text != txtUtransInitialL_TAdd)
+                if (txtUtranTOADDR_L.Text != txtUtransInitialL_TAdd)
                 {
                     lblLeftTo.Font = fontLabelHasEdits;
                     //lblLeftTo.ForeColor = Color.LightSalmon;
@@ -1263,23 +1617,23 @@ namespace UtransEditorAGRC
             }
         }
 
-        // R_F_ADD
-        private void txtUtranR_F_Add_TextChanged(object sender, EventArgs e)
+        // FROMADDR_R
+        private void txtUtranFROMADDR_R_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtranR_F_Add.Text.ToUpper().ToString() != txtCountyR_F_Add.Text.ToUpper().ToString())
+                if (txtUtranFROMADDR_R.Text.ToUpper().ToString() != txtCountyFROMADDR_R.Text.ToUpper().ToString())
                 {
-                    txtUtranR_F_Add.BackColor = Color.LightYellow;
-                    txtCountyR_F_Add.BackColor = Color.LightYellow;
+                    txtUtranFROMADDR_R.BackColor = Color.LightYellow;
+                    txtCountyFROMADDR_R.BackColor = Color.LightYellow;
                 }
-                else if (txtUtranR_F_Add.Text.ToUpper().ToString() == txtCountyR_F_Add.Text.ToUpper().ToString())
+                else if (txtUtranFROMADDR_R.Text.ToUpper().ToString() == txtCountyFROMADDR_R.Text.ToUpper().ToString())
                 {
-                    txtUtranR_F_Add.BackColor = Color.White;
-                    txtCountyR_F_Add.BackColor = Color.White;
+                    txtUtranFROMADDR_R.BackColor = Color.White;
+                    txtCountyFROMADDR_R.BackColor = Color.White;
                 }
 
-                if (txtUtranR_F_Add.Text != txtUtransInitialR_F_Add)
+                if (txtUtranFROMADDR_R.Text != txtUtransInitialFROMADDR_R)
                 {
                     lblRightFrom.Font = fontLabelHasEdits;
                     //lblRightFrom.ForeColor = Color.LightSalmon;
@@ -1306,23 +1660,23 @@ namespace UtransEditorAGRC
             }
         }
 
-        // R_T_ADD
-        private void txtUtranR_T_Add_TextChanged(object sender, EventArgs e)
+        // TOADDR_R
+        private void txtUtranTOADDR_R_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtranR_T_Add.Text.ToUpper().ToString() != txtCountyR_T_Add.Text.ToUpper().ToString())
+                if (txtUtranTOADDR_R.Text.ToUpper().ToString() != txtCountyTOADDR_R.Text.ToUpper().ToString())
                 {
-                    txtUtranR_T_Add.BackColor = Color.LightYellow;
-                    txtCountyR_T_Add.BackColor = Color.LightYellow;
+                    txtUtranTOADDR_R.BackColor = Color.LightYellow;
+                    txtCountyTOADDR_R.BackColor = Color.LightYellow;
                 }
-                else if (txtUtranR_T_Add.Text.ToUpper().ToString() == txtCountyR_T_Add.Text.ToUpper().ToString())
+                else if (txtUtranTOADDR_R.Text.ToUpper().ToString() == txtCountyTOADDR_R.Text.ToUpper().ToString())
                 {
-                    txtUtranR_T_Add.BackColor = Color.White;
-                    txtCountyR_T_Add.BackColor = Color.White;
+                    txtUtranTOADDR_R.BackColor = Color.White;
+                    txtCountyTOADDR_R.BackColor = Color.White;
                 }
 
-                if (txtUtranR_T_Add.Text != txtUtransInitialR_T_Add)
+                if (txtUtranTOADDR_R.Text != txtUtransInitialTOADDR_R)
                 {
                     lblRightTo.Font = fontLabelHasEdits;
                     //lblRightTo.ForeColor = Color.LightSalmon;
@@ -1392,7 +1746,7 @@ namespace UtransEditorAGRC
             }
         }
 
-        // STREETNAME
+        // NAME
         private void txtUtranStName_TextChanged(object sender, EventArgs e)
         {
             try
@@ -1423,6 +1777,14 @@ namespace UtransEditorAGRC
                 }
                 //fontLabelHasEdits.Dispose();
                 //fontLabelRegular.Dispose();
+
+                //string strRemoveApostrophe = txtUtranStName.Text;
+                //// remove apostrophes in street names
+                //if (strRemoveApostrophe.Contains("'"))
+                //{
+                //    txtUtranStName.Text = strRemoveApostrophe.Replace("'", "");
+                //}
+
             }
             catch (Exception ex)
             {
@@ -1435,7 +1797,7 @@ namespace UtransEditorAGRC
             }
         }
 
-        // STREETTYPE
+        // POSTTYPE
         private void txtUtranStType_TextChanged(object sender, EventArgs e)
         {
             try
@@ -1478,32 +1840,32 @@ namespace UtransEditorAGRC
             }
         }
 
-        // SUFDIR
-        private void txtUtranSufDir_TextChanged(object sender, EventArgs e)
+        // POSTDIR
+        private void txtUtranPOSTDIR_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtranSufDir.Text.ToUpper().ToString() != txtCountySufDir.Text.ToUpper().ToString())
+                if (txtUtranPOSTDIR.Text.ToUpper().ToString() != txtCountyPOSTDIR.Text.ToUpper().ToString())
                 {
-                    txtUtranSufDir.BackColor = Color.LightYellow;
-                    txtCountySufDir.BackColor = Color.LightYellow;
+                    txtUtranPOSTDIR.BackColor = Color.LightYellow;
+                    txtCountyPOSTDIR.BackColor = Color.LightYellow;
                 }
-                else if (txtUtranSufDir.Text.ToUpper().ToString() == txtCountySufDir.Text.ToUpper().ToString())
+                else if (txtUtranPOSTDIR.Text.ToUpper().ToString() == txtCountyPOSTDIR.Text.ToUpper().ToString())
                 {
-                    txtUtranSufDir.BackColor = Color.White;
-                    txtCountySufDir.BackColor = Color.White;
+                    txtUtranPOSTDIR.BackColor = Color.White;
+                    txtCountyPOSTDIR.BackColor = Color.White;
                 }
 
-                if (txtUtranSufDir.Text != txtUtransInitialSufDir)
+                if (txtUtranPOSTDIR.Text != txtUtransInitialPOSTDIR)
                 {
-                    lblSufDir.Font = fontLabelHasEdits;
-                    //lblSufDir.ForeColor = Color.LightSalmon;
+                    lblPOSTDIR.Font = fontLabelHasEdits;
+                    //lblPOSTDIR.ForeColor = Color.LightSalmon;
                     btnSaveToUtrans.Enabled = true;
                 }
                 else
                 {
-                    lblSufDir.Font = fontLabelRegular;
-                    //lblSufDir.ForeColor = Color.Black;
+                    lblPOSTDIR.Font = fontLabelRegular;
+                    //lblPOSTDIR.ForeColor = Color.Black;
                     //btnSaveToUtrans.Enabled = false;
                     btnSaveToUtrans.Enabled = true;
                 }
@@ -1521,31 +1883,74 @@ namespace UtransEditorAGRC
             }
         }
 
-        // ALIAS1
-        private void txtUtransAlias1_TextChanged(object sender, EventArgs e)
+        // A1_PREDIR
+        private void txtUtransA1_PREDIR_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtransAlias1.Text.ToUpper().ToString() != txtCountyAlias1.Text.ToUpper().ToString())
+                if (txtUtransA1_PREDIR.Text.ToUpper().ToString() != txtCountyA1_PREDIR.Text.ToUpper().ToString())
                 {
-                    txtUtransAlias1.BackColor = Color.LightYellow;
-                    txtCountyAlias1.BackColor = Color.LightYellow;
+                    txtUtransA1_PREDIR.BackColor = Color.LightYellow;
+                    txtCountyA1_PREDIR.BackColor = Color.LightYellow;
                 }
-                else if (txtUtransAlias1.Text.ToUpper().ToString() == txtCountyAlias1.Text.ToUpper().ToString())
+                else if (txtUtransA1_PREDIR.Text.ToUpper().ToString() == txtCountyA1_PREDIR.Text.ToUpper().ToString())
                 {
-                    txtUtransAlias1.BackColor = Color.White;
-                    txtCountyAlias1.BackColor = Color.White;
+                    txtUtransA1_PREDIR.BackColor = Color.White;
+                    txtCountyA1_PREDIR.BackColor = Color.White;
                 }
 
-                if (txtUtransAlias1.Text != txtUtransInitialAlias1)
+                if (txtUtransA1_PREDIR.Text != txtUtransInitialA1_PREDIR)
                 {
-                    lblAlias.Font = fontLabelHasEdits;
+                    lblA1_PREDIR.Font = fontLabelHasEdits;
                     //lblAlias.ForeColor = Color.LightSalmon;
                     btnSaveToUtrans.Enabled = true;
                 }
                 else
                 {
-                    lblAlias.Font = fontLabelRegular;
+                    lblA1_PREDIR.Font = fontLabelRegular;
+                    //lblAlias.ForeColor = Color.Black;
+                    //btnSaveToUtrans.Enabled = false;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                //fontLabelHasEdits.Dispose();
+                //fontLabelRegular.Dispose();
+            }
+            catch (Exception ex)
+            {
+                //clsGlobals.logger.Error(Environment.NewLine + "Error Message: " + ex.Message + Environment.NewLine + "Error Source: " + ex.Source + Environment.NewLine + "Error Location:" + ex.StackTrace + Environment.NewLine + "Target Site: " + ex.TargetSite);
+
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        // A1_NAME
+        private void txtUtransA1_NAME_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtUtransA1_NAME.Text.ToUpper().ToString() != txtCountyA1_NAME.Text.ToUpper().ToString())
+                {
+                    txtUtransA1_NAME.BackColor = Color.LightYellow;
+                    txtCountyA1_NAME.BackColor = Color.LightYellow;
+                }
+                else if (txtUtransA1_NAME.Text.ToUpper().ToString() == txtCountyA1_NAME.Text.ToUpper().ToString())
+                {
+                    txtUtransA1_NAME.BackColor = Color.White;
+                    txtCountyA1_NAME.BackColor = Color.White;
+                }
+
+                if (txtUtransA1_NAME.Text != txtUtransInitialA1_NAME)
+                {
+                    lblA1_NAME.Font = fontLabelHasEdits;
+                    //lblAlias.ForeColor = Color.LightSalmon;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                else
+                {
+                    lblA1_NAME.Font = fontLabelRegular;
                     //lblAlias.ForeColor = Color.Black;
                     //btnSaveToUtrans.Enabled = false;
                     btnSaveToUtrans.Enabled = true;
@@ -1565,32 +1970,32 @@ namespace UtransEditorAGRC
 
         }
 
-        // ALIAS1TYPE
-        private void txtUtransAlias1Type_TextChanged(object sender, EventArgs e)
+        // A1_POSTTYPE
+        private void txtUtransA1_POSTTYPE_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtransAlias1Type.Text.ToUpper().ToString() != txtCountyAlias1Type.Text.ToUpper().ToString())
+                if (txtUtransA1_POSTTYPE.Text.ToUpper().ToString() != txtCountyA1_POSTTYPE.Text.ToUpper().ToString())
                 {
-                    txtUtransAlias1Type.BackColor = Color.LightYellow;
-                    txtCountyAlias1Type.BackColor = Color.LightYellow;
+                    txtUtransA1_POSTTYPE.BackColor = Color.LightYellow;
+                    txtCountyA1_POSTTYPE.BackColor = Color.LightYellow;
                 }
-                else if (txtUtransAlias1Type.Text.ToUpper().ToString() == txtCountyAlias1Type.Text.ToUpper().ToString())
+                else if (txtUtransA1_POSTTYPE.Text.ToUpper().ToString() == txtCountyA1_POSTTYPE.Text.ToUpper().ToString())
                 {
-                    txtUtransAlias1Type.BackColor = Color.White;
-                    txtCountyAlias1Type.BackColor = Color.White;
+                    txtUtransA1_POSTTYPE.BackColor = Color.White;
+                    txtCountyA1_POSTTYPE.BackColor = Color.White;
                 }
 
-                if (txtUtransAlias1Type.Text != txtUtransInitialAlias1Type)
+                if (txtUtransA1_POSTTYPE.Text != txtUtransInitialA1_POSTTYPE)
                 {
-                    lblAlias1Type.Font = fontLabelHasEdits;
-                    //lblAlias1Type.ForeColor = Color.LightSalmon;
+                    lblA1_POSTTYPE.Font = fontLabelHasEdits;
+                    //lblA1_POSTTYPE.ForeColor = Color.LightSalmon;
                     btnSaveToUtrans.Enabled = true;
                 }
                 else
                 {
-                    lblAlias1Type.Font = fontLabelRegular;
-                    //lblAlias1Type.ForeColor = Color.Black;
+                    lblA1_POSTTYPE.Font = fontLabelRegular;
+                    //lblA1_POSTTYPE.ForeColor = Color.Black;
                     //btnSaveToUtrans.Enabled = false;
                     btnSaveToUtrans.Enabled = true;
                 }
@@ -1608,32 +2013,32 @@ namespace UtransEditorAGRC
             }
         }
 
-        // ALIAS2
-        private void txtUtransAlias2_TextChanged(object sender, EventArgs e)
+        // A1_POSTDIR
+        private void txtUtransA1_POSTDIR_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtransAlias2.Text.ToUpper().ToString() != txtCountyAlias2.Text.ToUpper().ToString())
+                if (txtUtransA1_POSTDIR.Text.ToUpper().ToString() != txtCountyA1_POSTDIR.Text.ToUpper().ToString())
                 {
-                    txtUtransAlias2.BackColor = Color.LightYellow;
-                    txtCountyAlias2.BackColor = Color.LightYellow;
+                    txtUtransA1_POSTDIR.BackColor = Color.LightYellow;
+                    txtCountyA1_POSTDIR.BackColor = Color.LightYellow;
                 }
-                else if (txtUtransAlias2.Text.ToUpper().ToString() == txtCountyAlias2.Text.ToUpper().ToString())
+                else if (txtUtransA1_POSTDIR.Text.ToUpper().ToString() == txtCountyA1_POSTDIR.Text.ToUpper().ToString())
                 {
-                    txtUtransAlias2.BackColor = Color.White;
-                    txtCountyAlias2.BackColor = Color.White;
+                    txtUtransA1_POSTDIR.BackColor = Color.White;
+                    txtCountyA1_POSTDIR.BackColor = Color.White;
                 }
 
-                if (txtUtransAlias2.Text != txtUtransInitialAlias2)
+                if (txtUtransA1_POSTDIR.Text != txtUtransInitialA1_POSTDIR)
                 {
-                    lblAlias2.Font = fontLabelHasEdits;
-                    //lblAlias2.ForeColor = Color.LightSalmon;
+                    lblA1_POSTDIR.Font = fontLabelHasEdits;
+                    //lblA1_POSTTYPE.ForeColor = Color.LightSalmon;
                     btnSaveToUtrans.Enabled = true;
                 }
                 else
                 {
-                    lblAlias2.Font = fontLabelRegular;
-                    //lblAlias2.ForeColor = Color.Black;
+                    lblA1_POSTDIR.Font = fontLabelRegular;
+                    //lblA1_POSTTYPE.ForeColor = Color.Black;
                     //btnSaveToUtrans.Enabled = false;
                     btnSaveToUtrans.Enabled = true;
                 }
@@ -1651,32 +2056,33 @@ namespace UtransEditorAGRC
             }
         }
 
-        // ALIAS2TYPE
-        private void txtUtransAlias2Type_TextChanged(object sender, EventArgs e)
+
+        // A2_PREDIR
+        private void txtUtransA2_PREDIR_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtransAlias2Type.Text.ToUpper().ToString() != txtCountyAlias2Type.Text.ToUpper().ToString())
+                if (txtUtransA2_PREDIR.Text.ToUpper().ToString() != txtCountyA2_PREDIR.Text.ToUpper().ToString())
                 {
-                    txtUtransAlias2Type.BackColor = Color.LightYellow;
-                    txtCountyAlias2Type.BackColor = Color.LightYellow;
+                    txtUtransA2_PREDIR.BackColor = Color.LightYellow;
+                    txtCountyA2_PREDIR.BackColor = Color.LightYellow;
                 }
-                else if (txtUtransAlias2Type.Text.ToUpper().ToString() == txtCountyAlias2Type.Text.ToUpper().ToString())
+                else if (txtUtransA2_PREDIR.Text.ToUpper().ToString() == txtCountyA2_PREDIR.Text.ToUpper().ToString())
                 {
-                    txtUtransAlias2Type.BackColor = Color.White;
-                    txtCountyAlias2Type.BackColor = Color.White;
+                    txtUtransA2_PREDIR.BackColor = Color.White;
+                    txtCountyA2_PREDIR.BackColor = Color.White;
                 }
 
-                if (txtUtransAlias2Type.Text != txtUtransInitialAlias2Type)
+                if (txtUtransA2_PREDIR.Text != txtUtransInitialA2_PREDIR)
                 {
-                    lblAlias2Type.Font = fontLabelHasEdits;
-                    //lblAlias2Type.ForeColor = Color.LightSalmon;
+                    lblA2_PREDIR.Font = fontLabelHasEdits;
+                    //lblAlias.ForeColor = Color.LightSalmon;
                     btnSaveToUtrans.Enabled = true;
                 }
                 else
                 {
-                    lblAlias2Type.Font = fontLabelRegular;
-                    //lblAlias2Type.ForeColor = Color.Black;
+                    lblA2_PREDIR.Font = fontLabelRegular;
+                    //lblAlias.ForeColor = Color.Black;
                     //btnSaveToUtrans.Enabled = false;
                     btnSaveToUtrans.Enabled = true;
                 }
@@ -1694,31 +2100,160 @@ namespace UtransEditorAGRC
             }
         }
 
-        //ACSNAME
+        // A2_NAME
+        private void txtUtransA2_NAME_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtUtransA2_NAME.Text.ToUpper().ToString() != txtCountyA2_NAME.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_NAME.BackColor = Color.LightYellow;
+                    txtCountyA2_NAME.BackColor = Color.LightYellow;
+                }
+                else if (txtUtransA2_NAME.Text.ToUpper().ToString() == txtCountyA2_NAME.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_NAME.BackColor = Color.White;
+                    txtCountyA2_NAME.BackColor = Color.White;
+                }
+
+                if (txtUtransA2_NAME.Text != txtUtransInitialA2_NAME)
+                {
+                    lblA2_NAME.Font = fontLabelHasEdits;
+                    //lblA2_NAME.ForeColor = Color.LightSalmon;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                else
+                {
+                    lblA2_NAME.Font = fontLabelRegular;
+                    //lblA2_NAME.ForeColor = Color.Black;
+                    //btnSaveToUtrans.Enabled = false;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                //fontLabelHasEdits.Dispose();
+                //fontLabelRegular.Dispose();
+            }
+            catch (Exception ex)
+            {
+                //clsGlobals.logger.Error(Environment.NewLine + "Error Message: " + ex.Message + Environment.NewLine + "Error Source: " + ex.Source + Environment.NewLine + "Error Location:" + ex.StackTrace + Environment.NewLine + "Target Site: " + ex.TargetSite);
+
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        // A2_POSTTYPE
+        private void txtUtransA2_POSTTYPE_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtUtransA2_POSTTYPE.Text.ToUpper().ToString() != txtCountyA2_POSTTYPE.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_POSTTYPE.BackColor = Color.LightYellow;
+                    txtCountyA2_POSTTYPE.BackColor = Color.LightYellow;
+                }
+                else if (txtUtransA2_POSTTYPE.Text.ToUpper().ToString() == txtCountyA2_POSTTYPE.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_POSTTYPE.BackColor = Color.White;
+                    txtCountyA2_POSTTYPE.BackColor = Color.White;
+                }
+
+                if (txtUtransA2_POSTTYPE.Text != txtUtransInitialA2_POSTTYPE)
+                {
+                    lblA2_POSTTYPE.Font = fontLabelHasEdits;
+                    //lblA2_POSTTYPE.ForeColor = Color.LightSalmon;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                else
+                {
+                    lblA2_POSTTYPE.Font = fontLabelRegular;
+                    //lblA2_POSTTYPE.ForeColor = Color.Black;
+                    //btnSaveToUtrans.Enabled = false;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                //fontLabelHasEdits.Dispose();
+                //fontLabelRegular.Dispose();
+            }
+            catch (Exception ex)
+            {
+                //clsGlobals.logger.Error(Environment.NewLine + "Error Message: " + ex.Message + Environment.NewLine + "Error Source: " + ex.Source + Environment.NewLine + "Error Location:" + ex.StackTrace + Environment.NewLine + "Target Site: " + ex.TargetSite);
+
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        // A2_POSTDIR
+        private void txtUtransA2_POSTDIR_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtUtransA2_POSTDIR.Text.ToUpper().ToString() != txtCountyA2_POSTDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_POSTDIR.BackColor = Color.LightYellow;
+                    txtCountyA2_POSTDIR.BackColor = Color.LightYellow;
+                }
+                else if (txtUtransA2_POSTDIR.Text.ToUpper().ToString() == txtCountyA2_POSTDIR.Text.ToUpper().ToString())
+                {
+                    txtUtransA2_POSTDIR.BackColor = Color.White;
+                    txtCountyA2_POSTDIR.BackColor = Color.White;
+                }
+
+                if (txtUtransA2_POSTDIR.Text != txtUtransInitialA2_POSTDIR)
+                {
+                    lblA2_POSTDIR.Font = fontLabelHasEdits;
+                    //lblA1_POSTTYPE.ForeColor = Color.LightSalmon;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                else
+                {
+                    lblA2_POSTDIR.Font = fontLabelRegular;
+                    //lblA1_POSTTYPE.ForeColor = Color.Black;
+                    //btnSaveToUtrans.Enabled = false;
+                    btnSaveToUtrans.Enabled = true;
+                }
+                //fontLabelHasEdits.Dispose();
+                //fontLabelRegular.Dispose();
+            }
+            catch (Exception ex)
+            {
+                //clsGlobals.logger.Error(Environment.NewLine + "Error Message: " + ex.Message + Environment.NewLine + "Error Source: " + ex.Source + Environment.NewLine + "Error Location:" + ex.StackTrace + Environment.NewLine + "Target Site: " + ex.TargetSite);
+
+                MessageBox.Show("Error Message: " + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine +
+                "Error Source: " + Environment.NewLine + ex.Source + Environment.NewLine + Environment.NewLine +
+                "Error Location:" + Environment.NewLine + ex.StackTrace,
+                "UTRANS Editor tool error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        //AN_NAME
         private void txtUtransAcsAllias_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtransAcsName.Text.ToUpper().ToString() != txtCountyAcsName.Text.ToUpper().ToString())
+                if (txtUtransAN_NAME.Text.ToUpper().ToString() != txtCountyAN_NAME.Text.ToUpper().ToString())
                 {
-                    txtUtransAcsName.BackColor = Color.LightYellow;
-                    txtCountyAcsName.BackColor = Color.LightYellow;
+                    txtUtransAN_NAME.BackColor = Color.LightYellow;
+                    txtCountyAN_NAME.BackColor = Color.LightYellow;
                 }
-                else if (txtUtransAcsName.Text.ToUpper().ToString() == txtCountyAcsName.Text.ToUpper().ToString())
+                else if (txtUtransAN_NAME.Text.ToUpper().ToString() == txtCountyAN_NAME.Text.ToUpper().ToString())
                 {
-                    txtUtransAcsName.BackColor = Color.White;
-                    txtCountyAcsName.BackColor = Color.White;
+                    txtUtransAN_NAME.BackColor = Color.White;
+                    txtCountyAN_NAME.BackColor = Color.White;
                 }
 
-                if (txtUtransAcsName.Text != txtUtransInitialAcsAlias)
+                if (txtUtransAN_NAME.Text != txtUtransInitialAN_NAME)
                 {
-                    lblAcsName.Font = fontLabelHasEdits;
+                    lblAN_NAME.Font = fontLabelHasEdits;
                     //lblAcsAlias.ForeColor = Color.LightSalmon;
                     btnSaveToUtrans.Enabled = true;
                 }
                 else
                 {
-                    lblAcsName.Font = fontLabelRegular;
+                    lblAN_NAME.Font = fontLabelRegular;
                     //lblAcsAlias.ForeColor = Color.Black;
                     //btnSaveToUtrans.Enabled = false;
                     btnSaveToUtrans.Enabled = true;
@@ -1737,32 +2272,32 @@ namespace UtransEditorAGRC
             }
         }
 
-        // ACSSUF
-        private void txtUtransAcsSuf_TextChanged(object sender, EventArgs e)
+        // AN_POSTDIR
+        private void txtUtransAN_POSTDIR_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (txtUtransAcsSuf.Text.ToUpper().ToString() != txtCountyAcsSuf.Text.ToUpper().ToString())
+                if (txtUtransAN_POSTDIR.Text.ToUpper().ToString() != txtCountyAN_POSTDIR.Text.ToUpper().ToString())
                 {
-                    txtUtransAcsSuf.BackColor = Color.LightYellow;
-                    txtCountyAcsSuf.BackColor = Color.LightYellow;
+                    txtUtransAN_POSTDIR.BackColor = Color.LightYellow;
+                    txtCountyAN_POSTDIR.BackColor = Color.LightYellow;
                 }
-                else if (txtUtransAcsSuf.Text.ToUpper().ToString() == txtCountyAcsSuf.Text.ToUpper().ToString())
+                else if (txtUtransAN_POSTDIR.Text.ToUpper().ToString() == txtCountyAN_POSTDIR.Text.ToUpper().ToString())
                 {
-                    txtUtransAcsSuf.BackColor = Color.White;
-                    txtCountyAcsSuf.BackColor = Color.White;
+                    txtUtransAN_POSTDIR.BackColor = Color.White;
+                    txtCountyAN_POSTDIR.BackColor = Color.White;
                 }
 
-                if (txtUtransAcsSuf.Text != txtUtransInitialAscSuf)
+                if (txtUtransAN_POSTDIR.Text != txtUtransInitialAN_POSTDIR)
                 {
-                    lblAcsSuf.Font = fontLabelHasEdits;
-                    //lblAcsSuf.ForeColor = Color.LightSalmon;
+                    lblAN_POSTDIR.Font = fontLabelHasEdits;
+                    //lblAN_POSTDIR.ForeColor = Color.LightSalmon;
                     btnSaveToUtrans.Enabled = true;
                 }
                 else
                 {
-                    lblAcsSuf.Font = fontLabelRegular;
-                    //lblAcsSuf.ForeColor = Color.Black;
+                    lblAN_POSTDIR.Font = fontLabelRegular;
+                    //lblAN_POSTDIR.ForeColor = Color.Black;
                     //btnSaveToUtrans.Enabled = false;
                     btnSaveToUtrans.Enabled = true;
                 }
@@ -1812,6 +2347,36 @@ namespace UtransEditorAGRC
                         // do nothing... continue to saving
                     }
                     else if (dialogResult1 == DialogResult.No) //exit the save operation becuase the user chose to select a cartocode
+                    {
+                        //exit out and don't proceed to saving...
+                        return;
+                    }
+                }
+
+                //check if a vertlevel has been chosen
+                if (cboVertLevel.SelectedIndex == -1) //or maybe check for .text == ""
+                {
+                    DialogResult dialogResult1 = MessageBox.Show("Warning!  You are saving a street segment that has not been assigned a VERT_LEVEL." + Environment.NewLine + "Would you like to continue the save without a VERT_LEVEL?", "Format Warning!", MessageBoxButtons.YesNo);
+                    if (dialogResult1 == DialogResult.Yes)
+                    {
+                        // do nothing... continue to saving
+                    }
+                    else if (dialogResult1 == DialogResult.No) //exit the save operation becuase the user chose to select a VERT_LEVEL
+                    {
+                        //exit out and don't proceed to saving...
+                        return;
+                    }
+                }
+
+                //check if a oneway has been chosen
+                if (cboOneWay.SelectedIndex == -1) //or maybe check for .text == ""
+                {
+                    DialogResult dialogResult1 = MessageBox.Show("Warning!  You are saving a street segment that has not been assigned a ONEWAY." + Environment.NewLine + "Would you like to continue the save without a ONEWAY?", "Format Warning!", MessageBoxButtons.YesNo);
+                    if (dialogResult1 == DialogResult.Yes)
+                    {
+                        // do nothing... continue to saving
+                    }
+                    else if (dialogResult1 == DialogResult.No) //exit the save operation becuase the user chose to select a ONEWAY
                     {
                         //exit out and don't proceed to saving...
                         return;
@@ -1919,39 +2484,39 @@ namespace UtransEditorAGRC
                         clsGlobals.arcEditor.StopOperation("DFC_RESULT Update");
 
                         //call google spreadsheet doc
-                        clsGlobals.strCountySegment = txtCountyPreDir.Text.Trim() + " " + txtCountyStName.Text.Trim() + " " + txtCountyStType.Text.Trim() + " " + txtCountySufDir.Text.Trim();
+                        clsGlobals.strCountySegment = txtCountyPreDir.Text.Trim() + " " + txtCountyStName.Text.Trim() + " " + txtCountyStType.Text.Trim() + " " + txtCountyPOSTDIR.Text.Trim();
                         clsGlobals.strCountySegmentTrimed = clsGlobals.strCountySegment.Trim();
-                        if (txtCountyL_F_Add.Text != "")
+                        if (txtCountyFROMADDR_L.Text != "")
                         {
-                            clsGlobals.strCountyL_F_Add = txtCountyL_F_Add.Text.ToString().Trim();
+                            clsGlobals.strCountyFROMADDR_L = txtCountyFROMADDR_L.Text.ToString().Trim();
                         }
                         else
                         {
-                            clsGlobals.strCountyL_F_Add = "0";
+                            clsGlobals.strCountyFROMADDR_L = "0";
                         }
-                        if (txtCountyL_T_Add.Text != "")
+                        if (txtCountyTOADDR_L.Text != "")
                         {
-                            clsGlobals.strCountyL_T_Add = txtCountyL_T_Add.Text.ToString().Trim();
-                        }
-                        else
-                        {
-                            clsGlobals.strCountyL_T_Add = "0";
-                        }
-                        if (txtCountyR_F_Add.Text != "")
-                        {
-                            clsGlobals.strCountyR_F_Add = txtCountyR_F_Add.Text.ToString().Trim();
+                            clsGlobals.strCountyTOADDR_L = txtCountyTOADDR_L.Text.ToString().Trim();
                         }
                         else
                         {
-                            clsGlobals.strCountyR_F_Add = "0";
+                            clsGlobals.strCountyTOADDR_L = "0";
                         }
-                        if (txtCountyR_T_Add.Text != "")
+                        if (txtCountyFROMADDR_R.Text != "")
                         {
-                            clsGlobals.strCountyR_T_Add = txtCountyR_T_Add.Text.ToString().Trim();
+                            clsGlobals.strCountyFROMADDR_R = txtCountyFROMADDR_R.Text.ToString().Trim();
                         }
                         else
                         {
-                            clsGlobals.strCountyR_T_Add = "0";
+                            clsGlobals.strCountyFROMADDR_R = "0";
+                        }
+                        if (txtCountyTOADDR_R.Text != "")
+                        {
+                            clsGlobals.strCountyTOADDR_R = txtCountyTOADDR_R.Text.ToString().Trim();
+                        }
+                        else
+                        {
+                            clsGlobals.strCountyTOADDR_R = "0";
                         }
 
                         //check if null values in utrans streets, if so assign zero
@@ -1960,44 +2525,44 @@ namespace UtransEditorAGRC
                         strGoogleLogRightTo = "";
                         strGoogleLogRightFrom = "";
                         
-                        if (txtUtranL_T_Add.Text == "")
+                        if (txtUtranTOADDR_L.Text == "")
 	                    {
 		                    strGoogleLogLeftTo = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogLeftTo = txtUtranL_T_Add.Text;
+                            strGoogleLogLeftTo = txtUtranTOADDR_L.Text;
 	                    }
-                        if (txtUtranL_F_Add.Text == "")
+                        if (txtUtranFROMADDR_L.Text == "")
 	                    {
 		                     strGoogleLogLeftFrom = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogLeftFrom = txtUtranL_F_Add.Text;
+                            strGoogleLogLeftFrom = txtUtranFROMADDR_L.Text;
 	                    }
-                        if (txtUtranR_F_Add.Text == "")
+                        if (txtUtranFROMADDR_R.Text == "")
 	                    {
 		                    strGoogleLogRightFrom = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogRightFrom = txtUtranR_F_Add.Text;
+                            strGoogleLogRightFrom = txtUtranFROMADDR_R.Text;
 	                    }
-                        if (txtUtranR_T_Add.Text == "")
+                        if (txtUtranTOADDR_R.Text == "")
 	                    {
 		                    strGoogleLogRightTo = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogRightTo = txtUtranR_T_Add.Text;
+                            strGoogleLogRightTo = txtUtranTOADDR_R.Text;
 	                    }
 
                         // get city from muni layer for google doc city field
                         clsGlobals.strGoogleSpreadsheetCityField = getCityFromSpatialIntersect(arcCountyFeature);
 
                         //string together the agrc street segment
-                        clsGlobals.strAgrcSegment = strGoogleLogLeftFrom + "-" + strGoogleLogLeftTo + " " + strGoogleLogRightFrom + "-" + strGoogleLogRightTo + " " + txtUtranPreDir.Text.Trim() + " " + txtUtranStName.Text.Trim() + " " + txtUtranStType.Text.Trim() + " " + txtUtranSufDir.Text.Trim();
+                        clsGlobals.strAgrcSegment = strGoogleLogLeftFrom + "-" + strGoogleLogLeftTo + " " + strGoogleLogRightFrom + "-" + strGoogleLogRightTo + " " + txtUtranPreDir.Text.Trim() + " " + txtUtranStName.Text.Trim() + " " + txtUtranStType.Text.Trim() + " " + txtUtranPOSTDIR.Text.Trim();
 
                         //call the google api to transfer values to the spreadsheet
                         clsUtransEditorStaticClass.AddRowToGoogleSpreadsheet();
@@ -2025,39 +2590,39 @@ namespace UtransEditorAGRC
                         ////arcCur_dfcLayer = null;
 
                         //call google spreadsheet doc
-                        clsGlobals.strCountySegment = txtCountyPreDir.Text.Trim() + " " + txtCountyStName.Text.Trim() + " " + txtCountyStType.Text.Trim() + " " + txtCountySufDir.Text.Trim();
+                        clsGlobals.strCountySegment = txtCountyPreDir.Text.Trim() + " " + txtCountyStName.Text.Trim() + " " + txtCountyStType.Text.Trim() + " " + txtCountyPOSTDIR.Text.Trim();
                         clsGlobals.strCountySegmentTrimed = clsGlobals.strCountySegment.Trim();
-                        if (txtCountyL_F_Add.Text != "")
+                        if (txtCountyFROMADDR_L.Text != "")
                         {
-                            clsGlobals.strCountyL_F_Add = txtCountyL_F_Add.Text.ToString().Trim();
+                            clsGlobals.strCountyFROMADDR_L = txtCountyFROMADDR_L.Text.ToString().Trim();
                         }
                         else
                         {
-                            clsGlobals.strCountyL_F_Add = "0";
+                            clsGlobals.strCountyFROMADDR_L = "0";
                         }
-                        if (txtCountyL_T_Add.Text != "")
+                        if (txtCountyTOADDR_L.Text != "")
                         {
-                            clsGlobals.strCountyL_T_Add = txtCountyL_T_Add.Text.ToString().Trim();
-                        }
-                        else
-                        {
-                            clsGlobals.strCountyL_T_Add = "0";
-                        }
-                        if (txtCountyR_F_Add.Text != "")
-                        {
-                            clsGlobals.strCountyR_F_Add = txtCountyR_F_Add.Text.ToString().Trim();
+                            clsGlobals.strCountyTOADDR_L = txtCountyTOADDR_L.Text.ToString().Trim();
                         }
                         else
                         {
-                            clsGlobals.strCountyR_F_Add = "0";
+                            clsGlobals.strCountyTOADDR_L = "0";
                         }
-                        if (txtCountyR_T_Add.Text != "")
+                        if (txtCountyFROMADDR_R.Text != "")
                         {
-                            clsGlobals.strCountyR_T_Add = txtCountyR_T_Add.Text.ToString().Trim();
+                            clsGlobals.strCountyFROMADDR_R = txtCountyFROMADDR_R.Text.ToString().Trim();
                         }
                         else
                         {
-                            clsGlobals.strCountyR_T_Add = "0";
+                            clsGlobals.strCountyFROMADDR_R = "0";
+                        }
+                        if (txtCountyTOADDR_R.Text != "")
+                        {
+                            clsGlobals.strCountyTOADDR_R = txtCountyTOADDR_R.Text.ToString().Trim();
+                        }
+                        else
+                        {
+                            clsGlobals.strCountyTOADDR_R = "0";
                         }
 
                         //check if null values in utrans streets, if so assign zero
@@ -2066,44 +2631,44 @@ namespace UtransEditorAGRC
                         strGoogleLogRightTo = "";
                         strGoogleLogRightFrom = "";
                         
-                        if (txtUtranL_T_Add.Text == "")
+                        if (txtUtranTOADDR_L.Text == "")
 	                    {
 		                    strGoogleLogLeftTo = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogLeftTo = txtUtranL_T_Add.Text;
+                            strGoogleLogLeftTo = txtUtranTOADDR_L.Text;
 	                    }
-                        if (txtUtranL_F_Add.Text == "")
+                        if (txtUtranFROMADDR_L.Text == "")
 	                    {
 		                     strGoogleLogLeftFrom = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogLeftFrom = txtUtranL_F_Add.Text;
+                            strGoogleLogLeftFrom = txtUtranFROMADDR_L.Text;
 	                    }
-                        if (txtUtranR_F_Add.Text == "")
+                        if (txtUtranFROMADDR_R.Text == "")
 	                    {
 		                    strGoogleLogRightFrom = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogRightFrom = txtUtranR_F_Add.Text;
+                            strGoogleLogRightFrom = txtUtranFROMADDR_R.Text;
 	                    }
-                        if (txtUtranR_T_Add.Text == "")
+                        if (txtUtranTOADDR_R.Text == "")
 	                    {
 		                    strGoogleLogRightTo = "0";
 	                    }
                         else
 	                    {
-                            strGoogleLogRightTo = txtUtranR_T_Add.Text;
+                            strGoogleLogRightTo = txtUtranTOADDR_R.Text;
 	                    }
 
                         // get city from muni layer for google doc city field
                         clsGlobals.strGoogleSpreadsheetCityField = getCityFromSpatialIntersect(arcCountyFeature);
 
                         //string together the agrc street segment
-                        clsGlobals.strAgrcSegment = strGoogleLogLeftFrom + "-" + strGoogleLogLeftTo + " " + strGoogleLogRightFrom + "-" + strGoogleLogRightTo + " " + txtUtranPreDir.Text.Trim() + " " + txtUtranStName.Text.Trim() + " " + txtUtranStType.Text.Trim() + " " + txtUtranSufDir.Text.Trim();
+                        clsGlobals.strAgrcSegment = strGoogleLogLeftFrom + "-" + strGoogleLogLeftTo + " " + strGoogleLogRightFrom + "-" + strGoogleLogRightTo + " " + txtUtranPreDir.Text.Trim() + " " + txtUtranStName.Text.Trim() + " " + txtUtranStType.Text.Trim() + " " + txtUtranPOSTDIR.Text.Trim();
 
                         //call the google api to transfer values to the spreadsheet
                         clsUtransEditorStaticClass.AddRowToGoogleSpreadsheet();
@@ -2142,30 +2707,36 @@ namespace UtransEditorAGRC
                         if (!ctrlCurrent.Tag.ToString().Contains("Co"))
                         {
                             //check for emptly values in the numeric fields and populate with zeros in utrans
-                            if (ctrlCurrent.Tag.ToString() == "L_F_ADD" & ctrlCurrent.Text.ToString() == "")
+                            if (ctrlCurrent.Tag.ToString() == "LeftFromAddress" & ctrlCurrent.Text.ToString() == "")
                             {
-                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), 0);
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
                             }
-                            else if (ctrlCurrent.Tag.ToString() == "L_T_ADD" & ctrlCurrent.Text.ToString() == "")
+                            else if (ctrlCurrent.Tag.ToString() == "LeftToAddress" & ctrlCurrent.Text.ToString() == "")
                             {
-                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), 0);
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
                             }
-                            else if (ctrlCurrent.Tag.ToString() == "R_F_ADD" & ctrlCurrent.Text.ToString() == "")
+                            else if (ctrlCurrent.Tag.ToString() == "RightFromAddress" & ctrlCurrent.Text.ToString() == "")
                             {
-                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), 0);
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
                             }
-                            else if (ctrlCurrent.Tag.ToString() == "R_T_ADD" & ctrlCurrent.Text.ToString() == "")
+                            else if (ctrlCurrent.Tag.ToString() == "RightToAddress" & ctrlCurrent.Text.ToString() == "")
                             {
-                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), 0);
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), 0);
                                 //break;
+                            }
+                            else if (ctrlCurrent.Tag.ToString() == "StreetName" & ctrlCurrent.Text.ToString().Contains("'")) // streetname contains an apostrophe, so remove it
+                            {
+                                // remove the apostrophe
+                                string strRemoveApostrophe = ctrlCurrent.Text.ToString().Replace("'","");
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), strRemoveApostrophe);
                             }
                             else
                             {
                                 //populate the field with the value in the corresponding textbox
-                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField(ctrlCurrent.Tag.ToString()), ctrlCurrent.Text.Trim());
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindFieldByAliasName(ctrlCurrent.Tag.ToString()), ctrlCurrent.Text.Trim());
                             }
                         }
                     }
@@ -2181,34 +2752,8 @@ namespace UtransEditorAGRC
                     arcUtransEdits_polyline.QueryPoint(esriSegmentExtension.esriNoExtension, 0.5, true, arcUtransEdits_midPoint);
                     //MessageBox.Show("The midpoint of the selected line segment is: " + arcUtransEdits_midPoint.X.ToString() + ", " + arcUtransEdits_midPoint.Y.ToString());
 
-                    // spatial intersect for the following fields: ADDR_SYS, ADDR_QUAD, ZIPLEFT, ZIPRIGHT, COFIPS (Maybe USPS_PLACE)
-                    // ADDR_SYS and ADDR_QUAD
-                    ISpatialFilter arcSpatialFilter = new SpatialFilter();
-                    arcSpatialFilter.Geometry = arcUtransEdits_midPoint;
-                    arcSpatialFilter.GeometryField = "SHAPE";
-                    arcSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
-                    arcSpatialFilter.SubFields = "*";
-
-                    IFeatureCursor arcAddrSysCursor = clsGlobals.arcFLayerAddrSysQuads.Search(arcSpatialFilter, false);
-                    IFeature arcFeatureAddrSys = arcAddrSysCursor.NextFeature();
-                    if (arcFeatureAddrSys != null)
-                    {
-                        //update the value in the utrans based on the intersect
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDR_SYS"), arcFeatureAddrSys.get_Value(arcFeatureAddrSys.Fields.FindField("GRID_NAME")).ToString().Trim());
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDR_QUAD"), arcFeatureAddrSys.get_Value(arcFeatureAddrSys.Fields.FindField("QUADRANT")).ToString().Trim());
-                    }
-                    else
-                    {
-                        MessageBox.Show("The midpoint of the street segment you are trying to update is not within an AddressSystemQuadrants.", "Whoa there Cowboy!");
-                        //give option to leave blank or abort edit operation and return
-                        //return;
-                    }
-                    //clear out variables
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcAddrSysCursor);
-                    arcAddrSysCursor = null;
-                    arcFeatureAddrSys = null;
-
-                    // ZIPLEFT and ZIPRIGHT (use iconstructpoint.constructoffset method to offset the midpoint of the line)
+                    // spatial intersect for right and left fields //
+                    // ZIPCODE_L and ZIPCODE_R (use iconstructpoint.constructoffset method to offset the midpoint of the line)
                     // test the iconstructpoint.constructtooffset mehtod
                     IConstructPoint arcConstructionPoint_posRight = new PointClass();
                     IConstructPoint arcConstructionPoint_negLeft = new PointClass();
@@ -2224,25 +2769,25 @@ namespace UtransEditorAGRC
                     //MessageBox.Show("for negative/left offset: " + outPoint_negLeft.X + " , " + outPoint_negLeft.Y);
 
 
-                    // LEFT - ZIP & MUNICIPALITY(SDE) //
-                    // query zipcode layer for a zip on left side of segment
-                    ISpatialFilter arcSpatialFilter_leftZip = new SpatialFilter();
-                    arcSpatialFilter_leftZip.Geometry = outPoint_negLeft;
-                    arcSpatialFilter_leftZip.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+                    // __LEFT SPATIAL FIELDS__ //
+                    ISpatialFilter arcSpatialFilter_left = new SpatialFilter();
+                    arcSpatialFilter_left.Geometry = outPoint_negLeft;
+                    arcSpatialFilter_left.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
 
-                    IFeatureCursor arcZipCursor_left = clsGlobals.arcFLayerZipCodes.Search(arcSpatialFilter_leftZip, false);
+                    // query ZIPCODE layer left
+                    IFeatureCursor arcZipCursor_left = clsGlobals.arcFLayerZipCodes.Search(arcSpatialFilter_left, false);
                     IFeature arcFeatureZip_left = arcZipCursor_left.NextFeature();
                     if (arcFeatureZip_left != null)
                     {
                         //update the value in the utrans based on the intersect
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPLEFT"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("ZIP5")));
-                        //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPRIGHT"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("ZIP5")));
-                        //maybe update the usps_place field as well with the "name" field from the zipcodes layer
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("USPS_PLACE"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("NAME")).ToString().Trim());
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPCODE_L"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("ZIP5")));
+                        //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPCODE_R"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("ZIP5")));
+                        //maybe update the POSTCOMM_L field as well with the "name" field from the zipcodes layer
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("POSTCOMM_L"), arcFeatureZip_left.get_Value(arcFeatureZip_left.Fields.FindField("NAME")).ToString().Trim().ToUpper());
                     }
                     else
                     {
-                        MessageBox.Show("A zipcode could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Whoa there Cowboy!");
+                        MessageBox.Show("A zipcode could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                         //give option to leave blank or abort edit operation and return
                         //return;
                     }
@@ -2253,107 +2798,346 @@ namespace UtransEditorAGRC
                     arcZipCursor_left = null;
                     arcFeatureZip_left = null;
 
-                    // query the municipal layer
-                    IFeatureCursor arcMuniCursor_left = clsGlobals.arcFLayerMunicipalities.Search(arcSpatialFilter_leftZip, false);
+
+                    // query the MNUI layer left
+                    IFeatureCursor arcMuniCursor_left = clsGlobals.arcFLayerMunicipalities.Search(arcSpatialFilter_left, false);
                     IFeature arcFeatureMuni_left = arcMuniCursor_left.NextFeature();
 
                     if (arcFeatureMuni_left != null)
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("L_CITY"), arcFeatureMuni_left.get_Value(arcFeatureMuni_left.Fields.FindField("NAME")));
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_L"), arcFeatureMuni_left.get_Value(arcFeatureMuni_left.Fields.FindField("NAME")).ToString().Trim());
                     }
                     else
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("L_CITY"), "");
-                        //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Whoa there Cowboy!");
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_L"), "");
+                        //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
+                    ////System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMuniCursor_left);
+                    ////arcMuniCursor_left = null;
+                    ////arcFeatureMuni_left = null;
+                    //////arcSpatialFilter_left = null;
 
+
+                    // query the ADDRESS SYSTEM layer left
+                    IFeatureCursor arcAddrSysCursor_left = clsGlobals.arcFLayerAddrSysQuads.Search(arcSpatialFilter_left, false);
+                    IFeature arcFeatureAddrSys_left = arcAddrSysCursor_left.NextFeature();
+
+                    if (arcFeatureAddrSys_left != null)
+                    {
+                        // get the grid name, then title case it so it conforms to the domain values
+                        string gridName = arcFeatureAddrSys_left.get_Value(arcFeatureAddrSys_left.Fields.FindField("GRID_NAME")).ToString().Trim();
+                        string gridName_TitleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(gridName.ToLower());
+
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_L"), gridName_TitleCase.Trim());
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_L"), arcFeatureAddrSys_left.get_Value(arcFeatureAddrSys_left.Fields.FindField("QUADRANT")).ToString().ToUpper().Trim());
+                    }
+                    else
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_L"), "");
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_L"), "");
+                        //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
+                    }
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcAddrSysCursor_left);
+                    arcAddrSysCursor_left = null;
+                    arcFeatureAddrSys_left = null;
+                    //arcSpatialFilter_left = null;
+
+
+                    // query the COUNTY layer left
+                    IFeatureCursor arcCountyCursor_left = clsGlobals.arcFLayerCounties.Search(arcSpatialFilter_left, false);
+                    IFeature arcFeatureCounty_left = arcCountyCursor_left.NextFeature();
+
+                    if (arcFeatureCounty_left != null)
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COUNTY_L"), arcFeatureCounty_left.get_Value(arcFeatureCounty_left.Fields.FindField("FIPS_STR")));
+                    }
+                    else
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COUNTY_L"), "");
+                        MessageBox.Show("A county could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
+                        //MessageBox.Show("A Municipality/City could not be found on the left side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
+                    }
+                    ////System.Runtime.InteropServices.Marshal.ReleaseComObject(arcCountyCursor_left);
+                    ////arcCountyCursor_left = null;
+                    ////arcFeatureCounty_left = null;
+                    //////arcSpatialFilter_left = null;
+
+
+                    // query the UNINCCOM layer left
+                    IFeatureCursor arcMetroAreasCursor_left = clsGlobals.arcFLayerMetroTwnShips.Search(arcSpatialFilter_left, false);
+                    IFeature arcFeatureMetroAreas_left = arcMetroAreasCursor_left.NextFeature();
+
+                    if (arcFeatureMetroAreas_left != null)
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), arcFeatureMetroAreas_left.get_Value(arcFeatureMetroAreas_left.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
+                    }
+                    else
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), "");
+                    }
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_left);
+                    arcMetroAreasCursor_left = null;
+                    arcFeatureMetroAreas_left = null;
+                    //arcSpatialFilter_left = null;
+
+                    // assign DOT_OWN_L field
+                    // if dot_rtname like '0%' then it's udot, if not then check for muni, if not muni then use county
+                    if (checkIfUdotStreet.StartsWith("0"))
+                    {
+                        // then it's a udot street
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_L"), "UDOT");
+                    }
+                    else
+                    {
+                        // it's not a udot street so make other checks...
+                        // check if there's a left muni
+                        if (arcFeatureMuni_left != null)
+                        {
+                            arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_L"), "MU " + arcFeatureMuni_left.get_Value(arcFeatureMuni_left.Fields.FindField("NAME")).ToString().Trim());
+                        }
+                        else
+                        {
+                            // use the county number to get the name
+                            if (arcFeatureCounty_left != null)
+                            {
+                                // get the county name from number
+                                string countyDOTOwnName = getCountyNameFromNumber(arcFeatureCounty_left.get_Value(arcFeatureCounty_left.Fields.FindField("FIPS_STR")).ToString());
+                                // assign county value
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_L"), countyDOTOwnName);
+                            }
+                            else
+                            {
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_L"), "");
+                            }
+                        }
+                    }
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMuniCursor_left);
                     arcMuniCursor_left = null;
                     arcFeatureMuni_left = null;
-                    arcSpatialFilter_leftZip = null;
+                    //arcSpatialFilter_left = null;
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcCountyCursor_left);
+                    arcCountyCursor_left = null;
+                    arcFeatureCounty_left = null;
+                    //arcSpatialFilter_left = null;
 
 
-                    // RIGHT ZIP & MUNICIPALITY(SDE) //
-                    // query zipcode layer for a zipcode on right side of segment // 
-                    ISpatialFilter arcSpatialFilter_rightZip = new SpatialFilter();
-                    arcSpatialFilter_rightZip.Geometry = outPoint_posRight;
-                    arcSpatialFilter_rightZip.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+                    // __RIGHT SPATIAL FIELDS__ //
+                    ISpatialFilter arcSpatialFilter_right = new SpatialFilter();
+                    arcSpatialFilter_right.Geometry = outPoint_posRight;
+                    arcSpatialFilter_right.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
 
-                    IFeatureCursor arcZipCursor_right = clsGlobals.arcFLayerZipCodes.Search(arcSpatialFilter_rightZip, false);
+                    // query ZIPCODE layer right
+                    IFeatureCursor arcZipCursor_right = clsGlobals.arcFLayerZipCodes.Search(arcSpatialFilter_right, false);
                     IFeature arcFeatureZip_right = arcZipCursor_right.NextFeature();
                     if (arcFeatureZip_right != null)
                     {
                         //update the value in the utrans based on the intersect
-                        //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPLEFT"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("ZIP5")));
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPRIGHT"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("ZIP5")));
-                        //maybe update the usps_place field as well with the "name" field from the zipcodes layer
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("USPS_PLACE"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("NAME")).ToString().Trim());
+                        //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPCODE_L"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("ZIP5")));
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ZIPCODE_R"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("ZIP5")));
+                        //maybe update the POSTCOMM_L field as well with the "name" field from the zipcodes layer
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("POSTCOMM_L"), arcFeatureZip_right.get_Value(arcFeatureZip_right.Fields.FindField("NAME")).ToString().Trim().ToUpper());
                     }
                     else
                     {
-                        MessageBox.Show("A zipcode could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Whoa there Cowboy!");
+                        MessageBox.Show("A zipcode could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                         //give option to leave blank or abort edit operation and return
                         //return;
                     }
                     //clear out variables
                     // release the cursor
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatureZip_right);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcZipCursor_right);
                     //GC.Collect();
                     arcFeatureZip_right = null;
-                    arcFeatureZip_right = null;
 
-                    // query the municipal layer
-                    IFeatureCursor arcMuniCursor_right = clsGlobals.arcFLayerMunicipalities.Search(arcSpatialFilter_rightZip, false);
+
+                    // query the MUNI layer right
+                    IFeatureCursor arcMuniCursor_right = clsGlobals.arcFLayerMunicipalities.Search(arcSpatialFilter_right, false);
                     IFeature arcFeatureMuni_right = arcMuniCursor_right.NextFeature();
 
                     if (arcFeatureMuni_right != null)
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("R_CITY"), arcFeatureMuni_right.get_Value(arcFeatureMuni_right.Fields.FindField("NAME")));
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_R"), arcFeatureMuni_right.get_Value(arcFeatureMuni_right.Fields.FindField("NAME")).ToString().Trim());
                     }
                     else
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("R_CITY"), "");
-                        //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Whoa there Cowboy!");
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("INCMUNI_R"), "");
+                        //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
                     }
+                    ////System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMuniCursor_right);
+                    ////arcMuniCursor_right = null;
+                    ////arcFeatureMuni_right = null;
+                    //////arcSpatialFilter_right = null;
 
+
+                    // query the ADDRESS SYSTEM layer right
+                    IFeatureCursor arcAddrSysCursor_right = clsGlobals.arcFLayerAddrSysQuads.Search(arcSpatialFilter_right, false);
+                    IFeature arcFeatureAddrSys_right = arcAddrSysCursor_right.NextFeature();
+
+                    if (arcFeatureAddrSys_right != null)
+                    {
+                        // get the grid name, then title case it so it conforms to the domain values
+                        string gridName = arcFeatureAddrSys_right.get_Value(arcFeatureAddrSys_right.Fields.FindField("GRID_NAME")).ToString().Trim();
+                        string gridName_TitleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(gridName.ToLower());
+
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_R"), gridName_TitleCase.Trim());
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_R"), arcFeatureAddrSys_right.get_Value(arcFeatureAddrSys_right.Fields.FindField("QUADRANT")).ToString().ToUpper().Trim());
+                    }
+                    else
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_R"), "");
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_R"), "");
+                        //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
+                    }
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcAddrSysCursor_right);
+                    arcAddrSysCursor_right = null;
+                    arcFeatureAddrSys_right = null;
+                    //arcSpatialFilter_right = null;
+
+
+                    // query the COUNTY layer right
+                    IFeatureCursor arcCountyCursor_right = clsGlobals.arcFLayerCounties.Search(arcSpatialFilter_right, false);
+                    IFeature arcFeatureCounty_right = arcCountyCursor_right.NextFeature();
+
+                    if (arcFeatureCounty_right != null)
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COUNTY_R"), arcFeatureCounty_right.get_Value(arcFeatureCounty_right.Fields.FindField("FIPS_STR")));
+                    }
+                    else
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COUNTY_R"), "");
+                        MessageBox.Show("A county could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
+                        //MessageBox.Show("A Municipality/City could not be found on the right side of the segment - based on the segment's midpoint with a 15 meter offset.", "Easy there Turbo!");
+                    }
+                    //System.Runtime.InteropServices.Marshal.ReleaseComObject(arcCountyCursor_right);
+                    //arcCountyCursor_right = null;
+                    //arcFeatureCounty_right = null;
+                    ////arcSpatialFilter_right = null;
+
+
+                    // query the UNINCCOM layer right
+                    IFeatureCursor arcMetroAreasCursor_right = clsGlobals.arcFLayerMetroTwnShips.Search(arcSpatialFilter_right, false);
+                    IFeature arcFeatureMetroAreas_right = arcMetroAreasCursor_right.NextFeature();
+
+                    if (arcFeatureMetroAreas_right != null)
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), arcFeatureMetroAreas_right.get_Value(arcFeatureMetroAreas_right.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
+                    }
+                    else
+                    {
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), "");
+                    }
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_right);
+                    arcMetroAreasCursor_right = null;
+                    arcFeatureMetroAreas_right = null;
+                    //arcSpatialFilter_right = null;
+
+
+                    // assign DOT_OWN_R field
+                    // if dot_rtname like '0%' then it's udot, if not then check for muni, if not muni then use county
+                    if (checkIfUdotStreet.StartsWith("0"))
+                    {
+                        // then it's a udot street
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_R"), "UDOT");
+                    }
+                    else
+                    {
+                        // it's not a udot street so make other checks...
+                        // check if there's a right muni
+                        if (arcFeatureMuni_right != null)
+                        {
+                            arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_R"), "MU " + arcFeatureMuni_right.get_Value(arcFeatureMuni_right.Fields.FindField("NAME")).ToString().Trim());
+                        }
+                        else
+                        {
+                            // use the county number to get the name
+                            if (arcFeatureCounty_right != null)
+                            {
+                                // get the county name from number
+                                string countyDOTOwnName = getCountyNameFromNumber(arcFeatureCounty_right.get_Value(arcFeatureCounty_right.Fields.FindField("FIPS_STR")).ToString());
+                                // assign county value
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_R"), countyDOTOwnName);
+                            }
+                            else
+                            {
+                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("DOT_OWN_R"), "");
+                            }
+                        }
+                    }
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcCountyCursor_right);
+                    arcCountyCursor_right = null;
+                    arcFeatureCounty_right = null;
+                    //arcSpatialFilter_right = null;
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMuniCursor_right);
                     arcMuniCursor_right = null;
                     arcFeatureMuni_right = null;
-                    arcSpatialFilter_rightZip = null;
+                    //arcSpatialFilter_right = null;
 
-                    // null out the offset points
+
+                    // null out the offset points and spatial filters
                     outPoint_posRight = null;
                     outPoint_negLeft = null;
+                    arcSpatialFilter_right = null;
+                    arcSpatialFilter_left = null;
 
-                    // COFIPS
-                    IFeatureCursor arcCountiesCursor = clsGlobals.arcFLayerCounties.Search(arcSpatialFilter, false);
-                    IFeature arcFeature_County = arcCountiesCursor.NextFeature();
-                    if (arcFeature_County != null)
-                    {
-                        //update the value in the utrans based on the intersect
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COFIPS"), arcFeature_County.get_Value(arcFeature_County.Fields.FindField("FIPS_STR")));
-                    }
-                    else
-                    {
-                        MessageBox.Show("The midpoint of the street segment you are trying to update is not within a County.", "Whoa there Cowboy!");
-                        //give option to leave blank or abort edit operation and return
-                        //return;
-                    }
-                    //clear out variables
-                    arcCountiesCursor = null;
-                    arcFeature_County = null;
+
+                    ////// THIS CODE IS FOR NON RIGHT/LEFT FIELDS, WHICH WE NOLONGER HAVE IN THE NEW NG SCHEMA //
+                    ////// ADDRSYS_L and QUADRANT_L
+                    ////ISpatialFilter arcSpatialFilter = new SpatialFilter();
+                    ////arcSpatialFilter.Geometry = arcUtransEdits_midPoint;
+                    ////arcSpatialFilter.GeometryField = "SHAPE";
+                    ////arcSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+                    ////arcSpatialFilter.SubFields = "*";
+
+                    ////IFeatureCursor arcAddrSysCursor = clsGlobals.arcFLayerAddrSysQuads.Search(arcSpatialFilter, false);
+                    ////IFeature arcFeatureAddrSys = arcAddrSysCursor.NextFeature();
+                    ////if (arcFeatureAddrSys != null)
+                    ////{
+                    ////    //update the value in the utrans based on the intersect
+                    ////    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ADDRSYS_L"), arcFeatureAddrSys.get_Value(arcFeatureAddrSys.Fields.FindField("GRID_NAME")).ToString().Trim());
+                    ////    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("QUADRANT_L"), arcFeatureAddrSys.get_Value(arcFeatureAddrSys.Fields.FindField("QUADRANT")).ToString().Trim());
+                    ////}
+                    ////else
+                    ////{
+                    ////    MessageBox.Show("The midpoint of the street segment you are trying to update is not within an AddressSystemQuadrants.", "Easy there Turbo!");
+                    ////    //give option to leave blank or abort edit operation and return
+                    ////    //return;
+                    ////}
+                    //////clear out variables
+                    ////System.Runtime.InteropServices.Marshal.ReleaseComObject(arcAddrSysCursor);
+                    ////arcAddrSysCursor = null;
+                    ////arcFeatureAddrSys = null;
+
+                    ////// COUNTY_L
+                    ////IFeatureCursor arcCountiesCursor = clsGlobals.arcFLayerCounties.Search(arcSpatialFilter, false);
+                    ////IFeature arcFeature_County = arcCountiesCursor.NextFeature();
+                    ////if (arcFeature_County != null)
+                    ////{
+                    ////    //update the value in the utrans based on the intersect
+                    ////    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("COUNTY_L"), arcFeature_County.get_Value(arcFeature_County.Fields.FindField("FIPS_STR")));
+                    ////}
+                    ////else
+                    ////{
+                    ////    MessageBox.Show("The midpoint of the street segment you are trying to update is not within a County.", "Easy there Turbo!");
+                    ////    //give option to leave blank or abort edit operation and return
+                    ////    //return;
+                    ////}
+                    //////clear out variables
+                    ////arcCountiesCursor = null;
+                    ////arcFeature_County = null;
+
+
 
                     // FULLNAME //
                     //check if street name is numeric
                     int intStName;
                     if (int.TryParse(txtUtranStName.Text, out intStName))
                     {
-                        string strFullNameNumeric = txtUtranStName.Text.Trim() + " " + txtUtranSufDir.Text.Trim();
+                        string strFullNameNumeric = txtUtranStName.Text.Trim() + " " + txtUtranPOSTDIR.Text.Trim();
 
-                        //check if sufdir is populated and sttype is not
-                        if (txtUtranSufDir.Text == "" | txtUtranStType.Text != "")
+                        //check if POSTDIR is populated and sttype is not
+                        if (txtUtranPOSTDIR.Text == "" | txtUtranStType.Text != "")
                         {
-                            DialogResult dialogResult2 = MessageBox.Show("Format Warning!  You are saving a numberic street but have conflict with either SUFDIR or STREETTYPE." + Environment.NewLine + "Numberic Streets typically require a SUFDIR value and not a STREETTYPE value." + Environment.NewLine + Environment.NewLine + "Would you like to continue with the save?", "Format Warning!", MessageBoxButtons.YesNo);
+                            DialogResult dialogResult2 = MessageBox.Show("Format Warning!  You are saving a numberic street but have conflict with either POSTDIR or POSTTYPE." + Environment.NewLine + "Numberic Streets typically require a POSTDIR value and not a POSTTYPE value." + Environment.NewLine + Environment.NewLine + "Would you like to continue with the save?", "Format Warning!", MessageBoxButtons.YesNo);
                             if (dialogResult2 == DialogResult.Yes)
                             {
                                 arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("FULLNAME"), strFullNameNumeric.Trim());
@@ -2372,10 +3156,10 @@ namespace UtransEditorAGRC
                     {
                         string strFullNameAlpha = txtUtranStName.Text.Trim() + " " + txtUtranStType.Text.Trim();
 
-                        //check if sttype is populated and sufdir is not
-                        if (txtUtranSufDir.Text != "" | txtUtranStType.Text == "")
+                        //check if sttype is populated and POSTDIR is not
+                        if (txtUtranPOSTDIR.Text != "" | txtUtranStType.Text == "")
                         {
-                            DialogResult dialogResult3 = MessageBox.Show("Format Warning!  You are saving an alphabetic street but have conflict with either SUFDIR or STREETTYPE." + Environment.NewLine + "Alphabetic Streets typically require a STREETTYPE and often do not include a SUFDIR value." + Environment.NewLine + Environment.NewLine + "Would you like to continue with the save?", "Format Warning!", MessageBoxButtons.YesNo);
+                            DialogResult dialogResult3 = MessageBox.Show("Format Warning!  You are saving an alphabetic street but have conflict with either POSTDIR or POSTTYPE." + Environment.NewLine + "Alphabetic Streets typically require a POSTTYPE and often do not include a POSTDIR value." + Environment.NewLine + Environment.NewLine + "Would you like to continue with the save?", "Format Warning!", MessageBoxButtons.YesNo);
                             if (dialogResult3 == DialogResult.Yes)
                             {
                                 arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("FULLNAME"), strFullNameAlpha.Trim());
@@ -2392,27 +3176,57 @@ namespace UtransEditorAGRC
                     }
 
                     // ACSALIAS //
-                    string strAscAlias = txtUtransAcsName.Text.Trim() + " " + txtUtransAcsSuf.Text.Trim();
-                    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ACSALIAS"), strAscAlias.Trim());
+                    //string strAscAlias = txtUtransAN_NAME.Text.Trim() + " " + txtUtransAN_POSTDIR.Text.Trim();
+                    //arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ACSALIAS"), strAscAlias.Trim());
 
-                    // CARTOCODE
-                    if (cboCartoCode.SelectedIndex == 15) //this is the 99 value
+                    // CARTOCODE //
+                    if (cboCartoCode.SelectedIndex == -1)
                     {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("CARTOCODE"), 99);
-                    }
-                    else if (cboCartoCode.SelectedIndex == -1)
-                    {
+                        // the user did not specify a list item
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("CARTOCODE"), null);
-                    }
-                    else if (cboCartoCode.SelectedIndex == 16) //don't add one (as done in the else) to this case b/c of the 99 value throws-off the index thing, so it's 16
-                    {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("CARTOCODE"), 16);
                     }
                     else
                     {
+                        // use the list item number and add one b/c it's zero-based
                         arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("CARTOCODE"), (cboCartoCode.SelectedIndex + 1));
                     }
-                    
+
+                    // ONEWAY //
+                    if (cboOneWay.SelectedIndex == -1)
+                    {
+                        // the user did not specify a list item
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ONEWAY"), null);
+                    }
+                    else
+                    {
+                        // use the list item number b/c it's zero-based
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("ONEWAY"), (cboOneWay.SelectedIndex));
+                    }
+
+                    // VERT_LEVEL //
+                    if (cboVertLevel.SelectedIndex == -1)
+                    {
+                        // the user did not specify a list item
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("VERT_LEVEL"), null);
+                    }
+                    else
+                    {
+                        // use the list item number b/c it's zero-based
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("VERT_LEVEL"), (cboVertLevel.SelectedIndex));
+                    }
+
+                    // SPEED_LMT //
+                    if (cboSpeed.SelectedIndex == -1)
+                    {
+                        // the user did not specify a list item
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("SPEED_LMT"), null);
+                    }
+                    else
+                    {
+                        // use the list item number b/c it's zero-based
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("SPEED_LMT"), (cboSpeed.SelectedItem.ToString()));
+                    }
+
                     //store the feature if not a duplicate
                     arcUtransEdit_Feature.Store();
 
@@ -2632,7 +3446,8 @@ namespace UtransEditorAGRC
 
                 //create query filter to get the new segment (from county fc)
                 IQueryFilter arcQueryFilter_loadSegment = new QueryFilter();
-                arcQueryFilter_loadSegment.SubFields = "Shape,ZIPLEFT,ZIPRIGHT,L_F_ADD,L_T_ADD,R_F_ADD,R_T_ADD,PREDIR,STREETNAME,STREETTYPE,SUFDIR,ALIAS1,ALIAS1TYPE,ALIAS2,ALIAS2TYPE,ACSALIAS,ACSNAME,ACSSUF,USPS_PLACE,ONEWAY,SPEED,VERTLEVEL,CLASS,MODIFYDATE,COLLDATE,ACCURACY,SOURCE,NOTES,STATUS,ACCESS,USAGENOTES,BIKE_L,BIKE_R,BIKE_NOTES,BIKE_STATUS,GRID1MIL,GRID100K";
+                arcQueryFilter_loadSegment.SubFields = "Shape,STATUS,CARTOCODE,FULLNAME,FROMADDR_L,TOADDR_L,FROMADDR_R,TOADDR_R,PARITY_L,PARITY_R,PREDIR,NAME,POSTTYPE,POSTDIR,AN_NAME,AN_POSTDIR,A1_PREDIR,A1_NAME,A1_POSTTYPE,A1_POSTDIR,A2_PREDIR,A2_NAME,A2_POSTTYPE,A2_POSTDIR,QUADRANT_L,QUADRANT_R,STATE_L,STATE_R,COUNTY_L,COUNTY_R,ADDRSYS_L,ADDRSYS_R,POSTCOMM_L,POSTCOMM_R,ZIPCODE_L,ZIPCODE_R,INCMUNI_L,INCMUNI_R,UNINCCOM_L,UNINCCOM_R,NBRHDCOM_L,NBRHDCOM_R,ER_CAD_ZONES,ESN_L,ESN_R,MSAGCOMM_L,MSAGCOMM_R,ONEWAY,VERT_LEVEL,SPEED_LMT,ACCESSCODE,DOT_HWYNAM,DOT_RTNAME,DOT_RTPART,DOT_F_MILE,DOT_T_MILE,DOT_FCLASS,DOT_SRFTYP,DOT_CLASS,DOT_OWN_L,DOT_OWN_R,DOT_AADT,DOT_AADTYR,DOT_THRULANES,BIKE_L,BIKE_R,BIKE_PLN_L,BIKE_PLN_R,BIKE_REGPR,BIKE_NOTES,UNIQUE_ID,LOCAL_UID,UTAHRD_UID,SOURCE,UPDATED,EFFECTIVE,EXPIRE,CREATED,CREATOR,EDITOR,CUSTOMTAGS";
+                //OLD SCHEMA >> arcQueryFilter_loadSegment.SubFields = "Shape,ZIPCODE_L,ZIPCODE_R,FROMADDR_L,TOADDR_L,FROMADDR_R,TOADDR_R,PREDIR,NAME,POSTTYPE,POSTDIR,A1_PREDIR,A1_NAME,A1_POSTTYPE,A1_POSTDIR,A2_PREDIR,A2_NAME,A2_POSTTYPE,A2_POSTDIR,AN_NAME,AN_POSTDIR,POSTCOMM_L,ONEWAY,SPEED_LMT_LMT,VERT_LEVEL,DOT_CLASS,MODIFYDATE,COLLDATE,ACCURACY,SOURCE,NOTES,STATUS,ACCESS,USAGENOTES,BIKE_L,BIKE_R,BIKE_NOTES,BIKE_STATUS,GRID1MIL,GRID100K";
                 arcQueryFilter_loadSegment.WhereClause = "OBJECTID = " + strCountyOID;
 
                 //get the county roads segment for quering new utrans street segment below
@@ -2686,66 +3501,66 @@ namespace UtransEditorAGRC
 
 
                 //create variables for the address range where clause, in case empty values
-                string strL_F_add = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("L_F_ADD")).ToString().Trim();
-                string strL_T_add = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("L_T_ADD")).ToString().Trim();
-                string strR_F_add = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("R_F_ADD")).ToString().Trim();
-                string strR_T_add = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("R_T_ADD")).ToString().Trim();
+                string strFROMADDR_L = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("FROMADDR_L")).ToString().Trim();
+                string strTOADDR_L = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("TOADDR_L")).ToString().Trim();
+                string strFROMADDR_R = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("FROMADDR_R")).ToString().Trim();
+                string strTOADDR_R = arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("TOADDR_R")).ToString().Trim();
 
 
                 //check for road segment has empty values for street range, if so pass in zero in where clause
-                if (strL_F_add == "")
+                if (strFROMADDR_L == "")
                 {
-                    strL_F_add = "is null";
+                    strFROMADDR_L = "is null";
                 }
                 else
                 {
-                    strL_F_add = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("L_F_ADD")).ToString();
+                    strFROMADDR_L = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("FROMADDR_L")).ToString();
                 }
 
-                if (strL_T_add == "")
+                if (strTOADDR_L == "")
                 {
-                    strL_T_add = "is null";
+                    strTOADDR_L = "is null";
                 }
                 else
                 {
-                    strL_T_add = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("L_T_ADD")).ToString();
+                    strTOADDR_L = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("TOADDR_L")).ToString();
                 }
 
-                if (strR_F_add == "")
+                if (strFROMADDR_R == "")
                 {
-                    strR_F_add = "is null";
+                    strFROMADDR_R = "is null";
                 }
                 else
                 {
-                    strR_F_add = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("R_F_ADD")).ToString();
+                    strFROMADDR_R = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("FROMADDR_R")).ToString();
                 }
 
-                if (strR_T_add == "")
+                if (strTOADDR_R == "")
                 {
-                    strR_T_add = "is null";
+                    strTOADDR_R = "is null";
                 }
                 else
                 {
-                    strR_T_add = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("R_T_ADD")).ToString();
+                    strTOADDR_R = "= " + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("TOADDR_R")).ToString();
                 }
 
                 //select the new feature in the utrans database - based on values in the county street layer
                 IQueryFilter arcQueryFilterNewUtransSegment = new QueryFilter();
                 arcQueryFilterNewUtransSegment.WhereClause =
-                    "L_F_ADD " + strL_F_add +
-                    " AND L_T_ADD " + strL_T_add +
-                    " AND R_F_ADD " + strR_F_add +
-                    " AND R_T_ADD " + strR_T_add +
+                    "FROMADDR_L " + strFROMADDR_L +
+                    " AND TOADDR_L " + strTOADDR_L +
+                    " AND FROMADDR_R " + strFROMADDR_R +
+                    " AND TOADDR_R " + strTOADDR_R +
                     " AND PREDIR = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("PREDIR")) + "'" +
-                    " AND STREETNAME = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("STREETNAME")) + "'" +
-                    " AND STREETTYPE = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("STREETTYPE")) + "'" +
-                    " AND SUFDIR = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("SUFDIR")) + "'";
-                    //" AND ALIAS1 = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("ALIAS1")) + "'" +
-                    //" AND ALIAS1TYPE = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("ALIAS1TYPE")) + "'" +
-                    //" AND ALIAS2 = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("ALIAS2")) + "'" +
-                    //" AND ALIAS2TYPE = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("ALIAS2TYPE")) + "'" +
+                    " AND NAME = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("NAME")) + "'" +
+                    " AND POSTTYPE = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("POSTTYPE")) + "'" +
+                    " AND POSTDIR = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("POSTDIR")) + "'";
+                    //" AND A1_NAME = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("A1_NAME")) + "'" +
+                    //" AND A1_POSTTYPE = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("A1_POSTTYPE")) + "'" +
+                    //" AND A2_NAME = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("A2_NAME")) + "'" +
+                    //" AND A2_POSTTYPE = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("A2_POSTTYPE")) + "'" +
                     //" AND ACSALIAS = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("ACSALIAS")) + "'" +
-                    //" AND ACSSUF = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("ACSSUF")) + "'";
+                    //" AND AN_POSTDIR = '" + arcFeature_CountyLoadSegment.get_Value(arcFeature_CountyLoadSegment.Fields.FindField("AN_POSTDIR")) + "'";
 
                 //create feature cursor for getting new road segment 
                 IFeatureCursor arcFeatCur_UtransNewSegment = clsGlobals.arcGeoFLayerUtransStreets.SearchDisplayFeatures(arcQueryFilterNewUtransSegment, false);
@@ -2853,8 +3668,7 @@ namespace UtransEditorAGRC
         }
 
 
-
-        //this method is called if the user selects something in the cartocode combobox
+        //these methods check if edits are about to happen on the combobox data, and if so make the field name label bold
         private void cboCartoCode_SelectedIndexChanged(object sender, EventArgs e)
         {
             //make label bold if the selected index is different from intial index (from on-selection-changed)
@@ -2868,12 +3682,51 @@ namespace UtransEditorAGRC
                 groupBox5.Font = fontLabelRegular;
                 cboCartoCode.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
             }
-            
             //fontLabelHasEdits.Dispose();
             //fontLabelRegular.Dispose();
-            
         }
-
+        private void cboVertLevel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //make label bold if the selected index is different from intial index (from on-selection-changed)
+            if (intUtransInitialVertLevelIndex != cboVertLevel.SelectedIndex)
+            {
+                groupBox9.Font = fontLabelHasEdits;
+                cboVertLevel.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
+            }
+            else
+            {
+                groupBox9.Font = fontLabelRegular;
+                cboVertLevel.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
+            }
+        }
+        private void cboOneWay_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //make label bold if the selected index is different from intial index (from on-selection-changed)
+            if (intUtransInitialOneWayIndex != cboOneWay.SelectedIndex)
+            {
+                groupBox8.Font = fontLabelHasEdits;
+                cboOneWay.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
+            }
+            else
+            {
+                groupBox8.Font = fontLabelRegular;
+                cboOneWay.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
+            }
+        }
+        private void cboSpeed_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //make label bold if the selected index is different from intial index (from on-selection-changed)
+            if (intUtransInitialSpeedLmtIndex != cboSpeed.SelectedIndex)
+            {
+                groupBox10.Font = fontLabelHasEdits;
+                cboSpeed.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
+            }
+            else
+            {
+                groupBox10.Font = fontLabelRegular;
+                cboSpeed.Font = fontLabelRegular; // for some reason you have to set it to regular each time or it's bold - maybe b/c it's a child of groupbox
+            }
+        }
 
 
         // this method is called when the update oid button is clicked
@@ -2940,7 +3793,7 @@ namespace UtransEditorAGRC
                 }
                 else
                 {
-                    MessageBox.Show("Please select only ONE feature from the UTRANS.TRANSADMIN.StatewideStreets layer.  Note that the feature must overlap the selected DFC_RESULT segment.");
+                    MessageBox.Show("Please select only ONE feature from the UTRANS.TRANSADMIN.Roads_Edit layer.  Note that the feature must overlap the selected DFC_RESULT segment.");
                     return;
                 }
 
@@ -3212,8 +4065,8 @@ namespace UtransEditorAGRC
                 arcPolyline.QueryPoint(esriSegmentExtension.esriNoExtension, 0.5, true, arcMidPoint);
                 //MessageBox.Show("The midpoint of the selected line segment is: " + arcUtransEdits_midPoint.X.ToString() + ", " + arcUtransEdits_midPoint.Y.ToString());
 
-                // spatial intersect for the following fields: ADDR_SYS, ADDR_QUAD, ZIPLEFT, ZIPRIGHT, COFIPS (Maybe USPS_PLACE)
-                // ADDR_SYS and ADDR_QUAD
+                // spatial intersect for the following fields: ADDRSYS_L, QUADRANT_L, ZIPCODE_L, ZIPCODE_R, COUNTY_L (Maybe POSTCOMM_L)
+                // ADDRSYS_L and QUADRANT_L
                 ISpatialFilter arcSpatialFilterCity = new SpatialFilter();
                 arcSpatialFilterCity.Geometry = arcMidPoint;
                 arcSpatialFilterCity.GeometryField = "SHAPE";
@@ -3278,7 +4131,78 @@ namespace UtransEditorAGRC
 
         }
 
+        private void lblStName_Click(object sender, EventArgs e)
+        {
 
+        }
 
+        private void groupBox8_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private string getCountyNameFromNumber(string countyNumber)
+        {
+            if (countyNumber == "49001")
+                return "CO Beaver";
+            else if (countyNumber == "49003")
+                return "CO Box Elder";
+            else if (countyNumber == "49005")
+                return "CO Cache";
+            else if (countyNumber == "49007")
+                return "CO Carbon";
+            else if (countyNumber == "49009")
+                return "CO Daggett";
+            else if (countyNumber == "49011")
+                return "CO Davis";
+            else if (countyNumber == "49013")
+                return "CO Duchesne";
+            else if (countyNumber == "49015")
+                return "CO Emery";
+            else if (countyNumber == "49017")
+                return "CO Garfield";
+            else if (countyNumber == "49019")
+                return "CO Grand";
+            else if (countyNumber == "49021")
+                return "CO Iron";
+            else if (countyNumber == "49023")
+                return "CO Juab";
+            else if (countyNumber == "49025")
+                return "CO Kane";
+            else if (countyNumber == "49027")
+                return "CO Millard";
+            else if (countyNumber == "49029")
+                return "CO Morgan";
+            else if (countyNumber == "49031")
+                return "CO Piute";
+            else if (countyNumber == "49033")
+                return "CO Rich";
+            else if (countyNumber == "49035")
+                return "CO Salt Lake";
+            else if (countyNumber == "49037")
+                return "CO San Juan";
+            else if (countyNumber == "49039")
+                return "CO Sanpete";
+            else if (countyNumber == "49041")
+                return "CO Sevier";
+            else if (countyNumber == "49043")
+                return "CO Summit";
+            else if (countyNumber == "49045")
+                return "CO Tooele";
+            else if (countyNumber == "49047")
+                return "CO Uintah";
+            else if (countyNumber == "49049")
+                return "CO Utah";
+            else if (countyNumber == "49051")
+                return "CO Wasatch";
+            else if (countyNumber == "49053")
+                return "CO Washington";
+            else if (countyNumber == "49055")
+                return "CO Wayne";
+            else if (countyNumber == "49057")
+                return "CO Weber";
+            else
+                return "";
+        }
     }
 }

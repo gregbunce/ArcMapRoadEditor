@@ -21,7 +21,7 @@ namespace UtransEditorAGRC
         IFeatureLayer arcFL_DFC = null;
         IFeatureLayer arcFL_IgnoreFGDB = null;
         IFeature arcFeat_DFC = null;
-        //string[] strCOFIPS_Array;
+        //string[] strCOUNTY_L_Array;
 
         public ExportToIgnoreFC()
         {
@@ -131,18 +131,18 @@ namespace UtransEditorAGRC
                     }
                     if (arcFL_UtransStreet == null)
                     {
-                        MessageBox.Show("Please select the correct layer for UTRANS.StatewideStreets", "Layer Name Issue", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Please select the correct layer for UTRANS.Roads_Edit", "Layer Name Issue", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
 
-                    // split the cofips value to get out the number
-                    string strCOFIPS_Combobox = null;
-                    string[] strCOFIPS_Array = null;
-                    string strCOFIPS_Number = null;
-                    strCOFIPS_Combobox = cboCountyName.Text;
-                    strCOFIPS_Array = strCOFIPS_Combobox.Split('-');
-                    strCOFIPS_Number = strCOFIPS_Array[0].ToString().Trim();
+                    // split the COUNTY_L value to get out the number
+                    string strCOUNTY_L_Combobox = null;
+                    string[] strCOUNTY_L_Array = null;
+                    string strCOUNTY_L_Number = null;
+                    strCOUNTY_L_Combobox = cboCountyName.Text;
+                    strCOUNTY_L_Array = strCOUNTY_L_Combobox.Split('-');
+                    strCOUNTY_L_Number = strCOUNTY_L_Array[0].ToString().Trim();
 
 
                     // set up feature cursor for getting the ignore records from the dfc
@@ -178,7 +178,7 @@ namespace UtransEditorAGRC
                         arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("CURRENT_NOTES"), strCurrentNotes);
                         arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("PREV__NOTES"), strPrevNotes);
                         arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("Date_Ignored"), dateTimePickerExportIgnores.Value.ToShortDateString());
-                        arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("COFIPS"), strCOFIPS_Number);
+                        arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("COUNTY_L"), strCOUNTY_L_Number);
 
                         // set up query filters and cursors for the utrans segment to get values from
                         if (strUtransOID != "-1")
@@ -192,20 +192,20 @@ namespace UtransEditorAGRC
                             {
                                 //populate the utrans segment with the needed values
                                 arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("UtransSegment"), "| " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("L_F_ADD")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("L_T_ADD")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("R_F_ADD")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("R_T_ADD")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("FROMADDR_L")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("TOADDR_L")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("FROMADDR_R")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("TOADDR_R")).ToString().Trim() + " | " +
                                     arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("PREDIR")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("STREETNAME")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("STREETTYPE")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("SUFDIR")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("ALIAS1")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("ALIAS1TYPE")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("ALIAS2")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("ALIAS2TYPE")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("ACSNAME")).ToString().Trim() + " | " +
-                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("ACSSUF")).ToString().Trim() + " |");
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("NAME")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("POSTTYPE")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("POSTDIR")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("A1_NAME")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("A1_POSTTYPE")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("A2_NAME")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("A2_POSTTYPE")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("AN_NAME")).ToString().Trim() + " | " +
+                                    arcFeat_Utrans.get_Value(arcFeat_Utrans.Fields.FindField("AN_POSTDIR")).ToString().Trim() + " |");
 
                                 //null out query filter and feature cursor
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeatCursor_Utrans);
@@ -237,20 +237,20 @@ namespace UtransEditorAGRC
                         {
                             //populate the utrans segment with the needed values
                             arcNewFeature.set_Value(arcFL_IgnoreFGDB.FeatureClass.Fields.FindField("CountySegment"), "| " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("L_F_ADD")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("L_T_ADD")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("R_F_ADD")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("R_T_ADD")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("FROMADDR_L")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("TOADDR_L")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("FROMADDR_R")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("TOADDR_R")).ToString().Trim() + " | " +
                                 arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("PREDIR")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("STREETNAME")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("STREETTYPE")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("SUFDIR")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("ALIAS1")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("ALIAS1TYPE")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("ALIAS2")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("ALIAS2TYPE")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("ACSNAME")).ToString().Trim() + " | " +
-                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("ACSSUF")).ToString().Trim() + " |");
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("NAME")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("POSTTYPE")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("POSTDIR")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("A1_NAME")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("A1_POSTTYPE")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("A2_NAME")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("A2_POSTTYPE")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("AN_NAME")).ToString().Trim() + " | " +
+                                arcFeat_CountyStreets.get_Value(arcFeat_CountyStreets.Fields.FindField("AN_POSTDIR")).ToString().Trim() + " |");
 
                             //null out query filter and feature cursor
                             System.Runtime.InteropServices.Marshal.ReleaseComObject(arcFeat_CountyStreets);
@@ -272,7 +272,7 @@ namespace UtransEditorAGRC
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(arcQF_DFC_Ignore);
                     GC.Collect();
 
-                    MessageBox.Show("Done exporting Ignores from " + strCOFIPS_Array[1].ToString().Trim() + " County's DFC_RESULT layer.", "Finished!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Done exporting Ignores from " + strCOUNTY_L_Array[1].ToString().Trim() + " County's DFC_RESULT layer.", "Finished!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     
                     //close the form
                     this.Close();
