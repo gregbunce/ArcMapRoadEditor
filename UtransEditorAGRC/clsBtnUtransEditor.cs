@@ -77,7 +77,7 @@ namespace UtransEditorAGRC
             //
             base.m_category = "AGRC"; //localizable text
             base.m_caption = "UTRANS Editor";  //localizable text
-            base.m_message = "This tool assists in the UTRANS update process.  Requires the following layers as named in the map: ''UTRANS.TRANSADMIN.Roads_Edit'', ''COUNTY_STREETS'', ''DFC_RESULT'', ''SGID10.LOCATION.AddressSystemQuadrants'', ''SGID10.BOUNDARIES.ZipCodes'', ''SGID10.BOUNDARIES.Counties'', ''SGID10.BOUNDARIES.Municipalities'', ''SGID10.BOUNDARIES.MetroTownships''.  Also, must be editing on UTRANS layer.";  //localizable text 
+            base.m_message = "This tool assists in the UTRANS update process.  Requires the following layers as named in the map: ''UTRANS.TRANSADMIN.Roads_Edit'', ''COUNTY_STREETS'', ''DFC_RESULT'', ''SGID.LOCATION.AddressSystemQuadrants'', ''SGID.BOUNDARIES.ZipCodes'', ''SGID.BOUNDARIES.Counties'', ''SGID.BOUNDARIES.Municipalities'', ''SGID.BOUNDARIES.MetroTownships''.  Also, must be editing on UTRANS layer.";  //localizable text 
             base.m_toolTip = "AGRC UTRANS Editor Tool";  //localizable text 
             base.m_name = "UtransEditorTool";   //unique id, non-localizable (e.g. "MyCategory_ArcMapCommand")
             base.m_bitmap = Properties.Resources.clsBtnUtransEditor;
@@ -163,23 +163,23 @@ namespace UtransEditorAGRC
                         {
                             isDfcResult = true;
                         }
-                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.LOCATION.ADDRESSSYSTEMQUADRANTS")
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID.LOCATION.ADDRESSSYSTEMQUADRANTS")
                         {
                             isAddrSystem = true;
                         }
-                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.ZIPCODES")
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID.BOUNDARIES.ZIPCODES")
                         {
                             isZipcode = true;
                         }
-                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.COUNTIES")
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID.BOUNDARIES.COUNTIES")
                         {
                             isCounties = true;
                         }
-                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.MUNICIPALITIES")
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID.BOUNDARIES.MUNICIPALITIES")
                         {
                             isMuni = true;
                         }
-                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID10.BOUNDARIES.METROTOWNSHIPS")
+                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID.BOUNDARIES.METROTOWNSHIPS")
                         {
                             isMetroTwnShp = true;
                         }

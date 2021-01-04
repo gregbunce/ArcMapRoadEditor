@@ -684,7 +684,7 @@
             this.lblA2_POSTDIR.Size = new System.Drawing.Size(74, 13);
             this.lblA2_POSTDIR.TabIndex = 19;
             this.lblA2_POSTDIR.Text = "A2_POSTDIR";
-            this.lblA2_POSTDIR.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblA2_POSTDIR.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // lblA1_POSTDIR
             // 
@@ -695,7 +695,7 @@
             this.lblA1_POSTDIR.Size = new System.Drawing.Size(74, 13);
             this.lblA1_POSTDIR.TabIndex = 18;
             this.lblA1_POSTDIR.Text = "A1_POSTDIR";
-            this.lblA1_POSTDIR.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblA1_POSTDIR.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // txtUtransA2_PREDIR
             // 
@@ -730,7 +730,7 @@
             this.lblA2_PREDIR.Size = new System.Drawing.Size(67, 13);
             this.lblA2_PREDIR.TabIndex = 16;
             this.lblA2_PREDIR.Text = "A2_PREDIR";
-            this.lblA2_PREDIR.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblA2_PREDIR.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // lblA1_PREDIR
             // 
@@ -741,7 +741,7 @@
             this.lblA1_PREDIR.Size = new System.Drawing.Size(67, 13);
             this.lblA1_PREDIR.TabIndex = 15;
             this.lblA1_PREDIR.Text = "A1_PREDIR";
-            this.lblA1_PREDIR.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblA1_PREDIR.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // txtUtransAN_POSTDIR
             // 
@@ -776,7 +776,7 @@
             this.lblAN_POSTDIR.Size = new System.Drawing.Size(76, 13);
             this.lblAN_POSTDIR.TabIndex = 11;
             this.lblAN_POSTDIR.Text = "AN_POSTDIR";
-            this.lblAN_POSTDIR.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblAN_POSTDIR.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // lblAN_NAME
             // 
@@ -787,7 +787,7 @@
             this.lblAN_NAME.Size = new System.Drawing.Size(59, 13);
             this.lblAN_NAME.TabIndex = 10;
             this.lblAN_NAME.Text = "AN_NAME";
-            this.lblAN_NAME.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblAN_NAME.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // lblA2_POSTTYPE
             // 
@@ -798,7 +798,7 @@
             this.lblA2_POSTTYPE.Size = new System.Drawing.Size(83, 13);
             this.lblA2_POSTTYPE.TabIndex = 7;
             this.lblA2_POSTTYPE.Text = "A2_POSTTYPE";
-            this.lblA2_POSTTYPE.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblA2_POSTTYPE.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // lblA2_NAME
             // 
@@ -809,7 +809,7 @@
             this.lblA2_NAME.Size = new System.Drawing.Size(57, 13);
             this.lblA2_NAME.TabIndex = 6;
             this.lblA2_NAME.Text = "A2_NAME";
-            this.lblA2_NAME.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblA2_NAME.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // txtUtransA2_POSTTYPE
             // 
@@ -868,7 +868,7 @@
             this.lblA1_POSTTYPE.Size = new System.Drawing.Size(83, 13);
             this.lblA1_POSTTYPE.TabIndex = 1;
             this.lblA1_POSTTYPE.Text = "A1_POSTTYPE";
-            this.lblA1_POSTTYPE.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblA1_POSTTYPE.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // lblA1_NAME
             // 
@@ -879,7 +879,7 @@
             this.lblA1_NAME.Size = new System.Drawing.Size(57, 13);
             this.lblA1_NAME.TabIndex = 0;
             this.lblA1_NAME.Text = "A1_NAME";
-            this.lblA1_NAME.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblA1_NAME.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // groupBox1
             // 
@@ -942,7 +942,7 @@
             this.lblLeftFrom.Size = new System.Drawing.Size(81, 13);
             this.lblLeftFrom.TabIndex = 2;
             this.lblLeftFrom.Text = "FROMADDR_L";
-            this.lblLeftFrom.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblLeftFrom.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // lblLeftTo
             // 
@@ -953,7 +953,7 @@
             this.lblLeftTo.Size = new System.Drawing.Size(65, 13);
             this.lblLeftTo.TabIndex = 4;
             this.lblLeftTo.Text = "TOADDR_L";
-            this.lblLeftTo.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblLeftTo.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // txtUtranPOSTDIR
             // 
@@ -988,7 +988,7 @@
             this.lblRightTo.Size = new System.Drawing.Size(67, 13);
             this.lblRightTo.TabIndex = 6;
             this.lblRightTo.Text = "TOADDR_R";
-            this.lblRightTo.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblRightTo.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // txtUtranStName
             // 
@@ -1011,7 +1011,7 @@
             this.lblRightFrom.Size = new System.Drawing.Size(83, 13);
             this.lblRightFrom.TabIndex = 5;
             this.lblRightFrom.Text = "FROMADDR_R";
-            this.lblRightFrom.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblRightFrom.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // txtUtranPreDir
             // 
@@ -1034,7 +1034,7 @@
             this.lblPOSTDIR.Size = new System.Drawing.Size(55, 13);
             this.lblPOSTDIR.TabIndex = 13;
             this.lblPOSTDIR.Text = "POSTDIR";
-            this.lblPOSTDIR.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblPOSTDIR.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // txtUtranFROMADDR_R
             // 
@@ -1057,7 +1057,7 @@
             this.lblStType.Size = new System.Drawing.Size(64, 13);
             this.lblStType.TabIndex = 12;
             this.lblStType.Text = "POSTTYPE";
-            this.lblStType.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblStType.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // txtUtranTOADDR_R
             // 
@@ -1080,8 +1080,7 @@
             this.lblStName.Size = new System.Drawing.Size(38, 13);
             this.lblStName.TabIndex = 11;
             this.lblStName.Text = "NAME";
-            this.lblStName.Click += new System.EventHandler(this.lblStName_Click);
-            this.lblStName.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblStName.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // lblPreDir
             // 
@@ -1092,7 +1091,7 @@
             this.lblPreDir.Size = new System.Drawing.Size(48, 13);
             this.lblPreDir.TabIndex = 10;
             this.lblPreDir.Text = "PREDIR";
-            this.lblPreDir.DoubleClick += new System.EventHandler(this.lbl_DoubleClick);
+            this.lblPreDir.Click += new System.EventHandler(this.lbl_DoubleClick);
             // 
             // linkLabelAttrDoc
             // 

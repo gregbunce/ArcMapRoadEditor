@@ -187,23 +187,23 @@ namespace UtransEditorAGRC
                                 clsGlobals.arcGeoFLayerDfcResult = arcMapp.get_Layer(i) as IGeoFeatureLayer;
                                 //MessageBox.Show("referenced dfc results");
                             }
-                            if (arcObjClass.AliasName.ToString() == "SGID10.LOCATION.AddressSystemQuadrants")
+                            if (arcObjClass.AliasName.ToString() == "SGID.LOCATION.AddressSystemQuadrants")
                             {
                                 clsGlobals.arcFLayerAddrSysQuads = arcMapp.get_Layer(i) as IFeatureLayer;
                             }
-                            if (arcObjClass.AliasName.ToString() == "SGID10.BOUNDARIES.ZipCodes")
+                            if (arcObjClass.AliasName.ToString() == "SGID.BOUNDARIES.ZipCodes")
                             {
                                 clsGlobals.arcFLayerZipCodes = arcMapp.get_Layer(i) as IFeatureLayer;
                             }
-                            if (arcObjClass.AliasName.ToString() == "SGID10.BOUNDARIES.Counties")
+                            if (arcObjClass.AliasName.ToString() == "SGID.BOUNDARIES.Counties")
                             {
                                 clsGlobals.arcFLayerCounties = arcMapp.get_Layer(i) as IFeatureLayer;
                             }
-                            if (arcObjClass.AliasName.ToString() == "SGID10.BOUNDARIES.Municipalities")
+                            if (arcObjClass.AliasName.ToString() == "SGID.BOUNDARIES.Municipalities")
                             {
                                 clsGlobals.arcFLayerMunicipalities = arcMapp.get_Layer(i) as IFeatureLayer;
                             }
-                            if (arcObjClass.AliasName.ToString() == "SGID10.BOUNDARIES.MetroTownships")
+                            if (arcObjClass.AliasName.ToString() == "SGID.BOUNDARIES.MetroTownships")
                             {
                                 clsGlobals.arcFLayerMetroTwnShips = arcMapp.get_Layer(i) as IFeatureLayer;
                             }
@@ -235,31 +235,31 @@ namespace UtransEditorAGRC
                 }
                 else if (clsGlobals.arcFLayerAddrSysQuads == null)
                 {
-                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID10.LOCATION.AddressSystemQuadrants' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID.LOCATION.AddressSystemQuadrants' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Close();
                     return;
                 }
                 else if (clsGlobals.arcFLayerZipCodes == null)
                 {
-                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID10.BOUNDARIES.ZipCodes' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID.BOUNDARIES.ZipCodes' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Close();
                     return;
                 }
                 else if (clsGlobals.arcFLayerCounties == null)
                 {
-                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID10.BOUNDARIES.Counties' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID.BOUNDARIES.Counties' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Close();
                     return;
                 }
                 else if (clsGlobals.arcFLayerMunicipalities == null)
                 {
-                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID10.BOUNDARIES.Municipalities' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID.BOUNDARIES.Municipalities' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Close();
                     return;
                 }
                 else if (clsGlobals.arcFLayerMetroTwnShips == null)
                 {
-                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID10.BOUNDARIES.MetroTownships' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID.BOUNDARIES.MetroTownships' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Close();
                     return;
                 }
@@ -4128,11 +4128,6 @@ namespace UtransEditorAGRC
         }
 
         private void groupBoxCountySeg_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblStName_Click(object sender, EventArgs e)
         {
 
         }
