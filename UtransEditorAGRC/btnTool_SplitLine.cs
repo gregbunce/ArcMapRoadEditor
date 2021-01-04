@@ -1066,11 +1066,11 @@ namespace UtransEditorAGRC
                 if (clsGlobals.arcFeatClass_USNG == null)
                 {
                     // connect to sgid database
-                    clsGlobals.workspaceSGID = clsUtransEditorStaticClass.ConnectToTransactionalVersion("", "sde:sqlserver:sgid.agrc.utah.gov", "SGID10", "DBMS", "sde.DEFAULT", "agrc", "agrc");
+                    clsGlobals.workspaceSGID = clsUtransEditorStaticClass.ConnectToTransactionalVersion("", "sde:sqlserver:internal.agrc.utah.gov", "SGID", "DBMS", "sde.DEFAULT", "internal", "internal");
                     clsGlobals.featureWorkspaceSGID = (IFeatureWorkspace)clsGlobals.workspaceSGID;
 
                     // get access to the us national grid feature class
-                    clsGlobals.arcFeatClass_USNG = clsGlobals.featureWorkspaceSGID.OpenFeatureClass("SGID10.INDICES.NationalGrid");
+                    clsGlobals.arcFeatClass_USNG = clsGlobals.featureWorkspaceSGID.OpenFeatureClass("SGID.INDICES.NationalGrid");
                 }
 
                 // get the feature's geometry
