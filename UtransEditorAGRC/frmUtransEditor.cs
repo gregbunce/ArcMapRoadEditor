@@ -4200,5 +4200,10 @@ namespace UtransEditorAGRC
             else
                 return "";
         }
+
+        private void groupBoxUtransSeg_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }

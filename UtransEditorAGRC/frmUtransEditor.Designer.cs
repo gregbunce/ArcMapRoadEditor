@@ -620,6 +620,7 @@
             this.groupBoxUtransSeg.TabIndex = 8;
             this.groupBoxUtransSeg.TabStop = false;
             this.groupBoxUtransSeg.Text = "Selected UTRANS Road Segment";
+            this.groupBoxUtransSeg.Enter += new System.EventHandler(this.groupBoxUtransSeg_Enter);
             // 
             // groupBox2
             // 
