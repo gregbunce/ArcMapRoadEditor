@@ -137,6 +137,7 @@
             this.cboVertLevel = new System.Windows.Forms.ComboBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.cboSpeed = new System.Windows.Forms.ComboBox();
+            this.lbl_transfer_all = new System.Windows.Forms.Label();
             this.groupBoxCountySeg.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -1431,11 +1432,22 @@
             this.cboSpeed.TabIndex = 0;
             this.cboSpeed.SelectedIndexChanged += new System.EventHandler(this.cboSpeed_SelectedIndexChanged);
             // 
+            // lbl_transfer_all
+            // 
+            this.lbl_transfer_all.AutoSize = true;
+            this.lbl_transfer_all.Location = new System.Drawing.Point(622, 214);
+            this.lbl_transfer_all.Name = "lbl_transfer_all";
+            this.lbl_transfer_all.Size = new System.Drawing.Size(93, 13);
+            this.lbl_transfer_all.TabIndex = 105;
+            this.lbl_transfer_all.Text = "Transfer all values";
+            this.lbl_transfer_all.Click += new System.EventHandler(this.lbl_DoubleClick);
+            // 
             // frmUtransEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1378, 516);
+            this.Controls.Add(this.lbl_transfer_all);
             this.Controls.Add(this.groupBox10);
             this.Controls.Add(this.groupBox9);
             this.Controls.Add(this.groupBox8);
@@ -1593,5 +1605,6 @@
         private System.Windows.Forms.ComboBox cboVertLevel;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.ComboBox cboSpeed;
+        private System.Windows.Forms.Label lbl_transfer_all;
     }
 }
