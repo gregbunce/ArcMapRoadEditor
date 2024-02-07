@@ -1263,274 +1263,296 @@ namespace UtransEditorAGRC
                 Label clickedLabel = sender as Label;
 
                 // this logic also handles the 'tranfer all values' label click
+                if (clickedLabel.Text == "Transfer all values")
+                {
+                    txtUtranFROMADDR_L.Text = txtCountyFROMADDR_L.Text;
+                    txtUtranTOADDR_L.Text = txtCountyTOADDR_L.Text;
+                    txtUtranFROMADDR_R.Text = txtCountyFROMADDR_R.Text;
+                    txtUtranTOADDR_R.Text = txtCountyTOADDR_R.Text;
+                    txtUtranStName.Text = txtCountyStName.Text;
+                    txtUtranPreDir.Text = txtCountyPreDir.Text;
+                    txtUtranStType.Text = txtCountyStType.Text;
+                    txtUtranPOSTDIR.Text = txtCountyPOSTDIR.Text;
+                    txtUtransA1_PREDIR.Text = txtCountyA1_PREDIR.Text;
+                    txtUtransA1_NAME.Text = txtCountyA1_NAME.Text;
+                    txtUtransA1_POSTTYPE.Text = txtCountyA1_POSTTYPE.Text;
+                    txtUtransA1_POSTDIR.Text = txtCountyA1_POSTDIR.Text;
+                    txtUtransA2_PREDIR.Text = txtCountyA2_PREDIR.Text;
+                    txtUtransA2_NAME.Text = txtCountyA2_NAME.Text;
+                    txtUtransA2_POSTTYPE.Text = txtCountyA2_POSTTYPE.Text;
+                    txtUtransA2_POSTDIR.Text = txtCountyA2_POSTDIR.Text;
+                    txtUtransAN_NAME.Text = txtCountyAN_NAME.Text; 
+                    txtUtransAN_POSTDIR.Text = txtCountyAN_POSTDIR.Text;
+                    return;
+                }
 
-                // FROMADDR_L
-                if (clickedLabel.Text == "FROMADDR_L" | clickedLabel.Text == "Transfer all values")
+                    // FROMADDR_L
+                    if (clickedLabel.Text == "FROMADDR_L")
                 {
                     if (txtUtranFROMADDR_L.Text != txtCountyFROMADDR_L.Text)
                     {
                         txtUtranFROMADDR_L.Text = txtCountyFROMADDR_L.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtranFROMADDR_L.Text == txtCountyFROMADDR_L.Text)
                     {
                         txtUtranFROMADDR_L.Text = txtUtransInitialFROMADDR_L;
-                        //return;
+                        return;
                     }
                 }
 
                 // TOADDR_L
-                if (clickedLabel.Text == "TOADDR_L" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "TOADDR_L")
                 {
                     if (txtUtranTOADDR_L.Text != txtCountyTOADDR_L.Text)
                     {
                         txtUtranTOADDR_L.Text = txtCountyTOADDR_L.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtranTOADDR_L.Text == txtCountyTOADDR_L.Text)
                     {
                         txtUtranTOADDR_L.Text = txtUtransInitialL_TAdd;
-                        //return;
+                        return;
                     }
                 }
 
                 // FROMADDR_R
-                if (clickedLabel.Text == "FROMADDR_R" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "FROMADDR_R")
                 {
                     if (txtUtranFROMADDR_R.Text != txtCountyFROMADDR_R.Text)
                     {
                         txtUtranFROMADDR_R.Text = txtCountyFROMADDR_R.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtranFROMADDR_R.Text == txtCountyFROMADDR_R.Text)
                     {
                         txtUtranFROMADDR_R.Text = txtUtransInitialFROMADDR_R;
-                        //return;
+                        return;
                     }
                 }
 
                 // TOADDR_R
-                if (clickedLabel.Text == "TOADDR_R" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "TOADDR_R")
                 {
                     if (txtUtranTOADDR_R.Text != txtCountyTOADDR_R.Text)
                     {
                         txtUtranTOADDR_R.Text = txtCountyTOADDR_R.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtranTOADDR_R.Text == txtCountyTOADDR_R.Text)
                     {
                         txtUtranTOADDR_R.Text = txtUtransInitialTOADDR_R;
-                        //return;
+                        return;
                     }
                 }
 
                 // NAME
-                if (clickedLabel.Text == "NAME" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "NAME")
                 {
                     if (txtUtranStName.Text != txtCountyStName.Text)
                     {
                         txtUtranStName.Text = txtCountyStName.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtranStName.Text == txtCountyStName.Text)
                     {
                         txtUtranStName.Text = txtUtransInitialStName;
-                        //return;
+                        return;
                     }
                 }
 
                 // PREDIR
-                if (clickedLabel.Text == "PREDIR" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "PREDIR")
                 {
                     if (txtUtranPreDir.Text != txtCountyPreDir.Text)
                     {
                         txtUtranPreDir.Text = txtCountyPreDir.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtranPreDir.Text == txtCountyPreDir.Text)
                     {
                         txtUtranPreDir.Text = txtUtransInitialPreDir;
-                        //return;
+                        return;
                     }
                 }
 
                 // POSTTYPE
-                if (clickedLabel.Text == "POSTTYPE" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "POSTTYPE")
                 {
                     if (txtUtranStType.Text != txtCountyStType.Text)
                     {
                         txtUtranStType.Text = txtCountyStType.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtranStType.Text == txtCountyStType.Text)
                     {
                         txtUtranStType.Text = txtUtransInitialStType;
-                        //return;
+                        return;
                     }
                 }
 
                 // POSTDIR
-                if (clickedLabel.Text == "POSTDIR" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "POSTDIR")
                 {
                     if (txtUtranPOSTDIR.Text != txtCountyPOSTDIR.Text)
                     {
                         txtUtranPOSTDIR.Text = txtCountyPOSTDIR.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtranPOSTDIR.Text == txtCountyPOSTDIR.Text)
                     {
                         txtUtranPOSTDIR.Text = txtUtransInitialPOSTDIR;
-                        //return;
+                        return;
                     }
                 }
 
                 // A1_PREDIR
-                if (clickedLabel.Text == "A1_PREDIR" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "A1_PREDIR")
                 {
                     if (txtUtransA1_PREDIR.Text != txtCountyA1_PREDIR.Text)
                     {
                         txtUtransA1_PREDIR.Text = txtCountyA1_PREDIR.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtransA1_PREDIR.Text == txtCountyA1_PREDIR.Text)
                     {
                         txtUtransA1_PREDIR.Text = txtUtransInitialA1_PREDIR;
-                        //return;
+                        return;
                     }
                 }
 
                 // A1_NAME
-                if (clickedLabel.Text == "A1_NAME" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "A1_NAME")
                 {
                     if (txtUtransA1_NAME.Text != txtCountyA1_NAME.Text)
                     {
                         txtUtransA1_NAME.Text = txtCountyA1_NAME.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtransA1_NAME.Text == txtCountyA1_NAME.Text)
                     {
                         txtUtransA1_NAME.Text = txtUtransInitialA1_NAME;
-                        //return;
+                        return;
                     }
                 }
 
                 // A1_POSTTYPE
-                if (clickedLabel.Text == "A1_POSTTYPE" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "A1_POSTTYPE")
                 {
                     if (txtUtransA1_POSTTYPE.Text != txtCountyA1_POSTTYPE.Text)
                     {
                         txtUtransA1_POSTTYPE.Text = txtCountyA1_POSTTYPE.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtransA1_POSTTYPE.Text == txtCountyA1_POSTTYPE.Text)
                     {
                         txtUtransA1_POSTTYPE.Text = txtUtransInitialA1_POSTTYPE;
-                        //return;
+                        return;
                     }
                 }
 
                 // A1_POSTDIR
-                if (clickedLabel.Text == "A1_POSTDIR" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "A1_POSTDIR")
                 {
                     if (txtUtransA1_POSTDIR.Text != txtCountyA1_POSTDIR.Text)
                     {
                         txtUtransA1_POSTDIR.Text = txtCountyA1_POSTDIR.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtransA1_POSTDIR.Text == txtCountyA1_POSTDIR.Text)
                     {
                         txtUtransA1_POSTDIR.Text = txtUtransInitialA1_POSTDIR;
-                        //return;
+                        return;
                     }
                 }
 
                 // A2_PREDIR
-                if (clickedLabel.Text == "A2_PREDIR" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "A2_PREDIR")
                 {
                     if (txtUtransA2_PREDIR.Text != txtCountyA2_PREDIR.Text)
                     {
                         txtUtransA2_PREDIR.Text = txtCountyA2_PREDIR.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtransA2_PREDIR.Text == txtCountyA2_PREDIR.Text)
                     {
                         txtUtransA2_PREDIR.Text = txtUtransInitialA2_PREDIR;
-                        //return;
+                        return;
                     }
                 }
 
                 // A2_NAME
-                if (clickedLabel.Text == "A2_NAME" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "A2_NAME")
                 {
                     if (txtUtransA2_NAME.Text != txtCountyA2_NAME.Text)
                     {
                         txtUtransA2_NAME.Text = txtCountyA2_NAME.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtransA2_NAME.Text == txtCountyA2_NAME.Text)
                     {
                         txtUtransA2_NAME.Text = txtUtransInitialA2_NAME;
-                        //return;
+                        return;
                     }
                 }
 
                 // A2_POSTTYPE
-                if (clickedLabel.Text == "A2_POSTTYPE" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "A2_POSTTYPE")
                 {
                     if (txtUtransA2_POSTTYPE.Text != txtCountyA2_POSTTYPE.Text)
                     {
                         txtUtransA2_POSTTYPE.Text = txtCountyA2_POSTTYPE.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtransA2_POSTTYPE.Text == txtCountyA2_POSTTYPE.Text)
                     {
                         txtUtransA2_POSTTYPE.Text = txtUtransInitialA2_POSTTYPE;
-                        //return;
+                        return;
                     }
                 }
 
                 // A2_POSTDIR
-                if (clickedLabel.Text == "A2_POSTDIR" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "A2_POSTDIR")
                 {
                     if (txtUtransA2_POSTDIR.Text != txtCountyA2_POSTDIR.Text)
                     {
                         txtUtransA2_POSTDIR.Text = txtCountyA2_POSTDIR.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtransA2_POSTDIR.Text == txtCountyA2_POSTDIR.Text)
                     {
                         txtUtransA2_POSTDIR.Text = txtUtransInitialA2_POSTDIR;
-                        //return;
+                        return;
                     }
                 }
 
                 // AN_NAME
-                if (clickedLabel.Text == "AN_NAME" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "AN_NAME")
                 {
                     if (txtUtransAN_NAME.Text != txtCountyAN_NAME.Text)
                     {
                         txtUtransAN_NAME.Text = txtCountyAN_NAME.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtransAN_NAME.Text == txtCountyAN_NAME.Text)
                     {
                         txtUtransAN_NAME.Text = txtUtransInitialAN_NAME;
-                        //return;
+                        return;
                     }
                 }
 
                 // AN_POSTDIR
-                if (clickedLabel.Text == "AN_POSTDIR" | clickedLabel.Text == "Transfer all values")
+                if (clickedLabel.Text == "AN_POSTDIR")
                 {
                     if (txtUtransAN_POSTDIR.Text != txtCountyAN_POSTDIR.Text)
                     {
                         txtUtransAN_POSTDIR.Text = txtCountyAN_POSTDIR.Text;
-                        //return;
+                        return;
                     }
                     if (txtUtransAN_POSTDIR.Text == txtCountyAN_POSTDIR.Text)
                     {
                         txtUtransAN_POSTDIR.Text = txtUtransInitialAN_POSTDIR;
-                        //return;
+                        return;
                     }
                 }
 
