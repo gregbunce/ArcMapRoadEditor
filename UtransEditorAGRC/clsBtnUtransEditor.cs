@@ -77,7 +77,7 @@ namespace UtransEditorAGRC
             //
             base.m_category = "AGRC"; //localizable text
             base.m_caption = "UTRANS Editor";  //localizable text
-            base.m_message = "This tool assists in the UTRANS update process.  Requires the following layers as named in the map: ''UTRANS.TRANSADMIN.Roads_Edit'', ''COUNTY_STREETS'', ''DFC_RESULT'', ''SGID.LOCATION.AddressSystemQuadrants'', ''SGID.BOUNDARIES.ZipCodes'', ''SGID.BOUNDARIES.Counties'', ''SGID.BOUNDARIES.Municipalities'', ''SGID.BOUNDARIES.MetroTownships''.  Also, must be editing on UTRANS layer.";  //localizable text 
+            base.m_message = "This tool assists in the UTRANS update process.  Requires the following layers as named in the map: ''UTRANS.TRANSADMIN.Roads_Edit'', ''COUNTY_STREETS'', ''DFC_RESULT'', ''SGID.LOCATION.AddressSystemQuadrants'', ''SGID.BOUNDARIES.ZipCodes'', ''SGID.BOUNDARIES.Counties'', and ''SGID.BOUNDARIES.Municipalities''.  Also, must be editing on UTRANS layer.";  //localizable text 
             base.m_toolTip = "AGRC UTRANS Editor Tool";  //localizable text 
             base.m_name = "UtransEditorTool";   //unique id, non-localizable (e.g. "MyCategory_ArcMapCommand")
             base.m_bitmap = Properties.Resources.clsBtnUtransEditor;
@@ -134,7 +134,7 @@ namespace UtransEditorAGRC
                     bool isZipcode = false;
                     bool isCounties = false;
                     bool isMuni = false;
-                    bool isMetroTwnShp = false;
+                    //bool isMetroTwnShp = false;
 
 
                     //get a reference to ieditlayers to see which layers are editable
@@ -179,14 +179,14 @@ namespace UtransEditorAGRC
                         {
                             isMuni = true;
                         }
-                        if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID.BOUNDARIES.METROTOWNSHIPS")
-                        {
-                            isMetroTwnShp = true;
-                        }
+                        //if (arcMapp.get_Layer(i).Name.ToUpper() == "SGID.BOUNDARIES.METROTOWNSHIPS")
+                        //{
+                        //    isMetroTwnShp = true;
+                        //}
                     }
 
                     //if all the needed layers are in the map, and utrans streets are editable then enable button
-                    if (isEditable & isCountyStreets & isDfcResult & isAddrSystem & isZipcode & isCounties & isMuni & isMetroTwnShp)
+                    if (isEditable & isCountyStreets & isDfcResult & isAddrSystem & isZipcode & isCounties & isMuni)
                     {
                         // inform the global bool variable that utrans can edit - allowing other tools to enable as a result
                         clsGlobals.blnCanUseUtransTool = true;

@@ -203,10 +203,10 @@ namespace UtransEditorAGRC
                             {
                                 clsGlobals.arcFLayerMunicipalities = arcMapp.get_Layer(i) as IFeatureLayer;
                             }
-                            if (arcObjClass.AliasName.ToString() == "SGID.BOUNDARIES.MetroTownships")
-                            {
-                                clsGlobals.arcFLayerMetroTwnShips = arcMapp.get_Layer(i) as IFeatureLayer;
-                            }
+                            //if (arcObjClass.AliasName.ToString() == "SGID.BOUNDARIES.MetroTownships")
+                            //{
+                            //    clsGlobals.arcFLayerMetroTwnShips = arcMapp.get_Layer(i) as IFeatureLayer;
+                            //}
                         }
                         catch (Exception) { }//in case there is an error looping through layers (sometimes on group layers or dynamic xy layers), just keep going
                         
@@ -257,12 +257,12 @@ namespace UtransEditorAGRC
                     this.Close();
                     return;
                 }
-                else if (clsGlobals.arcFLayerMetroTwnShips == null)
-                {
-                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID.BOUNDARIES.MetroTownships' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Close();
-                    return;
-                }
+                //else if (clsGlobals.arcFLayerMetroTwnShips == null)
+                //{
+                //    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID.BOUNDARIES.MetroTownships' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //    this.Close();
+                //    return;
+                //}
 
                 //clear the selection in the map, so we can start fresh with the tool and user's inputs
                 arcMapp.ClearSelection();
@@ -2903,20 +2903,20 @@ namespace UtransEditorAGRC
 
 
                     // query the UNINCCOM layer left
-                    IFeatureCursor arcMetroAreasCursor_left = clsGlobals.arcFLayerMetroTwnShips.Search(arcSpatialFilter_left, false);
-                    IFeature arcFeatureMetroAreas_left = arcMetroAreasCursor_left.NextFeature();
+                    //IFeatureCursor arcMetroAreasCursor_left = clsGlobals.arcFLayerMetroTwnShips.Search(arcSpatialFilter_left, false);
+                    //IFeature arcFeatureMetroAreas_left = arcMetroAreasCursor_left.NextFeature();
 
-                    if (arcFeatureMetroAreas_left != null)
-                    {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), arcFeatureMetroAreas_left.get_Value(arcFeatureMetroAreas_left.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
-                    }
-                    else
-                    {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), "");
-                    }
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_left);
-                    arcMetroAreasCursor_left = null;
-                    arcFeatureMetroAreas_left = null;
+                    //if (arcFeatureMetroAreas_left != null)
+                    //{
+                    //    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), arcFeatureMetroAreas_left.get_Value(arcFeatureMetroAreas_left.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
+                    //}
+                    //else
+                    //{
+                    //    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), "");
+                    //}
+                    //System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_left);
+                    //arcMetroAreasCursor_left = null;
+                    //arcFeatureMetroAreas_left = null;
                     //arcSpatialFilter_left = null;
 
                     // assign DOT_OWN_L field
@@ -3054,20 +3054,20 @@ namespace UtransEditorAGRC
 
 
                     // query the UNINCCOM layer right
-                    IFeatureCursor arcMetroAreasCursor_right = clsGlobals.arcFLayerMetroTwnShips.Search(arcSpatialFilter_right, false);
-                    IFeature arcFeatureMetroAreas_right = arcMetroAreasCursor_right.NextFeature();
+                    //IFeatureCursor arcMetroAreasCursor_right = clsGlobals.arcFLayerMetroTwnShips.Search(arcSpatialFilter_right, false);
+                    //IFeature arcFeatureMetroAreas_right = arcMetroAreasCursor_right.NextFeature();
 
-                    if (arcFeatureMetroAreas_right != null)
-                    {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), arcFeatureMetroAreas_right.get_Value(arcFeatureMetroAreas_right.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
-                    }
-                    else
-                    {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), "");
-                    }
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_right);
-                    arcMetroAreasCursor_right = null;
-                    arcFeatureMetroAreas_right = null;
+                    //if (arcFeatureMetroAreas_right != null)
+                    //{
+                    //    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), arcFeatureMetroAreas_right.get_Value(arcFeatureMetroAreas_right.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
+                    //}
+                    //else
+                    //{
+                    //    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), "");
+                    //}
+                    //System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_right);
+                    //arcMetroAreasCursor_right = null;
+                    //arcFeatureMetroAreas_right = null;
                     //arcSpatialFilter_right = null;
 
 
