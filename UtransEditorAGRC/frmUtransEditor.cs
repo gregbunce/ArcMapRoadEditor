@@ -203,10 +203,10 @@ namespace UtransEditorAGRC
                             {
                                 clsGlobals.arcFLayerMunicipalities = arcMapp.get_Layer(i) as IFeatureLayer;
                             }
-                            if (arcObjClass.AliasName.ToString() == "SGID.BOUNDARIES.MetroTownships")
-                            {
-                                clsGlobals.arcFLayerMetroTwnShips = arcMapp.get_Layer(i) as IFeatureLayer;
-                            }
+                            //if (arcObjClass.AliasName.ToString() == "SGID.BOUNDARIES.MetroTownships")
+                            //{
+                            //    clsGlobals.arcFLayerMetroTwnShips = arcMapp.get_Layer(i) as IFeatureLayer;
+                            //}
                         }
                         catch (Exception) { }//in case there is an error looping through layers (sometimes on group layers or dynamic xy layers), just keep going
                         
@@ -257,12 +257,12 @@ namespace UtransEditorAGRC
                     this.Close();
                     return;
                 }
-                else if (clsGlobals.arcFLayerMetroTwnShips == null)
-                {
-                    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID.BOUNDARIES.MetroTownships' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Close();
-                    return;
-                }
+                //else if (clsGlobals.arcFLayerMetroTwnShips == null)
+                //{
+                //    MessageBox.Show("A needed layer is Missing in the map." + Environment.NewLine + "Please add 'SGID.BOUNDARIES.MetroTownships' in order to continue.", "Missing Layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //    this.Close();
+                //    return;
+                //}
 
                 //clear the selection in the map, so we can start fresh with the tool and user's inputs
                 arcMapp.ClearSelection();
@@ -636,6 +636,20 @@ namespace UtransEditorAGRC
 
                 //refresh the map on the selected features
                 arcActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, null, null);
+
+                //auto populate a few values in the comboboxes if they are empty or null for these fields: cartocode, verlevel, and oneway
+                if (cboCartoCode.SelectedIndex == -1)
+                {
+                    cboCartoCode.SelectedIndex = 10;
+                }
+                if (cboVertLevel.SelectedIndex == -1)
+                {
+                    cboVertLevel.SelectedIndex = 0;
+                }
+                if (cboOneWay.SelectedIndex == -1)
+                {
+                    cboOneWay.SelectedIndex = 0;
+                }
 
                 //populate variables to hold the initial textbox text for utrans streets - in case the user wants to revert to it
                 txtUtransInitialFROMADDR_L = txtUtranFROMADDR_L.Text;
@@ -1248,8 +1262,32 @@ namespace UtransEditorAGRC
                 //get a reference to the label that was doublecliked
                 Label clickedLabel = sender as Label;
 
-                // FROMADDR_L
-                if (clickedLabel.Text == "FROMADDR_L")
+                // this logic also handles the 'tranfer all values' label click
+                if (clickedLabel.Text == "Transfer all values")
+                {
+                    txtUtranFROMADDR_L.Text = txtCountyFROMADDR_L.Text;
+                    txtUtranTOADDR_L.Text = txtCountyTOADDR_L.Text;
+                    txtUtranFROMADDR_R.Text = txtCountyFROMADDR_R.Text;
+                    txtUtranTOADDR_R.Text = txtCountyTOADDR_R.Text;
+                    txtUtranStName.Text = txtCountyStName.Text;
+                    txtUtranPreDir.Text = txtCountyPreDir.Text;
+                    txtUtranStType.Text = txtCountyStType.Text;
+                    txtUtranPOSTDIR.Text = txtCountyPOSTDIR.Text;
+                    txtUtransA1_PREDIR.Text = txtCountyA1_PREDIR.Text;
+                    txtUtransA1_NAME.Text = txtCountyA1_NAME.Text;
+                    txtUtransA1_POSTTYPE.Text = txtCountyA1_POSTTYPE.Text;
+                    txtUtransA1_POSTDIR.Text = txtCountyA1_POSTDIR.Text;
+                    txtUtransA2_PREDIR.Text = txtCountyA2_PREDIR.Text;
+                    txtUtransA2_NAME.Text = txtCountyA2_NAME.Text;
+                    txtUtransA2_POSTTYPE.Text = txtCountyA2_POSTTYPE.Text;
+                    txtUtransA2_POSTDIR.Text = txtCountyA2_POSTDIR.Text;
+                    txtUtransAN_NAME.Text = txtCountyAN_NAME.Text; 
+                    txtUtransAN_POSTDIR.Text = txtCountyAN_POSTDIR.Text;
+                    return;
+                }
+
+                    // FROMADDR_L
+                    if (clickedLabel.Text == "FROMADDR_L")
                 {
                     if (txtUtranFROMADDR_L.Text != txtCountyFROMADDR_L.Text)
                     {
@@ -2865,20 +2903,20 @@ namespace UtransEditorAGRC
 
 
                     // query the UNINCCOM layer left
-                    IFeatureCursor arcMetroAreasCursor_left = clsGlobals.arcFLayerMetroTwnShips.Search(arcSpatialFilter_left, false);
-                    IFeature arcFeatureMetroAreas_left = arcMetroAreasCursor_left.NextFeature();
+                    //IFeatureCursor arcMetroAreasCursor_left = clsGlobals.arcFLayerMetroTwnShips.Search(arcSpatialFilter_left, false);
+                    //IFeature arcFeatureMetroAreas_left = arcMetroAreasCursor_left.NextFeature();
 
-                    if (arcFeatureMetroAreas_left != null)
-                    {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), arcFeatureMetroAreas_left.get_Value(arcFeatureMetroAreas_left.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
-                    }
-                    else
-                    {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), "");
-                    }
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_left);
-                    arcMetroAreasCursor_left = null;
-                    arcFeatureMetroAreas_left = null;
+                    //if (arcFeatureMetroAreas_left != null)
+                    //{
+                    //    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), arcFeatureMetroAreas_left.get_Value(arcFeatureMetroAreas_left.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
+                    //}
+                    //else
+                    //{
+                    //    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_L"), "");
+                    //}
+                    //System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_left);
+                    //arcMetroAreasCursor_left = null;
+                    //arcFeatureMetroAreas_left = null;
                     //arcSpatialFilter_left = null;
 
                     // assign DOT_OWN_L field
@@ -3016,20 +3054,20 @@ namespace UtransEditorAGRC
 
 
                     // query the UNINCCOM layer right
-                    IFeatureCursor arcMetroAreasCursor_right = clsGlobals.arcFLayerMetroTwnShips.Search(arcSpatialFilter_right, false);
-                    IFeature arcFeatureMetroAreas_right = arcMetroAreasCursor_right.NextFeature();
+                    //IFeatureCursor arcMetroAreasCursor_right = clsGlobals.arcFLayerMetroTwnShips.Search(arcSpatialFilter_right, false);
+                    //IFeature arcFeatureMetroAreas_right = arcMetroAreasCursor_right.NextFeature();
 
-                    if (arcFeatureMetroAreas_right != null)
-                    {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), arcFeatureMetroAreas_right.get_Value(arcFeatureMetroAreas_right.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
-                    }
-                    else
-                    {
-                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), "");
-                    }
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_right);
-                    arcMetroAreasCursor_right = null;
-                    arcFeatureMetroAreas_right = null;
+                    //if (arcFeatureMetroAreas_right != null)
+                    //{
+                    //    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), arcFeatureMetroAreas_right.get_Value(arcFeatureMetroAreas_right.Fields.FindField("SHORTDESC")).ToString().ToUpper().Trim());
+                    //}
+                    //else
+                    //{
+                    //    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("UNINCCOM_R"), "");
+                    //}
+                    //System.Runtime.InteropServices.Marshal.ReleaseComObject(arcMetroAreasCursor_right);
+                    //arcMetroAreasCursor_right = null;
+                    //arcFeatureMetroAreas_right = null;
                     //arcSpatialFilter_right = null;
 
 
@@ -3135,46 +3173,52 @@ namespace UtransEditorAGRC
                     {
                         string strFullNameNumeric = txtUtranStName.Text.Trim() + " " + txtUtranPOSTDIR.Text.Trim();
 
-                        //check if POSTDIR is populated and sttype is not
-                        if (txtUtranPOSTDIR.Text == "" | txtUtranStType.Text != "")
-                        {
-                            DialogResult dialogResult2 = MessageBox.Show("Format Warning!  You are saving a numberic street but have conflict with either POSTDIR or POSTTYPE." + Environment.NewLine + "Numberic Streets typically require a POSTDIR value and not a POSTTYPE value." + Environment.NewLine + Environment.NewLine + "Would you like to continue with the save?", "Format Warning!", MessageBoxButtons.YesNo);
-                            if (dialogResult2 == DialogResult.Yes)
-                            {
-                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("FULLNAME"), strFullNameNumeric.Trim());
-                            }
-                            else if (dialogResult2 == DialogResult.No)
-                            {
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("FULLNAME"), strFullNameNumeric.Trim());
-                        }
+                        ////check if POSTDIR is populated and sttype is not (Michael does not want this warning message box so i'm disabling it for now)
+                        //if (txtUtranPOSTDIR.Text == "" | txtUtranStType.Text != "")
+                        //{
+                        //    DialogResult dialogResult2 = MessageBox.Show("Format Warning!  You are saving a numberic street but have conflict with either POSTDIR or POSTTYPE." + Environment.NewLine + "Numberic Streets typically require a POSTDIR value and not a POSTTYPE value." + Environment.NewLine + Environment.NewLine + "Would you like to continue with the save?", "Format Warning!", MessageBoxButtons.YesNo);
+                        //    if (dialogResult2 == DialogResult.Yes)
+                        //    {
+                        //        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("FULLNAME"), strFullNameNumeric.Trim());
+                        //    }
+                        //    else if (dialogResult2 == DialogResult.No)
+                        //    {
+                        //        return;
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("FULLNAME"), strFullNameNumeric.Trim());
+                        //}
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("FULLNAME"), strFullNameNumeric.Trim()); 
+                        //(remove the above line if want to use the message box warning system)
                     }
                     else //it's not a numeric street - it's alphabetic
                     {
                         string strFullNameAlpha = txtUtranStName.Text.Trim() + " " + txtUtranStType.Text.Trim();
 
-                        //check if sttype is populated and POSTDIR is not
-                        if (txtUtranPOSTDIR.Text != "" | txtUtranStType.Text == "")
-                        {
-                            DialogResult dialogResult3 = MessageBox.Show("Format Warning!  You are saving an alphabetic street but have conflict with either POSTDIR or POSTTYPE." + Environment.NewLine + "Alphabetic Streets typically require a POSTTYPE and often do not include a POSTDIR value." + Environment.NewLine + Environment.NewLine + "Would you like to continue with the save?", "Format Warning!", MessageBoxButtons.YesNo);
-                            if (dialogResult3 == DialogResult.Yes)
-                            {
-                                arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("FULLNAME"), strFullNameAlpha.Trim());
-                            }
-                            else if (dialogResult3 == DialogResult.No)
-                            {
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("FULLNAME"), strFullNameAlpha.Trim());
-                        }
+                        ////check if sttype is populated and POSTDIR is not (Michael does not want this warning message box so i'm disabling it for now)
+                        //if (txtUtranPOSTDIR.Text != "" | txtUtranStType.Text == "")
+                        //{
+                        //    DialogResult dialogResult3 = MessageBox.Show("Format Warning!  You are saving an alphabetic street but have conflict with either POSTDIR or POSTTYPE." + Environment.NewLine + "Alphabetic Streets typically require a POSTTYPE and often do not include a POSTDIR value." + Environment.NewLine + Environment.NewLine + "Would you like to continue with the save?", "Format Warning!", MessageBoxButtons.YesNo);
+                        //    if (dialogResult3 == DialogResult.Yes)
+                        //    {
+                        //        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("FULLNAME"), strFullNameAlpha.Trim());
+                        //    }
+                        //    else if (dialogResult3 == DialogResult.No)
+                        //    {
+                        //        return;
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("FULLNAME"), strFullNameAlpha.Trim());
+                        //}
+
+                        arcUtransEdit_Feature.set_Value(arcUtransEdit_Feature.Fields.FindField("FULLNAME"), strFullNameAlpha.Trim()); 
+                        //(remove the above line if want to use the message box warning system)
                     }
+                        
 
                     // ACSALIAS //
                     //string strAscAlias = txtUtransAN_NAME.Text.Trim() + " " + txtUtransAN_POSTDIR.Text.Trim();
@@ -4199,6 +4243,11 @@ namespace UtransEditorAGRC
                 return "CO Weber";
             else
                 return "";
+        }
+
+        private void groupBoxUtransSeg_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

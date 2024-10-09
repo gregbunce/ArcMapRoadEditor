@@ -67,11 +67,11 @@ namespace UtransEditorAGRC
             set;
         }
 
-        public static IFeatureLayer arcFLayerMetroTwnShips
-        {
-            get;
-            set;
-        }
+        //public static IFeatureLayer arcFLayerMetroTwnShips
+        //{
+        //    get;
+        //    set;
+        //}
 
         public static frmUtransEditor UtransEdior2
         {
