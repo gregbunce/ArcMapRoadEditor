@@ -1,0 +1,1 @@
+This C#.net project uses ESRI's ArcObjects (ArcMap 10.7.x) to assist in UGRC's monthly SGID Road update process. This project contains an ArcMap toolbar with 4 tools. This project also requires the .NET setup project (solution) in order to make the installation files (.msi). 
